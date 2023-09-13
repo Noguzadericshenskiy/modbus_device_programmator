@@ -1,0 +1,14 @@
+[tool.poetry]
+name = "SD46-1_MDProg"
+version = "0.1.0"
+description = "SD46-1 Modbus Device Programmator"
+authors = ["Noguzadericshenskiy <Grgpochta@bk.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
