@@ -1,7 +1,5 @@
-import tkinter as tk
-from tkinter import Tk, Frame, messagebox, Listbox, StringVar, Label
-from tkinter import ttk
-from tkinter.ttk import Combobox, Button, Entry
+from tkinter import Tk, Button, filedialog
+from tkinter.ttk import Combobox, Entry, Label, Progressbar
 
 from md_prog.views import config
 
@@ -13,54 +11,47 @@ class RootWin(Tk):
         self.geometry("1000x800")
         self.resizable(False, False)
         self.configure(background=config.main_window_color)
-        self.lbl_type = Label(
-            self,
-            bg=config.button_color,
-            fg=config.text_color,
-            text='Тип',
-            justify='right',
-            pady=5)
-        self.lbl_type.pack()
-
-
+        self.lbl_type = Label(self, text='Тип',)
+        self.lbl_type.config(config.lbl_conf)
+        self.lbl_type.grid(column=0, row=1)
         self.combobox_type = Combobox(
             self,
+            width=40,
+            height=10,
             values=self.combobox_type(),
             state="readonly"
         )
         # self.combobox_type.bind("<<ComboboxSelected>>", self.selected_type)
-        self.combobox_type.pack()
-        self.btn_connect = Button(
-            self,
-            text="Подключить",
-            command=self.get_selected_type,
-        )
-        self.btn_connect.pack()
-
-    # def selected_type(self, event):
-    #     value = self.combobox_type.get()
-    #     index = self.combobox_type.current()
-    #     print(value, index)
-
-        self.btn_disconnect = Button(
-            self,
-            text="Отключить",
-            command=self.disconnect
-        )
-        self.btn_disconnect.pack()
+        self.combobox_type.grid(column=1, row=1)
+        self.btn_connect = Button(self, text="Подключить", command=self.get_selected_type,)
+        self.btn_connect.config(config.btn_conf)
+        self.btn_connect.grid(column=2, row=1, columnspan=2)
+        self.btn_disconnect = Button(self, text="Отключить", command=self.disconnect,)
+        self.btn_disconnect.config(config.btn_conf)
+        self.btn_disconnect.grid(column=5, row=1)
         self.lbl_status_devise = Label(self, text='Статус',)
-        self.lbl_status_devise.pack()
-        self.lbl_status = Label(self, text="подключено, ожидание")
-        self.lbl_status.pack()
-        self.lbl_address = Label(self, text="Адрес")
-        self.lbl_address.pack()
+        self.lbl_status_devise.config(config.lbl_conf)
+        self.lbl_status_devise.grid(column=0, row=2)
+        self.lbl_status = Label(self, text="подключено",)
+        self.lbl_status.config(config.lbl_conf)
+        self.lbl_status.grid(column=1, row=2)
+        self.lbl_address = Label(self, text="Адрес",)
+        self.lbl_address.config(config.lbl_conf)
+        self.lbl_address.grid(column=2, row=2)
         self.etr_address = Entry(self)
-        self.etr_address.pack()
+        self.etr_address.grid(column=3, row=2)
         self.btn_write = Button(self, text="Записать", command=self.write,)
-        self.btn_write.pack()
+        self.btn_write.config(config.btn_conf)
+        self.btn_write.grid(column=5, row=2)
     # ToDo сюда добавить поле вывода с информацией
-        self.etr_save_info = Button(self, )
-
+        self.etr_save_info = Button(
+            self,
+            text="Сохранить в файл",
+            command=self.save_in_file,
+            background=config.button_color,
+            borderwidth=4,
+        )
+        self.etr_save_info.grid(column=0, row=5)
 
     def get_selected_type(self):
         value = self.combobox_type.get()
@@ -68,7 +59,7 @@ class RootWin(Tk):
 
     @staticmethod
     def combobox_type():
-        items = ("Tupe 1", "Tupe 2", "Type 3", "Type 4")
+        items = ("Type 1", "Type 2", "Type 3", "Type 4")
         return items
 
     def quit_app(self):
@@ -78,8 +69,18 @@ class RootWin(Tk):
         print("Отключить")
 
     def write(self):
+        self.pbar_write = Progressbar(self,
+                                      orient="horizontal",
+                                      mode="indeterminate",
+                                      )
+        self.pbar_write.grid(column=0, row=4)
+
         value = self.etr_address.get()
         print(value)
+
+    def save_in_file(self):
+        filedialog.asksaveasfilename(title="Сохранение в файл")
+        print("Сохранить в файл")
 
 
 if __name__ == "__main__":
