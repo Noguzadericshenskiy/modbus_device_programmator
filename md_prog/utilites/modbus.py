@@ -1,4 +1,4 @@
-from pymodbus.client.serial import ModbusSerialClient
+from pymodbus.client import MModbusSerialClient
 
 from pymodbus.constants import DeviceInformation
 
@@ -20,3 +20,5 @@ hh = client.read_holding_registers(
 
 hh1 = hh.registers[0]/10
 hh2 = hh.registers[0]/10
+print(hh1)
+print(hh2)

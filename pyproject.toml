@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "SD46-1_MDProg"
+name = "Modbus Device Programmator"
 version = "0.1.0"
 description = "SD46-1 Modbus Device Programmator"
 authors = ["Noguzadericshenskiy <Grgpochta@bk.ru>"]
@@ -7,6 +7,9 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
+pymodbus = "^3.5.2"
+pyfiglet = "^1.0.2"
+usb = "^0.0.83.dev0"
 
 
 [build-system]
