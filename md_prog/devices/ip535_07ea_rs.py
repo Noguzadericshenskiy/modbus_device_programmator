@@ -1,13 +1,34 @@
 #ИЗВЕЩАТЕЛЬ пожарный ручной взрывозащищенный адресный
 # ИП535-07еа-RS
+import pymodbus.framer
+from pymodbus.client import ModbusSerialClient as Client_mb
 
-class SignalingDevice:
+class SignalingDeviceIP53507ears(Client_mb):
     """
     ИЗВЕЩАТЕЛЬ пожарный ручной взрывозащищенный адресный ИП535-07еа-RS
     (протокол Modbus RTU)
     Руководство по эксплуатации
     4371-006-43082497-04-04 РЭ, 2021 г.
     """
+    def __init__(self, port):
+        baudrate_def = 19200
+        stopbits_def = 1
+        Client_mb.__init__(self, port, baudrate=9600, stopbits=1, framer=pymodbus.framer.ModbusRtuFramer, timeout=2)
+
+    def get_info(self, slave = 5):
+        address = self.read_holding_registers(address=0, slave=slave)
+        protocol_version =
+
+        return self.read_holding_registers(address=2, slave=slave)
+
+
+
+
+
+
+
+
+
     id: int = 1
     protocol_version: int = 2
     device_version: int = 3
@@ -15,3 +36,5 @@ class SignalingDevice:
     serial_number: str
     status_device: str
     configuration: str
+
+
