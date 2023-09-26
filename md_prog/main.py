@@ -7,7 +7,7 @@ from modbus_tk import modbus_rtu
 # port = "ttyUSB0"
 # port = "/dev/bus/usb/b'002'/b'002'"
 port = "COM6"
-slave1 = 10
+slave = 10
 function_code = 0
 starting_address = 0
 quantity_of_x = None
@@ -30,7 +30,8 @@ def main():
         )
         master.set_timeout(0.2)
         master.set_verbose(True)
-        info = master.execute(slave1, cst.READ_HOLDING_REGISTERS, 0, 10)
+        print(master)
+        info = master.execute(10, cst.READ_HOLDING_REGISTERS, 0, 10)
         print(info)
         # logger.info(info)
 
@@ -51,9 +52,10 @@ def main1():
     )
     master.set_timeout(0.2)
     master.set_verbose(True)
-    info = master.execute(slave1, cst.READ_HOLDING_REGISTERS, 0, 10)
+    info = master.execute(slave, cst.READ_HOLDING_REGISTERS, 0, 10)
     print(info)
 
 
+
 if __name__ == "__main__":
-    main1()
+    main()

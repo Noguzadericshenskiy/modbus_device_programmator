@@ -13,19 +13,25 @@ class SignalingDeviceIP53507ears(Client_mb):
     def __init__(self, port):
         baudrate_def = 19200
         stopbits_def = 1
-        Client_mb.__init__(self, port, baudrate=9600, stopbits=1, framer=pymodbus.framer.ModbusRtuFramer, timeout=2)
+        Client_mb.__init__(
+            self,
+            port,
+            baudrate=9600,
+            stopbits=1,
+            framer=pymodbus.framer.ModbusRtuFramer,
+            timeout=2
+        )
 
-    def get_info(self, slave = 5):
-        address = self.read_holding_registers(address=0, slave=slave)
-        protocol_version =
+    def get_info(self, slave=5):
+        params = dict()
+        params["address"] = self.read_holding_registers(address=0, slave=slave)
+        params["protocol_version"] = self.read_holding_registers(address= , slave=slave)
+        params["device_version"] = self.read_holding_registers(address= , slave=slave)
+        params["po_version"] = self.read_holding_registers(address= , slave=slave)
+        params["serial_number"] = self.read_holding_registers(address= , slave=slave)
+        params["status_device"] = self.read_holding_registers(address= , slave=slave)
 
-        return self.read_holding_registers(address=2, slave=slave)
-
-
-
-
-
-
+        return params
 
 
 
