@@ -1,4 +1,4 @@
-devases_setup = [
+devices_def = [
     {
         "name": "ИП535-07еа-RS",
         "slave": 1,

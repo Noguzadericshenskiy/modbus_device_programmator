@@ -2,7 +2,7 @@ from tkinter import Tk, Button, filedialog, Frame, StringVar, Listbox
 from tkinter.ttk import Combobox, Entry, Label, Progressbar
 
 from src import config
-from devices import devases_setup
+from devices import devices_def
 
 port = "COM5"
 
@@ -67,15 +67,15 @@ class RootWin(Tk):
 
     @staticmethod
     def combobox_type():
-       listd = ()
-        for i in devases_setup:
-         listd(i["name"])
+       # listd = ()
+       #  for i in devases_setup:
+       #   listd(i["name"])
 
         items = ("Type 1", "Type 2", "Type 3", "Type 4")
 
         return items
 
-    def get_list_devices():
+    def get_list_devices(self):
         ...
 
     def quit_app(self):
@@ -97,6 +97,7 @@ class RootWin(Tk):
     def save_in_file(self):
         filedialog.asksaveasfilename(title="Сохранение в файл")
         print("Сохранить в файл")
+        return "ok"
 
 
 class InfoBordFrame(Frame):

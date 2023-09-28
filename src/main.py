@@ -1,6 +1,6 @@
 import pymodbus.framer
 from pymodbus.client import ModbusSerialClient
-from devices import devases_setup
+from devices import devices_def
 
 
 def get_info(port: str, params_def: dict) -> dict:
