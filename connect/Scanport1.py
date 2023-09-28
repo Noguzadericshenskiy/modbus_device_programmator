@@ -1,11 +1,9 @@
-import pyfiglet
 import sys
 import socket
 from datetime import datetime
 
 target = "1"
-ascii_banner = pyfiglet.figlet_format("PORT SCANNER")
-print(ascii_banner)
+
 
 # Defining a target
 if len(sys.argv) == 2:

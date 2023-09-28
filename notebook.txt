@@ -1,2 +1,0 @@
-port USB = 003
-port ttyUSB0

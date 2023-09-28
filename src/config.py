@@ -10,6 +10,8 @@ lbl_conf = {
     "background": lbl_bg_color,
     "width": 10,
     "justify": "right",
+    "padding": 5,
+    "font": 12,
 }
 
 #Button
@@ -17,7 +19,10 @@ button_color = "#AEE0DB"
 btn_conf = {
     'background': button_color,
     "borderwidth": 4,
-    "width": 15
+    "width": 15,
+    "padx": 5,
+    "pady": 5,
+    "font": 12,
 }
 
 # Texts
