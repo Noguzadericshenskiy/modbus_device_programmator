@@ -1,5 +1,5 @@
 from tkinter import Tk, Button, filedialog, Frame, StringVar, Listbox
-from tkinter.ttk import Combobox, Entry, Label, Progressbar
+from tkinter.ttk import Combobox, Entry, Label, Progressbar, Treeview
 
 from src import config
 from devices import devices_def

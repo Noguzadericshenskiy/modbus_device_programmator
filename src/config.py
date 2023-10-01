@@ -8,7 +8,7 @@ text_color = "#050990"
 lbl_bg_color = "#ff7d00"
 lbl_conf = {
     "background": lbl_bg_color,
-    "width": 10,
+    "width": 30,
     "justify": "right",
     "padding": 5,
     "font": 12,
@@ -27,3 +27,7 @@ btn_conf = {
 
 # Texts
 error_enter_address = "Вводить нужно число от 1 до хз"
+
+# TABS
+HEADS_TABLE = ["Параметр", "Значение"]
+COLUMNS_TABLE = ["Параметр", "Значение"]
