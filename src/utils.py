@@ -51,7 +51,6 @@ def get_info(connect, settings):
     ]
     return list_info
 
-
 def set_value_register(conn, settings):
     conn.write_registers()
 
