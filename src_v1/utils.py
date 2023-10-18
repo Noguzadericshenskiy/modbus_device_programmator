@@ -1,5 +1,7 @@
 import pymodbus.framer
 from pymodbus.client import ModbusSerialClient
+from devices import devices_def
+
 
 def get_client(port: str, name_dev: str):
     baudrate_dev = 0

@@ -1,7 +1,7 @@
 from tkinter import Tk, Button, filedialog, Frame, StringVar, Listbox
 from tkinter.ttk import Combobox, Entry, Label, Progressbar, Treeview
 
-from src import config
+from src_v1 import config
 from devices import devices_def
 
 port = "COM5"

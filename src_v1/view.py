@@ -18,7 +18,7 @@ from tkinter.ttk import (
 
 from devices import devices_def
 from utils import get_client, get_info
-from src.config import *
+from src_v1.config import *
 
 
 class Root(Tk):
