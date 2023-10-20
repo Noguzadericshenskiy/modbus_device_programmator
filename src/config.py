@@ -11,7 +11,7 @@ lbl_conf = {
     "width": 30,
     "justify": "right",
     "padding": 5,
-    "font": 12,
+    "font": 10,
 }
 
 #Button
@@ -22,7 +22,7 @@ btn_conf = {
     "width": 15,
     "padx": 5,
     "pady": 5,
-    "font": 12,
+    "font": 10,
 }
 
 # Texts

@@ -64,7 +64,7 @@ class SignalingDeviceIP53_507EA_RS(Client_mb):
 
     def get_info(self, slave=SLAVE) -> dict:
         params = dict()
-        params["Адрес устройства"] = self.read_holding_registers(address=0, slave=1).registers[0]
+        params["Адрес устройства"] = self.read_holding_registers(address=0, slave=slave).registers
         params["Скорость интерфейса"] = self.SPEEDS_DEVICE[
             self.read_holding_registers(address=1, slave=slave).registers[0] - 1]
         params["Проверочный бит"] = self.VERIFICATION_BITS[
