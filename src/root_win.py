@@ -52,11 +52,26 @@ class UpFrame(Frame):
                 width=1000,
                 relief="raised",
             )
-        self.grid(column=0, row=1, columnspan=2, sticky="ew")
+        self.grid(column=0, row=1, sticky="ew")
 
-        self.lbl_port = Label(self, text="Укажите номер COM порта",)
+        self.lbl_port = Label(self, text="COM порт",)
         self.lbl_port.config(lbl_conf)
         self.lbl_port.grid(column=0, row=1)
+        self.lbl_type = Label(self, text="Устройство",)
+        self.lbl_type.config(lbl_conf)
+        self.lbl_type.grid(column=0, row=2)
+        self.lbl_address = Label(self, text="Адрес устр-ва", )
+        self.lbl_address.config(lbl_conf)
+        self.lbl_address.grid(column=0, row=3)
+        self.lbl_speed = Label(self, text="Скорость")
+        self.lbl_speed.config(lbl_conf)
+        self.lbl_speed.grid(column=0, row=4)
+        self.lbl_stop_bit = Label(self, text="Stop bit/s")
+        self.lbl_stop_bit.config(lbl_conf)
+        self.lbl_stop_bit.grid(column=0, row=5)
+        self.lbl_parity = Label(self, text="Parity")
+        self.lbl_parity.config(lbl_conf)
+        self.lbl_parity.grid(column=0, row=6)
 
         self.combobox_port = Combobox(
             self,
@@ -66,13 +81,6 @@ class UpFrame(Frame):
             state="readonly",
         )
         self.combobox_port.grid(column=1, row=1, sticky="w", padx=10)
-
-        # self.port_etr = Entry(self,)
-        # self.port_etr.grid(column=1, row=1, sticky="w", padx=10)
-
-        self.lbl_type = Label(self, text='Тип',)
-        self.lbl_type.config(lbl_conf)
-        self.lbl_type.grid(column=0, row=2)
         self.combobox_type = Combobox(
             self,
             width=50,
@@ -82,30 +90,29 @@ class UpFrame(Frame):
         )
         self.combobox_type.grid(column=1, row=2, sticky="w", padx=10)
 
-        self.lbl_address = Label(self, text="Введите адрес", )
-        self.lbl_address.config(lbl_conf)
-        self.lbl_address.grid(column=0, row=3)
-
         self.etr_address = Entry(self)
         self.etr_address.grid(column=1, row=3, sticky="w", padx=10)
 
+        self.combobox_speed = Combobox(
+            self,
+            width=20,
+            height=10,
+            values=self
+        )
+
+
         self.btn_connect = Button(self, text="Прочитать параметры", command=self.read_params,)
         self.btn_connect.config(btn_conf)
-        self.btn_connect.grid(column=5, row=1, columnspan=2)
+        self.btn_connect.grid(column=5, row=1,
+                              # columnspan=2
+                              )
 
         self.btn_set_def_param = Button(self, text="Установить параметры SIGMA", command=self.set_sigma)
+        # self.btn_set_def_param.grid(column=5, row=2,  )
 
         self.btn_disconnect = Button(self, text="Отключить", command=self.disconnect,)
         self.btn_disconnect.config(btn_conf)
         self.btn_disconnect.grid(column=5, row=2)
-
-        self.lbl_status_devise = Label(self, text='Статус',)
-        self.lbl_status_devise.config(lbl_conf)
-        self.lbl_status_devise.grid(column=0, row=4)
-
-        self.lbl_status = Label(self, text="Выполните подключение",)
-        self.lbl_status.config(lbl_conf)
-        self.lbl_status.grid(column=1, row=4)
 
         self.btn_write = Button(self, text="Записать",
                                 # command=self.write_params,
@@ -119,12 +126,12 @@ class UpFrame(Frame):
             columns=HEADS_TABLE,
             displaycolumns=COLUMNS_TABLE,
         )
-        self.table.grid(column=0, row=5, columnspan=5)
+        self.table.grid(column=0, row=5, sticky="ew")
 
     def table_wiev(self, list_params):
 
-        self.table.column("Параметр", width=0)
-        self.table.column("Значение", width=150)
+        # self.table.column("Параметр", width=0)
+        # self.table.column("Значение", width=150)
         for header in HEADS_TABLE:
             self.table.heading(header, text=header, anchor=CENTER)
 
@@ -145,6 +152,8 @@ class UpFrame(Frame):
                 self.table.insert('', END, values=row_info, tags=('oddrow',))
             count += 1
 
+    def get_speed_dev(self):
+        speed = self.combobox_type.get()
 
     def disconnect(self):
         self.lbl_status.config(text="Отключено")
@@ -165,23 +174,24 @@ class UpFrame(Frame):
     def get_params(self):
         "Получает параметры устройства"
         params_dev = []
+        device = None
         port = get_port(self.combobox_port.get())
+        slave = self.etr_address.get()
 
         if self.combobox_type.get() == "ИП535-07еа-RS":
             device = ip535_07ea_rs.SignalingDeviceIP53_507EA_RS(port=port)
-            params_dev = device.get_info(slave=1)
-            print(params_dev)
         if self.combobox_type.get() == "ИП535-07еа-RS-ПУСК":
             device = ip535_07ea_rs_START.SignalingDeviceStart(port=port)
             print("Пуск")
         if self.combobox_type.get() == "ИП329/330-1-1":
             device = ip329_330_1_1.FireDetektorFlameIP329_330_re(port=port)
-            params_dev = device.get_info()
-            print(params_dev)
         if self.combobox_type.get() == "МИП-И-Ех":
             device = mip_i_ex.InterfaceFirefighterModule(port=port)
-            params_dev = device.get_info(slave=2)
-            print(params_dev)
+
+        if slave:
+            params_dev = device.get_info(slave=int(slave))
+        else:
+            params_dev = device.get_info()
 
         return params_dev
 

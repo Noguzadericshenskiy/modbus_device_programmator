@@ -29,10 +29,10 @@ class InterfaceFirefighterModule(Client_mb):
     SLAVE = 1
     AV_VERIFICATION_BIT = VERIFICATION_BITS[0][1]
     SLAVE_STATUS = {
-        1: "Не определен",
-        2: "Короткое замыкание",
-        3: "Обрыв",
-        4: "Норма",
+        0: "Не определен",
+        1: "Короткое замыкание",
+        2: "Обрыв",
+        3: "Норма",
         5: "Тревога",
     }
     POWER_STATUS = {
@@ -57,25 +57,24 @@ class InterfaceFirefighterModule(Client_mb):
             timeout=0.05
         )
 
-    def get_info(self, slave=SLAVE) -> dict:
-        params = dict()
-        params["ID устройства"] = self.read_holding_registers(address=0, slave=slave).registers[0]
-        params["Адрес устройства"] = self.read_holding_registers(address=1, slave=slave).registers[0]
-        params["Скорость интерфейса"] = self.read_holding_registers(address=2, slave=slave).registers[0]
-        params["Статус шлейфа 1"] = self.SLAVE_STATUS[
-            self.read_holding_registers(address=3, slave=slave).registers[0]]
-        params["Статус шлейфа 2"] = self.SLAVE_STATUS[
-            self.read_holding_registers(address=4, slave=slave).registers[0]]
-        params["Статус шлейфа 3"] = self.SLAVE_STATUS[
-            self.read_holding_registers(address=5, slave=slave).registers[0]]
-        params["Статус источника 1"] = self.POWER_STATUS[
-            self.read_holding_registers(address=6, slave=slave).registers[0]]
-        params["Статус источника 2"] = self.POWER_STATUS[
-            self.read_holding_registers(address=7, slave=slave).registers[0]]
-        params["Длинна кабеля (ТРЕВОГА) 1"] = self.read_holding_registers(address=8, slave=slave).registers
-        params["Длинна кабеля (ТРЕВОГА) 2"] = self.read_holding_registers(address=9, slave=slave).registers
-        params["Длинна кабеля (ТРЕВОГА) 3"] = self.read_holding_registers(address=10, slave=slave).registers
+    def get_speed(self):
+        return [speed[1] for speed in self.SPEEDS_DEVICE]
 
-        params["Тест 11 адрес"] = self.read_holding_registers(address=11, slave=slave).registers
+    def get_info(self, slave: int = 1) -> tuple:
+        params = tuple()
+        params = (
+            ("ID устройства", self.read_holding_registers(address=0, slave=slave).registers[0]),
+            ("Адрес устройства", self.read_holding_registers(address=1, slave=slave).registers[0]),
+            ("Скорость интерфейса", self.read_holding_registers(address=2, slave=slave).registers[0]),
+            ("Статус шлейфа 1", self.SLAVE_STATUS[self.read_holding_registers(address=3, slave=slave).registers[0]]),
+            ("Статус шлейфа 2", self.SLAVE_STATUS[self.read_holding_registers(address=4, slave=slave).registers[0]]),
+            ("Статус шлейфа 3", self.SLAVE_STATUS[self.read_holding_registers(address=5, slave=slave).registers[0]]),
+            ("Статус источника 1", self.POWER_STATUS[self.read_holding_registers(address=6, slave=slave).registers[0]]),
+            ("Статус источника 2", self.POWER_STATUS[self.read_holding_registers(address=7, slave=slave).registers[0]]),
+            ("Длинна кабеля (ТРЕВОГА) 1", self.read_holding_registers(address=8, slave=slave).registers),
+            ("Длинна кабеля (ТРЕВОГА) 2", self.read_holding_registers(address=9, slave=slave).registers),
+            ("Длинна кабеля (ТРЕВОГА) 3", self.read_holding_registers(address=10, slave=slave).registers),
+        )
         self.close()
+
         return params
