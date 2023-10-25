@@ -14,14 +14,14 @@ class InterfaceFirefighterModule(Client_mb):
     СПР.425521.007 Д1-01
     """
 
-    SPEEDS_DEVICE = (
-        (1, 1200),
-        (2, 2400),
-        (3, 4800),
-        (4, 9600),
-        (5, 14400),
-        (6, 19200),
-    )
+    SPEEDS_DEVICE = {
+        1: 1200,
+        2: 2400,
+        3: 4800,
+        4: 9600,
+        5: 14400,
+        6: 19200,
+    }
     SPEED_DEFAULT = SPEEDS_DEVICE[3][1]
     VERIFICATION_BITS = ((1, "N"), (2, "E"), (3, "O"))
     NAME = "МИП-И-Ех"

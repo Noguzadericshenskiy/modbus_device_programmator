@@ -16,14 +16,15 @@ from tkinter.ttk import (
     Progressbar,
     Treeview)
 
-from devices import (
-    ip535_07ea_rs,
-    ip535_07ea_rs_START,
-    ip329_330_1_1,
-    mip_i_ex,
-)
+# from devices import (
+#     ip535_07ea_rs,
+#     ip535_07ea_rs_START,
+#     ip329_330_1_1,
+#     mip_i_ex,
+# )
 from src.config import *
-from src.utils import get_port_info, get_port
+from src.utils import get_device, get_port_info, get_port
+
 
 class Root(Tk):
     def __init__(self):
@@ -85,7 +86,7 @@ class UpFrame(Frame):
             self,
             width=50,
             height=10,
-            values=self.get_list_devices(),
+            values=LIST_NAMES_DEVICES,
             state="readonly"
         )
         self.combobox_type.grid(column=1, row=2, sticky="w", padx=10)
@@ -97,25 +98,24 @@ class UpFrame(Frame):
             self,
             width=20,
             height=10,
-            values=self
+            values=("1","2")
         )
 
 
-        self.btn_connect = Button(self, text="Прочитать параметры", command=self.read_params,)
+        self.btn_connect = Button(self, text="Прочитать параметры", )
         self.btn_connect.config(btn_conf)
         self.btn_connect.grid(column=5, row=1,
                               # columnspan=2
                               )
 
-        self.btn_set_def_param = Button(self, text="Установить параметры SIGMA", command=self.set_sigma)
+        self.btn_set_def_param = Button(self, text="Установить параметры SIGMA", )
         # self.btn_set_def_param.grid(column=5, row=2,  )
 
-        self.btn_disconnect = Button(self, text="Отключить", command=self.disconnect,)
+        self.btn_disconnect = Button(self, text="Кнопка 1", )
         self.btn_disconnect.config(btn_conf)
         self.btn_disconnect.grid(column=5, row=2)
 
-        self.btn_write = Button(self, text="Записать",
-                                # command=self.write_params,
+        self.btn_write = Button(self, text="Кнопка 2",
                                 )
         self.btn_write.config(btn_conf)
         self.btn_write.grid(column=5, row=3)
@@ -128,14 +128,9 @@ class UpFrame(Frame):
         )
         self.table.grid(column=0, row=5, sticky="ew")
 
-    def table_wiev(self, list_params):
-
-        # self.table.column("Параметр", width=0)
-        # self.table.column("Значение", width=150)
+    def table_output(self, list_params: tuple) -> None:
         for header in HEADS_TABLE:
             self.table.heading(header, text=header, anchor=CENTER)
-
-        # self.table.pack(side='left')
 
         self.table.tag_configure("oddrow", background='white')
         self.table.tag_configure("evenrow", background='lightblue')
@@ -145,60 +140,56 @@ class UpFrame(Frame):
 
         for row_info in list_params:
             if count % 2 == 0:
-                # row = tuple_additional(heading_tab)
                 self.table.insert('', END, values=row_info, tags=('evenrow',))
             else:
-                # row = tuple_additional(heading_tab)
                 self.table.insert('', END, values=row_info, tags=('oddrow',))
             count += 1
 
+    def get_conn_params_def(self):
+        device = get_device(self.combobox_type.get())
+        speed = device.SPEEDS_DEVICE
+
+
     def get_speed_dev(self):
+        device = get_device(self.combobox_type.get())
+
         speed = self.combobox_type.get()
+        return speed
 
-    def disconnect(self):
-        self.lbl_status.config(text="Отключено")
+    # def disconnect(self):
+    #     self.lbl_status.config(text="Отключено")
 
-    def read_params(self):
-        params = self.get_params()
-        self.table_wiev(params)
 
-    def get_list_devices(self) -> list:
-        list_devices = [
-            ip535_07ea_rs.SignalingDeviceIP53_507EA_RS.NAME,
-            ip535_07ea_rs_START.SignalingDeviceStart.NAME,
-            ip329_330_1_1.FireDetektorFlameIP329_330_re.NAME,
-            mip_i_ex.InterfaceFirefighterModule.NAME,
-            ]
-        return list_devices
 
-    def get_params(self):
+    def get_params(self) -> list:
         "Получает параметры устройства"
-        params_dev = []
-        device = None
         port = get_port(self.combobox_port.get())
         slave = self.etr_address.get()
 
-        if self.combobox_type.get() == "ИП535-07еа-RS":
-            device = ip535_07ea_rs.SignalingDeviceIP53_507EA_RS(port=port)
-        if self.combobox_type.get() == "ИП535-07еа-RS-ПУСК":
-            device = ip535_07ea_rs_START.SignalingDeviceStart(port=port)
-            print("Пуск")
-        if self.combobox_type.get() == "ИП329/330-1-1":
-            device = ip329_330_1_1.FireDetektorFlameIP329_330_re(port=port)
-        if self.combobox_type.get() == "МИП-И-Ех":
-            device = mip_i_ex.InterfaceFirefighterModule(port=port)
 
-        if slave:
-            params_dev = device.get_info(slave=int(slave))
-        else:
-            params_dev = device.get_info()
-
-        return params_dev
+        # if self.combobox_type.get() == "ИП535-07еа-RS":
+        #     device = ip535_07ea_rs.SignalingDeviceIP53_507EA_RS(port=port)
+        # if self.combobox_type.get() == "ИП535-07еа-RS-ПУСК":
+        #     device = ip535_07ea_rs_START.SignalingDeviceStart(port=port)
+        #     print("Пуск")
+        # if self.combobox_type.get() == "ИП329/330-1-1":
+        #     device = ip329_330_1_1.FireDetektorFlameIP329_330_re(port=port)
+        # if self.combobox_type.get() == "МИП-И-Ех":
+        #     device = mip_i_ex.InterfaceFirefighterModule(port=port)
 
 
-    def set_sigma(self):
-        port = get_port(self.combobox_port.get())
-        device = ip535_07ea_rs.SignalingDeviceIP53_507EA_RS(port=port)
+
+        # if slave:
+        #     params_dev = device.get_info(slave=int(slave))
+        # else:
+        #     params_dev = device.get_info()
+
+        return []
+
+
+    # def set_sigma(self):
+    #     port = get_port(self.combobox_port.get())
+    #     device = ip535_07ea_rs.SignalingDeviceIP53_507EA_RS(port=port)
 
     # def out_params_device(self, params: list) -> None:
         # for i_param in params:

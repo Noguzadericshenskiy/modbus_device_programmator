@@ -1,3 +1,17 @@
+from devices import (
+    ip535_07ea_rs,
+    ip535_07ea_rs_START,
+    ip329_330_1_1,
+    mip_i_ex,
+)
+
+LIST_NAMES_DEVICES = [
+    ip535_07ea_rs.SignalingDeviceIP53_507EA_RS.NAME,
+    ip535_07ea_rs_START.SignalingDeviceStart.NAME,
+    ip329_330_1_1.FireDetektorFlameIP329_330_re.NAME,
+    mip_i_ex.InterfaceFirefighterModule.NAME,
+]
+
 # Colors
 main_window_color = "#A1ABAA"
 # frame_up_bg_color = "yellow"
