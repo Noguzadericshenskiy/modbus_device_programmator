@@ -164,6 +164,7 @@ class UpFrame(Frame):
     def get_params(self) -> list:
         "Получает параметры устройства"
         port = get_port(self.combobox_port.get())
+
         slave = self.etr_address.get()
 
 

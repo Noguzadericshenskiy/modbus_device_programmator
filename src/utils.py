@@ -22,12 +22,14 @@ def get_device(name: str):
         device = mip_i_ex.InterfaceFirefighterModule()
     return device
 
+
 def get_port_info() -> list[Any]:
     ports = []
     usb_port = serial.tools.list_ports_windows.comports()
     for i_port in usb_port:
         ports.append((i_port.device, i_port.description))
     return ports
+
 
 def get_port(port_info: str) -> str:
     port = ""
