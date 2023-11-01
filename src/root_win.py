@@ -23,8 +23,8 @@ from tkinter.ttk import (
 #     mip_i_ex,
 # )
 from src.config import *
-from src.utils import get_device, get_port_info, get_port
-
+from src.utils import get_device, get_ports_info, get_port, check_slave
+from src.pop_up_window import msg_err_address, DialogChangAddress
 
 class Root(Tk):
     def __init__(self):
@@ -67,58 +67,55 @@ class UpFrame(Frame):
         self.lbl_speed = Label(self, text="Скорость")
         self.lbl_speed.config(lbl_conf)
         self.lbl_speed.grid(column=0, row=4)
-        self.lbl_stop_bit = Label(self, text="Stop bit/s")
+        self.lbl_stop_bit = Label(self, text="Parity")
         self.lbl_stop_bit.config(lbl_conf)
         self.lbl_stop_bit.grid(column=0, row=5)
-        self.lbl_parity = Label(self, text="Parity")
+        self.lbl_parity = Label(self, text="Stop bit/s")
         self.lbl_parity.config(lbl_conf)
         self.lbl_parity.grid(column=0, row=6)
-
-        self.combobox_port = Combobox(
-            self,
-            width=50,
-            height=10,
-            values=get_port_info(),
-            state="readonly",
-        )
+        self.combobox_port = Combobox(self, values=get_ports_info(), state="readonly")
+        self.combobox_port.config(combobox_conf_long)
         self.combobox_port.grid(column=1, row=1, sticky="w", padx=10)
-        self.combobox_type = Combobox(
-            self,
-            width=50,
-            height=10,
-            values=LIST_NAMES_DEVICES,
-            state="readonly"
-        )
+        self.combobox_type = Combobox(self, values=LIST_NAMES_DEVICES, state="readonly")
+        self.combobox_type.config(combobox_conf_long)
         self.combobox_type.grid(column=1, row=2, sticky="w", padx=10)
-
         self.etr_address = Entry(self)
         self.etr_address.grid(column=1, row=3, sticky="w", padx=10)
+        self.combobox_speed = Combobox(self, values=SPEEDS, state="readonly")
+        self.combobox_speed.config(combobox_conf_sm)
+        self.combobox_speed.grid(column=1, row=4, sticky="w", padx=10)
+        self.combobox_parity = Combobox(self, values=PARITY, state="readonly")
+        self.combobox_parity.config(combobox_conf_sm)
+        self.combobox_parity.grid(column=1, row=5, sticky="w", padx=10)
+        self.combobox_bits = Combobox(self, values=BITS, state="readonly")
+        self.combobox_bits.config(combobox_conf_sm)
+        self.combobox_bits.grid(column=1, row=6, sticky="w", padx=10)
 
-        self.combobox_speed = Combobox(
-            self,
-            width=20,
-            height=10,
-            values=("1","2")
-        )
-
-
-        self.btn_connect = Button(self, text="Прочитать параметры", )
+        self.btn_connect_def = Button(self, text='Получить параметры по умолчанию', command=self.get_info_dev)
+        self.btn_connect_def.config(btn_conf)
+        self.btn_connect_def.grid(column=5, row=1,)
+        self.btn_connect = Button(self, text="Прочитать параметры", command=self.get_info_dev)
         self.btn_connect.config(btn_conf)
-        self.btn_connect.grid(column=5, row=1,
+        self.btn_connect.grid(column=5, row=2,
                               # columnspan=2
                               )
+        self.btn_connect_sigma = Button(self, text="Прочитать с пар. Сигма", command=self.get_info_dev)
+        self.btn_connect_sigma.config(btn_conf)
+        self.btn_connect_sigma.grid(column=5, row=3,
+                              # columnspan=2
+                              )
+        self.btn_set_param_sigma = Button(self, text="Установить парамеры SIGMA", )
+        self.btn_set_param_sigma.config(btn_conf)
+        self.btn_set_param_sigma.grid(column=5, row=4,)
 
-        self.btn_set_def_param = Button(self, text="Установить параметры SIGMA", )
-        # self.btn_set_def_param.grid(column=5, row=2,  )
-
-        self.btn_disconnect = Button(self, text="Кнопка 1", )
+        self.btn_disconnect = Button(self, text="Изменить адрес устройства", command=self.set_address)
         self.btn_disconnect.config(btn_conf)
-        self.btn_disconnect.grid(column=5, row=2)
+        self.btn_disconnect.grid(column=5, row=5)
 
         self.btn_write = Button(self, text="Кнопка 2",
                                 )
         self.btn_write.config(btn_conf)
-        self.btn_write.grid(column=5, row=3)
+        self.btn_write.grid(column=5, row=6)
 
         self.table = Treeview(
             show="headings",
@@ -145,47 +142,56 @@ class UpFrame(Frame):
                 self.table.insert('', END, values=row_info, tags=('oddrow',))
             count += 1
 
-    def get_conn_params_def(self):
-        device = get_device(self.combobox_type.get())
-        speed = device.SPEEDS_DEVICE
+    def set_address(self):
+        # new_address = 0
+        # slave: str = self.etr_address.get()
+        # dev = self.get_conn_params()
+        print("Вызов DialogChangAddress")
+        new_addrees_viget = DialogChangAddress(self)
+        print(new_addrees_viget)
 
 
-    def get_speed_dev(self):
-        device = get_device(self.combobox_type.get())
+    def get_info_dev(self):
+        "Получить информацию об устройстве"
+        slave: str = self.etr_address.get()
+        dev = self.get_conn_params()
 
-        speed = self.combobox_type.get()
-        return speed
+        if slave != "":
+            if check_slave(slave):
+                self.table_output(dev.get_info(int(slave)))
+            else:
+                msg_err_address()
+                print("вывод окна с ошибкой")
+        else:
+            self.table_output(dev.get_info())
+
+    def get_conn_params(self):
+        "Получить информацию для соединения"
+        port = get_port(self.combobox_port.get())
+        name = self.combobox_type.get()
+
+        speed = self.combobox_speed.get()
+        parity = self.combobox_parity.get()
+        bits = self.combobox_bits.get()
+        if speed != "" and parity != "" and bits != "":
+            return get_device(name=name, port=port, baudrate=int(speed), parity=parity, stopbits=int(bits))
+        elif speed != "" and parity != "":
+            return get_device(name=name, port=port, baudrate=int(speed), parity=parity)
+        elif parity != "" and bits != "":
+            return get_device(name=name, port=port, parity=parity, stopbits=int(bits))
+        elif speed != "" and bits != "":
+            return get_device(name=name, port=port, baudrate=int(speed), stopbits=int(bits))
+        elif speed != "":
+            return get_device(name=name, port=port, baudrate=int(speed))
+        elif parity != "":
+            return get_device(name=name, port=port, parity=parity)
+        elif bits != "":
+            return get_device(name=name, port=port, stopbits=int(bits))
+        else:
+            return get_device(name=name, port=port)
 
     # def disconnect(self):
     #     self.lbl_status.config(text="Отключено")
-
-
-
-    def get_params(self) -> list:
-        "Получает параметры устройства"
-        port = get_port(self.combobox_port.get())
-
-        slave = self.etr_address.get()
-
-
-        # if self.combobox_type.get() == "ИП535-07еа-RS":
-        #     device = ip535_07ea_rs.SignalingDeviceIP53_507EA_RS(port=port)
-        # if self.combobox_type.get() == "ИП535-07еа-RS-ПУСК":
-        #     device = ip535_07ea_rs_START.SignalingDeviceStart(port=port)
-        #     print("Пуск")
-        # if self.combobox_type.get() == "ИП329/330-1-1":
-        #     device = ip329_330_1_1.FireDetektorFlameIP329_330_re(port=port)
-        # if self.combobox_type.get() == "МИП-И-Ех":
-        #     device = mip_i_ex.InterfaceFirefighterModule(port=port)
-
-
-
-        # if slave:
-        #     params_dev = device.get_info(slave=int(slave))
-        # else:
-        #     params_dev = device.get_info()
-
-        return []
 
 
     # def set_sigma(self):
@@ -194,7 +200,6 @@ class UpFrame(Frame):
 
     # def out_params_device(self, params: list) -> None:
         # for i_param in params:
-        ...
 
 
 if __name__ == "__main__":

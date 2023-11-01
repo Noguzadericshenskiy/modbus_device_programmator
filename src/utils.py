@@ -9,21 +9,23 @@ from devices import (
     mip_i_ex,
 )
 
-def get_device(name: str):
+# def get_device(name: str, port: str, baudrate: Any, parity: Any, stopbits: Any):
+def get_device(name, port, **kwargs):
     "Получить устройство"
     device = None
     if name == "ИП535-07еа-RS":
-        device = ip535_07ea_rs.SignalingDeviceIP53_507EA_RS()
+        device = ip535_07ea_rs.SignalingDeviceIP53_507EA_RS(port **kwargs)
     if name == "ИП535-07еа-RS-ПУСК":
-        device = ip535_07ea_rs_START.SignalingDeviceStart()
+        device = ip535_07ea_rs_START.SignalingDeviceStart(port, **kwargs)
     if name == "ИП329/330-1-1":
-        device = ip329_330_1_1.FireDetektorFlameIP329_330_re()
+        device = ip329_330_1_1.FireDetektorFlameIP329_330_re(port, **kwargs)
     if name == "МИП-И-Ех":
-        device = mip_i_ex.InterfaceFirefighterModule()
+        device = mip_i_ex.InterfaceFirefighterModule(port, **kwargs)
     return device
 
 
-def get_port_info() -> list[Any]:
+def get_ports_info() -> list[Any]:
+    "Получить информацию о портах"
     ports = []
     usb_port = serial.tools.list_ports_windows.comports()
     for i_port in usb_port:
@@ -32,6 +34,7 @@ def get_port_info() -> list[Any]:
 
 
 def get_port(port_info: str) -> str:
+    "Получить порт"
     port = ""
     pattern = port_info[0:5]
 
@@ -40,3 +43,11 @@ def get_port(port_info: str) -> str:
             port += char
 
     return port
+
+
+def check_slave(slave: str) -> bool:
+    if slave.isdigit():
+        if int(slave) > 0 and int(slave) <= 254:
+            return True
+        return False
+    return False

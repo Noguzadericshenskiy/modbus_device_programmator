@@ -12,6 +12,11 @@ LIST_NAMES_DEVICES = [
     mip_i_ex.InterfaceFirefighterModule.NAME,
 ]
 
+SPEEDS = (1200, 2400, 4800, 9600, 14400, 19200, 28800, 38400, 57600, 115200)
+PARITY = ("N", "E", "O")
+BITS = (1, 2)
+
+
 # Colors
 main_window_color = "#A1ABAA"
 # frame_up_bg_color = "yellow"
@@ -22,7 +27,7 @@ text_color = "#050990"
 lbl_bg_color = "#ff7d00"
 lbl_conf = {
     "background": lbl_bg_color,
-    "width": 30,
+    "width": 15,
     "justify": "right",
     "padding": 5,
     "font": 10,
@@ -32,13 +37,22 @@ lbl_conf = {
 button_color = "#AEE0DB"
 btn_conf = {
     'background': button_color,
-    "borderwidth": 4,
-    "width": 15,
-    "padx": 5,
-    "pady": 5,
-    "font": 10,
+    "borderwidth": 2,
+    "width": 30,
+    "padx": 2,
+    "pady": 2,
+    "font": 8,
+}
+# combobox
+combobox_conf_sm = {
+    "width": 20,
+    "height": 10,
 }
 
+combobox_conf_long = {
+    "width": 50,
+    "height": 10,
+}
 # Texts
 error_enter_address = "Вводить нужно число от 1 до хз"
 
