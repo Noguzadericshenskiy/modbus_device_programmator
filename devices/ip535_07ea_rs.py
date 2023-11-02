@@ -24,17 +24,17 @@ class SignalingDeviceIP53_507EA_RS(Client_mb):
         (10, 115200)
     )
     VERIFICATION_BITS = ((1, "N"), (2, "E"), (3, "O"))
-    STATUS = (
-        (1, "Загрузка"),
-        (2, "Тест"),
-        (3, "Норма"),
-        (4, "Требование квитирования"),
-        (5, "Сработал"),
-        (6, "Неисправность")
-    )
+    STATUS = {
+        1: "Загрузка",
+        2: "Тест",
+        3: "Норма",
+        4: "Требование квитирования",
+        5: "Сработал",
+        6: "Неисправность"
+    }
     NAME = "ИП535-07еа-RS"
     SPEED_DEFAULT = SPEEDS_DEVICE[5][1]
-    AV_VERIFICATION_BIT = VERIFICATION_BITS[1][1]
+    AV_VERIFICATION_BIT = VERIFICATION_BITS[0][1]
     NUMS_STOP_BIT = 1
     SLAVE = 1
 
@@ -55,27 +55,21 @@ class SignalingDeviceIP53_507EA_RS(Client_mb):
             timeout=0.05
         )
 
-    def conn_dev(self):
-        self.get_info()
-
-    def discon(self):
-        ...
-
-
-    def get_info(self, slave=SLAVE) -> dict:
-        params = dict()
-        params["Адрес устройства"] = self.read_holding_registers(address=0, slave=slave).registers
-        params["Скорость интерфейса"] = self.SPEEDS_DEVICE[
-            self.read_holding_registers(address=1, slave=slave).registers[0] - 1]
-        params["Проверочный бит"] = self.VERIFICATION_BITS[
-            self.read_holding_registers(address=2, slave=slave).registers[0] - 1]
-        params["Количество стоп битов"] = self.read_holding_registers(address=3, slave=slave).registers[0]
-        params["Идентификатор устройства"] = self.read_holding_registers(address=4, slave=slave).registers[0]
-        params["Версия устройства"] = self.read_holding_registers(address=6, slave=slave).registers[0]
-        params["Версия ПО устройства"] = self.read_holding_registers(address=7, slave=slave).registers[0]
-        params["Серийный номер"] = self.read_holding_registers(address=8, slave=slave).registers[0]
-        params["Состояние устройства"] = self.STATUS[
-            self.read_holding_registers(address=10, slave=slave).registers[0] - 1]
+    def get_info(self, slave=SLAVE) -> tuple:
+        params = (
+            ("Адрес устройства", self.read_holding_registers(address=0, slave=slave).registers[0]),
+            ("Скорость интерфейса", self.SPEEDS_DEVICE[
+            self.read_holding_registers(address=1, slave=slave).registers[0] - 1][1]),
+            ("Проверочный бит", self.VERIFICATION_BITS[
+            self.read_holding_registers(address=2, slave=slave).registers[0] - 1][1]),
+            ("Количество стоп битов", self.read_holding_registers(address=3, slave=slave).registers[0]),
+            ("Идентификатор устройства", self.read_holding_registers(address=4, slave=slave).registers[0]),
+            ("Версия устройства", self.read_holding_registers(address=6, slave=slave).registers[0]),
+            ("Версия ПО устройства", self.read_holding_registers(address=7, slave=slave).registers[0]),
+            ("Серийный номер", self.read_holding_registers(address=8, slave=slave).registers[0]),
+            ("Состояние устройства", self.STATUS[
+                self.read_holding_registers(address=10, slave=slave).registers[0]]),
+        )
         self.close()
         return params
 

@@ -7,7 +7,8 @@ from tkinter import (
     Listbox,
     LabelFrame,
     CENTER,
-    END
+    END,
+    IntVar,
 )
 from tkinter.ttk import (
     Combobox,
@@ -43,9 +44,10 @@ class Root(Tk):
 
 class UpFrame(Frame):
 
-    conn = None
+    # conn = None
     def __init__(self):
         super().__init__()
+        self.new_address = IntVar()
         self.configure(
                 background="#fc5e03",
                 border=5,
@@ -124,8 +126,10 @@ class UpFrame(Frame):
             displaycolumns=COLUMNS_TABLE,
         )
         self.table.grid(column=0, row=5, sticky="ew")
+        Label(self, textvariable=self.new_address).grid(column=0, row=7)
 
     def table_output(self, list_params: tuple) -> None:
+        self.table.delete(*self.table.get_children())
         for header in HEADS_TABLE:
             self.table.heading(header, text=header, anchor=CENTER)
 
@@ -147,8 +151,13 @@ class UpFrame(Frame):
         # slave: str = self.etr_address.get()
         # dev = self.get_conn_params()
         print("Вызов DialogChangAddress")
-        new_addrees_viget = DialogChangAddress(self)
-        print(new_addrees_viget)
+        conn = self.get_conn_params()
+        conn.set_address(self.new_address.get(), self.etr_address.get())
+        DialogChangAddress(self, conn, self.new_address)
+        e = self.new_address.get()
+
+        print("Вызов Label")
+
 
 
     def get_info_dev(self):

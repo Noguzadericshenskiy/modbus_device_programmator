@@ -57,16 +57,15 @@ class InterfaceFirefighterModule(Client_mb):
             timeout=0.05
         )
 
-    def get_speed(self):
-        return [speed[1] for speed in self.SPEEDS_DEVICE]
+    # def get_speed(self):
+    #     return [speed[1] for speed in self.SPEEDS_DEVICE]
 
-    def get_info(self, slave: int = 1) -> tuple:
-        params = tuple()
+    def get_info(self, slave: int = SLAVE) -> tuple:
         params = (
             ("ID устройства", self.read_holding_registers(address=0, slave=slave).registers[0]),
             ("Адрес устройства", self.read_holding_registers(address=1, slave=slave).registers[0]),
             ("Скорость интерфейса", self.SPEEDS_DEVICE[
-                self.read_holding_registers(address=2, slave=slave).registers[0]-1][1]),
+                self.read_holding_registers(address=2, slave=slave).registers[0] - 1][1]),
             ("Статус шлейфа 1", self.SLAVE_STATUS[self.read_holding_registers(address=3, slave=slave).registers[0]]),
             ("Статус шлейфа 2", self.SLAVE_STATUS[self.read_holding_registers(address=4, slave=slave).registers[0]]),
             ("Статус шлейфа 3", self.SLAVE_STATUS[self.read_holding_registers(address=5, slave=slave).registers[0]]),
@@ -77,5 +76,8 @@ class InterfaceFirefighterModule(Client_mb):
             ("Длинна кабеля (ТРЕВОГА) 3", self.read_holding_registers(address=10, slave=slave).registers),
         )
         self.close()
-
         return params
+
+    def set_address(self, new_add, slave):
+        print("установлен новый адрес", new_add, slave)
+        return new_add

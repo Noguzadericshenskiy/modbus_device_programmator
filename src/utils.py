@@ -14,7 +14,7 @@ def get_device(name, port, **kwargs):
     "Получить устройство"
     device = None
     if name == "ИП535-07еа-RS":
-        device = ip535_07ea_rs.SignalingDeviceIP53_507EA_RS(port **kwargs)
+        device = ip535_07ea_rs.SignalingDeviceIP53_507EA_RS(port, **kwargs)
     if name == "ИП535-07еа-RS-ПУСК":
         device = ip535_07ea_rs_START.SignalingDeviceStart(port, **kwargs)
     if name == "ИП329/330-1-1":
