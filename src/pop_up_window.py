@@ -5,8 +5,8 @@ from tkinter.ttk import Label, Entry, Button
 from config import *
 
 
-class DialogChangAddress(Toplevel):
-    def __init__(self, master, conn, new_address):
+class DialogEnterNewParameter(Toplevel):
+    def __init__(self, master, new_address):
         super().__init__(master)
         self.new_address = new_address
         self.grab_set()
@@ -23,7 +23,7 @@ class DialogChangAddress(Toplevel):
             # textvariable=self.new_address.get()
         )
         self.etr_slave.grid(column=1, row=1)
-        self.btn_change = Button(self, text="Изменить", command=self.change_button)
+        self.btn_change = Button(self, text="OK", command=self.change_button)
         self.btn_change.config(width=10, padding=10)
         self.btn_change.grid(column=0, row=3)
         self.btn_close = Button(self, text="Отмена", command=self.close)
@@ -48,6 +48,11 @@ def msg_err_address():
     )
 
 
+def msg_err_no_connect():
+    messagebox.showerror(
+        title="error connect",
+        message="не удалось подключится к устройству"
+    )
 
 
 

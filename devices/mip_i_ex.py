@@ -2,8 +2,9 @@
 «МИП»
 """
 
-import  pymodbus.framer
+import pymodbus.framer
 from pymodbus.client import ModbusSerialClient as Client_mb
+
 
 class InterfaceFirefighterModule(Client_mb):
     """
@@ -22,7 +23,7 @@ class InterfaceFirefighterModule(Client_mb):
         (5, 14400),
         (6, 19200),
     )
-    SPEED_DEFAULT = SPEEDS_DEVICE[3][1]
+    SPEED_DEFAULT = 9600
     VERIFICATION_BITS = ((1, "N"), (2, "E"), (3, "O"))
     NAME = "МИП-И-Ех"
     NUMS_STOP_BIT = 1
@@ -78,6 +79,8 @@ class InterfaceFirefighterModule(Client_mb):
         self.close()
         return params
 
-    def set_address(self, new_add, slave):
-        print("установлен новый адрес", new_add, slave)
-        return new_add
+    def set_slave(self, new_slave: int, slave: int):
+        self.write_register(3, new_slave, slave)
+        print("установлен новый адрес", new_slave, slave)
+        return new_slave
+

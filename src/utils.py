@@ -9,14 +9,20 @@ from devices import (
     mip_i_ex,
 )
 
-# def get_device(name: str, port: str, baudrate: Any, parity: Any, stopbits: Any):
+
+def get_baudrate_dev(dev, bdr):
+    for spd in dev.SPEEDS_DEVICE:
+        if spd[1] == bdr:
+            return spd[0]
+
+
 def get_device(name, port, **kwargs):
     "Получить устройство"
     device = None
     if name == "ИП535-07еа-RS":
         device = ip535_07ea_rs.SignalingDeviceIP53_507EA_RS(port, **kwargs)
     if name == "ИП535-07еа-RS-ПУСК":
-        device = ip535_07ea_rs_START.SignalingDeviceStart(port, **kwargs)
+        device = ip535_07ea_rs_START.SignalingDeviceIP53_507EA_Start(port, **kwargs)
     if name == "ИП329/330-1-1":
         device = ip329_330_1_1.FireDetektorFlameIP329_330_re(port, **kwargs)
     if name == "МИП-И-Ех":
@@ -37,7 +43,6 @@ def get_port(port_info: str) -> str:
     "Получить порт"
     port = ""
     pattern = port_info[0:5]
-
     for char in pattern:
         if char != " " and char != "":
             port += char

@@ -7,7 +7,7 @@ from devices import (
 
 LIST_NAMES_DEVICES = [
     ip535_07ea_rs.SignalingDeviceIP53_507EA_RS.NAME,
-    ip535_07ea_rs_START.SignalingDeviceStart.NAME,
+    ip535_07ea_rs_START.SignalingDeviceIP53_507EA_Start.NAME,
     ip329_330_1_1.FireDetektorFlameIP329_330_re.NAME,
     mip_i_ex.InterfaceFirefighterModule.NAME,
 ]
@@ -16,6 +16,9 @@ SPEEDS = (1200, 2400, 4800, 9600, 14400, 19200, 28800, 38400, 57600, 115200)
 PARITY = ("N", "E", "O")
 BITS = (1, 2)
 
+BAUDRATE_SIGMA = 9600
+PARITY_SIGMA = "N"
+S_BITS_SIGMA = 1
 
 # Colors
 main_window_color = "#A1ABAA"

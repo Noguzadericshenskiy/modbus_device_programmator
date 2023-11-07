@@ -11,6 +11,7 @@ class SignalingDeviceIP53_507EA_RS(Client_mb):
     Руководство по эксплуатации
     4371-006-43082497-04-04 РЭ, 2021 г.
     """
+
     SPEEDS_DEVICE = (
         (1, 1200),
         (2, 2400),
@@ -34,7 +35,7 @@ class SignalingDeviceIP53_507EA_RS(Client_mb):
     }
     NAME = "ИП535-07еа-RS"
     SPEED_DEFAULT = SPEEDS_DEVICE[5][1]
-    AV_VERIFICATION_BIT = VERIFICATION_BITS[0][1]
+    PARITY = "E"
     NUMS_STOP_BIT = 1
     SLAVE = 1
 
@@ -42,7 +43,7 @@ class SignalingDeviceIP53_507EA_RS(Client_mb):
             self,
             port,
             baudrate=SPEED_DEFAULT,
-            parity=AV_VERIFICATION_BIT,
+            parity=PARITY,
             stopbits=NUMS_STOP_BIT
     ):
           Client_mb.__init__(
@@ -53,15 +54,15 @@ class SignalingDeviceIP53_507EA_RS(Client_mb):
             parity=parity,
             framer=pymodbus.framer.ModbusRtuFramer,
             timeout=0.05
-        )
+          )
 
     def get_info(self, slave=SLAVE) -> tuple:
         params = (
             ("Адрес устройства", self.read_holding_registers(address=0, slave=slave).registers[0]),
             ("Скорость интерфейса", self.SPEEDS_DEVICE[
-            self.read_holding_registers(address=1, slave=slave).registers[0] - 1][1]),
+                self.read_holding_registers(address=1, slave=slave).registers[0] - 1][1]),
             ("Проверочный бит", self.VERIFICATION_BITS[
-            self.read_holding_registers(address=2, slave=slave).registers[0] - 1][1]),
+                self.read_holding_registers(address=2, slave=slave).registers[0] - 1][1]),
             ("Количество стоп битов", self.read_holding_registers(address=3, slave=slave).registers[0]),
             ("Идентификатор устройства", self.read_holding_registers(address=4, slave=slave).registers[0]),
             ("Версия устройства", self.read_holding_registers(address=6, slave=slave).registers[0]),
@@ -73,17 +74,25 @@ class SignalingDeviceIP53_507EA_RS(Client_mb):
         self.close()
         return params
 
-    def set_params_sigma(self, new_slave):
-        self.write_registers(slave=self.SPEED_DEFAULT, address=0, values=new_slave)
+    def set_slave(self, new_slave: int, slave: int) -> None:
+        self.write_register(0, new_slave, slave)
+        self.close()
 
-    def set_slave(self, slave, new_slave):
-        self.write_registers(slave=slave, address=0, values=new_slave)
+    def set_baudrate(self, new_spd: int, slave: int) -> None:
+        self.write_register(1, new_spd, slave)
+        self.close()
+
+    def set_parity(self, new_parity: int, slave: int) -> None:
+        self.write_register(2, new_parity, slave)
+        self.close()
+    def set_stop_bit(self, new_stop_bit: int, slave: int) -> None:
+        self.write_register(3, new_stop_bit, slave)
+        self.close()
 
     def clear_status(self):
         self.write_registers(address=12, values=4, slave=1)
         self.close()
         # self.get_info()
-
 
 
 
