@@ -18,16 +18,22 @@ from tkinter.ttk import (
     Label,
     Progressbar,
     Treeview)
-
-# from devices import (
-#     ip535_07ea_rs,
-#     ip535_07ea_rs_START,
-#     ip329_330_1_1,
-#     mip_i_ex,
-# )
 from src.config import *
-from src.utils import get_device, get_ports_info, get_port, check_slave, get_baudrate_dev
-from src.pop_up_window import msg_err_address, DialogEnterNewParameter, msg_err_no_connect
+from src.utils import (
+    get_device,
+    get_ports_info,
+    get_port,
+    check_slave,
+    get_value_baudrate_dev,
+    get_value_parity_dev
+)
+from src.pop_up_window import (
+    msg_err_address,
+    msg_err_no_connect,
+    DialogEnterNewSlave,
+    DialogEnterNewBaudrate,
+    DialogEnterNewParity,
+)
 
 
 class Root(Tk):
@@ -97,31 +103,35 @@ class UpFrame(Frame):
         self.combobox_bits = Combobox(self, values=BITS, state="readonly")
         self.combobox_bits.config(combobox_conf_sm)
         self.combobox_bits.grid(column=1, row=6, sticky="w", padx=10)
-        self.btn_connect_def = Button(self, text='Установить скорость', command=self.get_info_dev)
-        self.btn_connect_def.config(btn_conf)
-        self.btn_connect_def.grid(column=5, row=1,)
+
         self.btn_connect = Button(self, text="Прочитать параметры", command=self.get_info_dev)
         self.btn_connect.config(btn_conf)
-        self.btn_connect.grid(column=5, row=2,
+        self.btn_connect.grid(column=5, row=1,
                               # columnspan=2
                               )
-        self.btn_connect_sigma = Button(self, text="Прочитать с пар. Сигма", command=self.get_info_dev)
+        self.btn_connect_sigma = Button(self, text="Прочитать с пар. Сигма(--)", command=self.get_info_dev)
         self.btn_connect_sigma.config(btn_conf)
-        self.btn_connect_sigma.grid(column=5, row=3,
-                              # columnspan=2
-                              )
+        self.btn_connect_sigma.grid(column=5, row=2,)
+
         self.btn_set_param_sigma = Button(self, text="Установить парамеры SIGMA", command=self.set_params_sigma)
         self.btn_set_param_sigma.config(btn_conf)
-        self.btn_set_param_sigma.grid(column=5, row=4,)
+        self.btn_set_param_sigma.grid(column=5, row=3,)
 
-        self.btn_disconnect = Button(self, text="Изменить адрес устройства", command=self.set_address)
-        self.btn_disconnect.config(btn_conf)
-        self.btn_disconnect.grid(column=5, row=5)
+        self.btn_speed = Button(self, text='Установить скорость', command=self.set_speed_dev)
+        self.btn_speed.config(btn_conf)
+        self.btn_speed.grid(column=5, row=4,)
 
-        self.btn_write = Button(self, text="Кнопка 2",
-                                )
-        self.btn_write.config(btn_conf)
-        self.btn_write.grid(column=5, row=6)
+        self.btn_address = Button(self, text="Изменить адрес устройства", command=self.set_address)
+        self.btn_address.config(btn_conf)
+        self.btn_address.grid(column=5, row=5)
+
+        self.btn_parity = Button(self, text="Изменение проверки на четность", command=self.set_parity)
+        self.btn_parity.config(btn_conf)
+        self.btn_parity.grid(column=5, row=6)
+
+        self.btn_stop_bit = Button(self, text="Изменение стоп-бита", command=self.set_parity)
+        self.btn_stop_bit.config(btn_conf)
+        self.btn_stop_bit.grid(column=5, row=7)
 
         self.table = Treeview(
             show="headings",
@@ -149,38 +159,59 @@ class UpFrame(Frame):
                 self.table.insert('', END, values=row_info, tags=('oddrow',))
             count += 1
 
+    def set_stop_bit(self):
+        ...
+
+    def set_parity(self):
+        dev = self.get_conn_params()
+        parity_dev = [str(i_par[1]) for i_par in dev.VERIFICATION_BITS]
+        self.wait_window(DialogEnterNewParity(self, self.new_parity, parity_dev))
+        dev.set_parity(get_value_parity_dev(dev, self.new_parity.get()), int(self.etr_address.get()))
+        self.combobox_parity.set(self.new_parity.get())
+        dev = self.get_conn_params()
+        self.table_output(dev.get_info(int(self.etr_address.get())))
+
+    def set_speed_dev(self):
+        dev = self.get_conn_params()
+        speeds_dev = [str(i_spd[1]) for i_spd in dev.SPEEDS_DEVICE]
+        win_change_baudrate = DialogEnterNewBaudrate(self, self.new_baudrate, speeds_dev)
+        self.wait_window(win_change_baudrate)
+        dev.set_baudrate(get_value_baudrate_dev(dev, self.new_baudrate.get()), int(self.etr_address.get()))
+        self.combobox_speed.set(self.new_baudrate.get())
+        dev = self.get_conn_params()
+        self.table_output(dev.get_info(int(self.etr_address.get())))
+
     def set_address(self):
-        conn = self.get_conn_params()
-        win_change_address = DialogEnterNewParameter(self, self.new_slave)
+        dev = self.get_conn_params()
+        win_change_address = DialogEnterNewSlave(self, self.new_slave)
         self.wait_window(win_change_address)
-        conn.set_slave(self.new_slave.get(), int(self.etr_address.get()))
-        conn = self.get_conn_params()
-        self.table_output(conn.get_info(self.new_slave.get()))
+        dev.set_slave(self.new_slave.get(), int(self.etr_address.get()))
+        dev = self.get_conn_params()
+        self.table_output(dev.get_info(self.new_slave.get()))
 
     def set_params_sigma(self):
         "Меняем значения по умолчанию на сигму"
         port = get_port(self.combobox_port.get())
         name = self.combobox_type.get()
-        win_new_slave = DialogEnterNewParameter(self, self.new_slave)
+        win_new_slave = DialogEnterNewSlave(self, self.new_slave)
         self.wait_window(win_new_slave)
-
         new_slave = self.new_slave.get()
         if check_slave(str(new_slave)) != True:
             msg_err_address()
-
         dev = get_device(name, port)
         dev.set_slave(new_slave=new_slave, slave=dev.SLAVE)
-        time.sleep(0.5)
+        time.sleep(0.2)
         dev = get_device(name, port)
-        self.table_output(dev.get_info(new_slave))
-        baudrate = get_baudrate_dev(dev, BAUDRATE_SIGMA)
+        baudrate = get_value_baudrate_dev(dev, BAUDRATE_SIGMA)
         dev.set_baudrate(baudrate, slave=new_slave)
-        time.sleep(0.5)
+        time.sleep(0.2)
         dev = get_device(name, port, baudrate=BAUDRATE_SIGMA)
+        parity = get_value_parity_dev(dev, PARITY_SIGMA)
+        dev.set_parity(parity, slave=new_slave)
+        time.sleep(0.2)
+        dev = get_device(name, port, baudrate=BAUDRATE_SIGMA, parity=PARITY_SIGMA)
         self.table_output(dev.get_info(new_slave))
-        # dev.set_parity(PARITY_SIGMA, slave=new_slave)
-        # dev = get_device(name, port, beudrate=BAUDRATE_SIGMA, parity=PARITY_SIGMA)
-        # self.table_output(dev.get_info(new_slave))
+        stop_bit =
         # dev.set_stop_bit(S_BITS_SIGMA, slave=new_slave)
         # dev = get_device(
         #     name, port, beudrate=BAUDRATE_SIGMA, parity=PARITY_SIGMA, stopbits=S_BITS_SIGMA)

@@ -10,14 +10,24 @@ from devices import (
 )
 
 
-def get_baudrate_dev(dev, bdr):
+def get_value_parity_dev(dev, parity: str):
+    """ Возвращает значение проверки на четность
+        из списка скоростей конкретного устройства"""
+    for par in dev.VERIFICATION_BITS:
+        if par[1] == parity:
+            return par[0]
+
+
+def get_value_baudrate_dev(dev, bdr: int):
+    """ Возвращает значение скорости
+        из списка скоростей конкретного устройства"""
     for spd in dev.SPEEDS_DEVICE:
         if spd[1] == bdr:
             return spd[0]
 
 
-def get_device(name, port, **kwargs):
-    "Получить устройство"
+def get_device(name: str, port: Any, **kwargs):
+    "Получить объект устройства по названию"
     device = None
     if name == "ИП535-07еа-RS":
         device = ip535_07ea_rs.SignalingDeviceIP53_507EA_RS(port, **kwargs)
@@ -31,7 +41,7 @@ def get_device(name, port, **kwargs):
 
 
 def get_ports_info() -> list[Any]:
-    "Получить информацию о портах"
+    "Получить список портов"
     ports = []
     usb_port = serial.tools.list_ports_windows.comports()
     for i_port in usb_port:
@@ -40,7 +50,7 @@ def get_ports_info() -> list[Any]:
 
 
 def get_port(port_info: str) -> str:
-    "Получить порт"
+    "Получить название порта из строки с информацией о порте"
     port = ""
     pattern = port_info[0:5]
     for char in pattern:
@@ -51,6 +61,7 @@ def get_port(port_info: str) -> str:
 
 
 def check_slave(slave: str) -> bool:
+    "Проверка введенного адреса"
     if slave.isdigit():
         if int(slave) > 0 and int(slave) <= 254:
             return True
