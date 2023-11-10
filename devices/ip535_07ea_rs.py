@@ -11,7 +11,7 @@ class SignalingDeviceIP53_507EA_RS(Client_mb):
     Руководство по эксплуатации
     4371-006-43082497-04-04 РЭ, 2021 г.
     """
-
+    NAME = "ИП535-07еа-RS"
     SPEEDS_DEVICE = (
         (1, 1200),
         (2, 2400),
@@ -25,6 +25,19 @@ class SignalingDeviceIP53_507EA_RS(Client_mb):
         (10, 115200)
     )
     VERIFICATION_BITS = ((1, "N"), (2, "E"), (3, "O"))
+    STOP_BITS = ((1, "1"), (2, "1.5"), (3, '2'))
+    CONTROL_REGISTER = (
+        (0, "норма"),
+        (1, "пеезагрузка"),
+        (2, "сброс настроек по умолчанию"),
+        (4, "сброс зафиксированных событий"),
+        (8, "квитирование события"),
+        (16, "установка адреса МВ равного последним 2 цифрам сер. ном."))
+    SLAVE = 1
+    SPEED_DEFAULT = 19200
+    PARITY = "E"
+    NUMS_STOP_BIT = 1
+
     STATUS = {
         1: "Загрузка",
         2: "Тест",
@@ -33,11 +46,7 @@ class SignalingDeviceIP53_507EA_RS(Client_mb):
         5: "Сработал",
         6: "Неисправность"
     }
-    NAME = "ИП535-07еа-RS"
-    SPEED_DEFAULT = SPEEDS_DEVICE[5][1]
-    PARITY = "E"
-    NUMS_STOP_BIT = 1
-    SLAVE = 1
+
 
     def __init__(
             self,
@@ -63,7 +72,8 @@ class SignalingDeviceIP53_507EA_RS(Client_mb):
                 self.read_holding_registers(address=1, slave=slave).registers[0] - 1][1]),
             ("Проверочный бит", self.VERIFICATION_BITS[
                 self.read_holding_registers(address=2, slave=slave).registers[0] - 1][1]),
-            ("Количество стоп битов", self.read_holding_registers(address=3, slave=slave).registers[0]),
+            ("Количество стоп битов", self.STOP_BITS[
+                self.read_holding_registers(address=3, slave=slave).registers[0] - 1][1]),
             ("Идентификатор устройства", self.read_holding_registers(address=4, slave=slave).registers[0]),
             ("Версия устройства", self.read_holding_registers(address=6, slave=slave).registers[0]),
             ("Версия ПО устройства", self.read_holding_registers(address=7, slave=slave).registers[0]),

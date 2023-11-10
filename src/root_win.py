@@ -25,14 +25,17 @@ from src.utils import (
     get_port,
     check_slave,
     get_value_baudrate_dev,
-    get_value_parity_dev
+    get_value_parity_dev,
+    get_value_stop_bits_dev
 )
 from src.pop_up_window import (
     msg_err_address,
     msg_err_no_connect,
+    msg_err_incorect_params,
     DialogEnterNewSlave,
     DialogEnterNewBaudrate,
     DialogEnterNewParity,
+    DialogEnterNewStopBit,
 )
 
 
@@ -58,7 +61,7 @@ class UpFrame(Frame):
         self.new_slave = IntVar()
         self.new_baudrate = IntVar()
         self.new_parity = StringVar()
-        self.new_bits = IntVar()
+        self.new_bits = StringVar()
         self.configure(
                 background="#fc5e03",
                 border=5,
@@ -106,32 +109,32 @@ class UpFrame(Frame):
 
         self.btn_connect = Button(self, text="Прочитать параметры", command=self.get_info_dev)
         self.btn_connect.config(btn_conf)
-        self.btn_connect.grid(column=5, row=1,
-                              # columnspan=2
-                              )
-        self.btn_connect_sigma = Button(self, text="Прочитать с пар. Сигма(--)", command=self.get_info_dev)
-        self.btn_connect_sigma.config(btn_conf)
-        self.btn_connect_sigma.grid(column=5, row=2,)
+        self.btn_connect.grid(column=5, row=1,)
 
         self.btn_set_param_sigma = Button(self, text="Установить парамеры SIGMA", command=self.set_params_sigma)
         self.btn_set_param_sigma.config(btn_conf)
-        self.btn_set_param_sigma.grid(column=5, row=3,)
+        self.btn_set_param_sigma.grid(column=5, row=2,)
+
+
+        self.btn_address = Button(self, text="Изменить адрес устройства", command=self.set_address)
+        self.btn_address.config(btn_conf)
+        self.btn_address.grid(column=5, row=3)
 
         self.btn_speed = Button(self, text='Установить скорость', command=self.set_speed_dev)
         self.btn_speed.config(btn_conf)
         self.btn_speed.grid(column=5, row=4,)
 
-        self.btn_address = Button(self, text="Изменить адрес устройства", command=self.set_address)
-        self.btn_address.config(btn_conf)
-        self.btn_address.grid(column=5, row=5)
-
         self.btn_parity = Button(self, text="Изменение проверки на четность", command=self.set_parity)
         self.btn_parity.config(btn_conf)
-        self.btn_parity.grid(column=5, row=6)
+        self.btn_parity.grid(column=5, row=5)
 
-        self.btn_stop_bit = Button(self, text="Изменение стоп-бита", command=self.set_parity)
+        self.btn_stop_bit = Button(self, text="Изменение стоп-бита", command=self.set_stop_bit)
         self.btn_stop_bit.config(btn_conf)
-        self.btn_stop_bit.grid(column=5, row=7)
+        self.btn_stop_bit.grid(column=5, row=6)
+
+        self.btn_connect_sigma = Button(self, text="----------", )
+        self.btn_connect_sigma.config(btn_conf)
+        self.btn_connect_sigma.grid(column=5, row=7,)
 
         self.table = Treeview(
             show="headings",
@@ -160,7 +163,13 @@ class UpFrame(Frame):
             count += 1
 
     def set_stop_bit(self):
-        ...
+        dev = self.get_conn_params()
+        stop_bis = [str(i_s_bits[1]) for i_s_bits in dev.STOP_BITS]
+        self.wait_window(DialogEnterNewStopBit(self, self.new_bits, stop_bis))
+        dev.set_stop_bit(get_value_stop_bits_dev(dev, self.new_bits.get()), int(self.etr_address.get()))
+        self.combobox_bits.set(self.new_bits.get())
+        dev = self.get_conn_params()
+        self.table_output(dev.get_info(int(self.etr_address.get())))
 
     def set_parity(self):
         dev = self.get_conn_params()
@@ -210,12 +219,12 @@ class UpFrame(Frame):
         dev.set_parity(parity, slave=new_slave)
         time.sleep(0.2)
         dev = get_device(name, port, baudrate=BAUDRATE_SIGMA, parity=PARITY_SIGMA)
+        stop_bits = get_value_stop_bits_dev(dev, S_BITS_SIGMA)
+        dev.set_stop_bit(stop_bits, slave=new_slave)
+        time.sleep(0.2)
+        dev = get_device(
+            name, port, baudrate=BAUDRATE_SIGMA, parity=PARITY_SIGMA, stopbits=stop_bits)
         self.table_output(dev.get_info(new_slave))
-        stop_bit =
-        # dev.set_stop_bit(S_BITS_SIGMA, slave=new_slave)
-        # dev = get_device(
-        #     name, port, beudrate=BAUDRATE_SIGMA, parity=PARITY_SIGMA, stopbits=S_BITS_SIGMA)
-        # self.table_output(dev.get_info(new_slave))
 
     def get_info_dev(self):
         "Получить информацию об устройстве"
@@ -232,6 +241,8 @@ class UpFrame(Frame):
                 self.table_output(dev.get_info())
         except AttributeError:
             msg_err_no_connect()
+        except ValueError:
+            msg_err_incorect_params()
 
     def get_conn_params(self):
         "Получить информацию для соединения"

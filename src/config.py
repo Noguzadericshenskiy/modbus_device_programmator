@@ -14,11 +14,11 @@ LIST_NAMES_DEVICES = [
 
 SPEEDS = (1200, 2400, 4800, 9600, 14400, 19200, 28800, 38400, 57600, 115200)
 PARITY = ("N", "E", "O")
-BITS = (1, 2)
+BITS = ("1", "1.5", "2")
 
 BAUDRATE_SIGMA = 9600
 PARITY_SIGMA = "N"
-S_BITS_SIGMA = 1
+S_BITS_SIGMA = "1"
 
 # Colors
 main_window_color = "#A1ABAA"
@@ -57,7 +57,7 @@ combobox_conf_long = {
     "height": 10,
 }
 # Texts
-error_enter_address = "Вводить нужно число от 1 до хз"
+error_enter_address = "Вводить нужно число от 1 до 254"
 
 # TABS
 HEADS_TABLE = ["Параметр", "Значение"]

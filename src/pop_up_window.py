@@ -112,7 +112,7 @@ class DialogEnterNewSlave(BaseDialogWin):
         self.btn_change = Button(command=self.ok_button)
 
     def ok_button(self):
-        "Обработка события и отправка данных"
+        "Обработка события и установка данных"
         self.new_address.set(self.etr_slave.get())
         self.close()
 
@@ -121,8 +121,8 @@ class DialogEnterNewBaudrate(BaseDialogWin):
     """Диалоговое окно ввода скорости работы интерфейса"""
     def __init__(self, master, new_baudrate, speeds):
         super().__init__(master)
-        self.title = "Выбор адреса устройства"
-        self.lbl_parameter_enter.config(text="Введите Адрес устройства")
+        self.title = "Выбор скорости устройства"
+        self.lbl_parameter_enter.config(text="Выберите скорость устройства")
         self.new_baudrate = new_baudrate
         self.speeds = speeds
         self.combobox_speeds = Combobox(self, values=self.speeds, state="readonly")
@@ -130,7 +130,7 @@ class DialogEnterNewBaudrate(BaseDialogWin):
         self.combobox_speeds.grid(column=1, row=1)
 
     def ok_button(self):
-        "Обработка события и отправка данных"
+        "Обработка события и установка данных"
         self.new_baudrate.set(self.combobox_speeds.get())
         self.close()
 
@@ -141,15 +141,33 @@ class DialogEnterNewParity(BaseDialogWin):
         super().__init__(master)
         self.new_parity = new_parity
         self.parity_dev = parity_dev
-        self.title = "Установка проверки на четность"
+        self.title = "Выбор проверки на четность"
         self.lbl_parameter_enter = Label(self, text="Выберите проверку на четность ")
         self.combobox_parity = Combobox(self, values=self.parity_dev, state="readonly")
         self.combobox_parity.config(combobox_conf_sm)
         self.combobox_parity.grid(column=1, row=1)
 
     def ok_button(self):
-        "Обработка события и отправка данных"
+        "Обработка события и установка данных"
         self.new_parity.set(self.combobox_parity.get())
+        self.close()
+
+
+class DialogEnterNewStopBit(BaseDialogWin):
+    """Диалоговое окно выбора стоп бита"""
+    def __init__(self, master, new_bits, bits):
+        super().__init__(master)
+        self.new_bits = new_bits
+        self.bits = bits
+        self.title = "Выбор стоп бита"
+        self.lbl_parameter_enter = Label(self, text="Выберите стоп-бит")
+        self.combobox_s_bits = Combobox(self, values=self.bits, state="readonly")
+        self.combobox_s_bits.config(combobox_conf_sm)
+        self.combobox_s_bits.grid(column=1, row=1)
+
+    def ok_button(self):
+        """Обработка события и установка данных"""
+        self.new_bits.set(self.combobox_s_bits.get())
         self.close()
 
 
@@ -166,5 +184,9 @@ def msg_err_no_connect():
         message="не удалось подключится к устройству"
     )
 
-
+def msg_err_incorect_params():
+    messagebox.showerror(
+        title="incorrect params",
+        message="Не верные данные для подключения"
+    )
 

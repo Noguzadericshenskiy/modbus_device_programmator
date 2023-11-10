@@ -10,6 +10,13 @@ from devices import (
 )
 
 
+def get_value_stop_bits_dev(dev, stop_bits: str):
+    """Возвращает значение стоп бита из списка устройства"""
+    for s_bit in dev.STOP_BITS:
+        if s_bit[1] == stop_bits:
+            return s_bit[0]
+
+
 def get_value_parity_dev(dev, parity: str):
     """ Возвращает значение проверки на четность
         из списка скоростей конкретного устройства"""
