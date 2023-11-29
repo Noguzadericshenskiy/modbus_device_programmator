@@ -1,16 +1,20 @@
-#ИЗВЕЩАТЕЛЬ пожарный ручной взрывозащищенный адресный
-# ИП535-07еа-RS-“ПУСК”:
+"""
+Извещатель пожарный тепловой взрывозащищенный
+программируемый адресный
+ИП101-07а-RS
+"""
+
 import pymodbus.framer
 from pymodbus.client import ModbusSerialClient as Client_mb
 from pymodbus import bit_read_message, bit_write_message, register_write_message
 
-class SignalingDeviceIP53_507EA_Start(Client_mb):
+class SignalDeviceIP101_07A_RS(Client_mb):
     """
-    ИЗВЕЩАТЕЛЬ пожарный ручной взрывозащищенный адресный ИП535-07еа-RS-“ПУСК”:
-    (протокол Modbus RTU)
-    Руководство по эксплуатации
-    4371-006-43082497-04-04 РЭ, 2021 г.
+    Извещатель пожарный тепловой взрывозащищенный
+    программируемый адресный
+    Руководство по эксплуатации 4371-008-43082497-05-05 РЭ, 2022 г.
     """
+    NAME = "ИП101-07а-RS"
     SPEEDS_DEVICE = (
         (1, 1200),
         (2, 2400),
@@ -24,25 +28,34 @@ class SignalingDeviceIP53_507EA_Start(Client_mb):
         (10, 115200)
     )
     VERIFICATION_BITS = ((1, "N"), (2, "E"), (3, "O"))
+    STOP_BITS = ((1, "1"), (2, "1.5"), (3, '2'))
+
+    SLAVE = 1
+    SPEED_DEFAULT = 19200
+    PARITY = "E"
+    NUMS_STOP_BIT = 1
+
     STATUS = {
         1: "Загрузка",
         2: "Тест",
         3: "Норма",
-        4: "Требование квитирования",
+        4: "Внимание",
         5: "Сработал",
         6: "Неисправность"
     }
-    NAME = "ИП535-07еа-RS-ПУСК"
-    SPEED_DEFAULT = SPEEDS_DEVICE[5][1]
-    AV_VERIFICATION_BIT = VERIFICATION_BITS[1][1]
-    NUMS_STOP_BIT = 1
-    SLAVE = 1
+
+    CONTROL_REGISTER = (
+        (0, "норма"),
+        (1, "пеезагрузка"),
+        (2, "сброс настроек по умолчанию"),
+        (4, "сброс зафиксированных событий"),
+        (16, "установка адреса МВ равного последним 2 цифрам сер.№"))
 
     def __init__(
             self,
             port,
             baudrate=SPEED_DEFAULT,
-            parity=AV_VERIFICATION_BIT,
+            parity=PARITY,
             stopbits=NUMS_STOP_BIT
     ):
           Client_mb.__init__(
@@ -53,7 +66,7 @@ class SignalingDeviceIP53_507EA_Start(Client_mb):
             parity=parity,
             framer=pymodbus.framer.ModbusRtuFramer,
             timeout=0.05
-        )
+          )
 
     def get_info(self, slave=SLAVE) -> tuple:
         params = (
@@ -62,13 +75,20 @@ class SignalingDeviceIP53_507EA_Start(Client_mb):
                 self.read_holding_registers(address=1, slave=slave).registers[0] - 1][1]),
             ("Проверочный бит", self.VERIFICATION_BITS[
                 self.read_holding_registers(address=2, slave=slave).registers[0] - 1][1]),
-            ("Количество стоп битов", self.read_holding_registers(address=3, slave=slave).registers[0]),
+            ("Количество стоп битов", self.STOP_BITS[
+                self.read_holding_registers(address=3, slave=slave).registers[0] - 1][1]),
             ("Идентификатор устройства", self.read_holding_registers(address=4, slave=slave).registers[0]),
+            ("Версия протокола связи", self.read_holding_registers(address=5, slave=slave).registers[0]),
             ("Версия устройства", self.read_holding_registers(address=6, slave=slave).registers[0]),
             ("Версия ПО устройства", self.read_holding_registers(address=7, slave=slave).registers[0]),
             ("Серийный номер", self.read_holding_registers(address=8, slave=slave).registers[0]),
             ("Состояние устройства", self.STATUS[
                 self.read_holding_registers(address=10, slave=slave).registers[0]]),
+            ("Значение порога ВНИМАНИЕ", self.read_holding_registers(address=51, slave=slave).registers[0]),
+            ("Значение порога СРАБОТАЛ", self.read_holding_registers(address=52, slave=slave).registers[0]),
+            ("Скорость нарастания температуры", self.read_holding_registers(address=53, slave=slave).registers[0]),
+            ("Температура", self.read_holding_registers(address=54, slave=slave).registers[0]),
+            ("Скорость нарастания x10", self.read_holding_registers(address=56, slave=slave).registers[0]),
         )
         self.close()
         return params
@@ -89,7 +109,6 @@ class SignalingDeviceIP53_507EA_Start(Client_mb):
         self.write_register(3, new_stop_bit, slave)
         self.close()
 
-    def clear_status(self):
-        self.write_registers(address=12, values=4, slave=1)
-        self.close()
-        # self.get_info()
+    def get_diagnostic_info(self):
+        per = self.read_holding_registers(address=11, slave=5).registers[0]
+        print(bin(per))

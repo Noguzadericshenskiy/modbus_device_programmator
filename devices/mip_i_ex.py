@@ -4,7 +4,7 @@
 
 import pymodbus.framer
 from pymodbus.client import ModbusSerialClient as Client_mb
-
+from pymodbus import bit_read_message, bit_write_message, register_write_message
 
 class InterfaceFirefighterModule(Client_mb):
     """
@@ -15,6 +15,7 @@ class InterfaceFirefighterModule(Client_mb):
     СПР.425521.007 Д1-01
     """
 
+    NAME = "МИП-И-Ех"
     SPEEDS_DEVICE = (
         (1, 1200),
         (2, 2400),
@@ -23,12 +24,15 @@ class InterfaceFirefighterModule(Client_mb):
         (5, 14400),
         (6, 19200),
     )
-    SPEED_DEFAULT = 9600
+
     VERIFICATION_BITS = ((1, "N"), (2, "E"), (3, "O"))
-    NAME = "МИП-И-Ех"
-    NUMS_STOP_BIT = 1
+    STOP_BITS = ((1, "1"), (2, "1.5"), (3, '2'))
+
     SLAVE = 1
-    AV_VERIFICATION_BIT = VERIFICATION_BITS[0][1]
+    SPEED_DEFAULT = 9600
+    PARITY = "E"
+    NUMS_STOP_BIT = 1
+
     SLAVE_STATUS = {
         0: "Не определен",
         1: "Короткое замыкание",
@@ -45,7 +49,7 @@ class InterfaceFirefighterModule(Client_mb):
             self,
             port,
             baudrate=SPEED_DEFAULT,
-            parity=AV_VERIFICATION_BIT,
+            parity=PARITY,
             stopbits=NUMS_STOP_BIT
     ):
           Client_mb.__init__(
@@ -56,10 +60,7 @@ class InterfaceFirefighterModule(Client_mb):
             parity=parity,
             framer=pymodbus.framer.ModbusRtuFramer,
             timeout=0.05
-        )
-
-    # def get_speed(self):
-    #     return [speed[1] for speed in self.SPEEDS_DEVICE]
+          )
 
     def get_info(self, slave: int = SLAVE) -> tuple:
         params = (
@@ -79,8 +80,18 @@ class InterfaceFirefighterModule(Client_mb):
         self.close()
         return params
 
-    def set_slave(self, new_slave: int, slave: int):
-        self.write_register(3, new_slave, slave)
-        print("установлен новый адрес", new_slave, slave)
-        return new_slave
+    def set_slave(self, new_slave: int, slave: int) -> None:
+        self.write_register(1, new_slave, slave)
+        self.close()
 
+    def set_baudrate(self, new_spd: int, slave: int) -> None:
+        self.write_register(2, new_spd, slave)
+        self.close()
+
+    def set_parity(self, new_parity: int, slave: int) -> None:
+        # self.write_register(2, new_parity, slave)
+        self.close()
+
+    def set_stop_bit(self, new_stop_bit: int, slave: int) -> None:
+        # self.write_register(3, new_stop_bit, slave)
+        self.close()

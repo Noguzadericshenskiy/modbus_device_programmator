@@ -26,7 +26,7 @@ from src.utils import (
     check_slave,
     get_value_baudrate_dev,
     get_value_parity_dev,
-    get_value_stop_bits_dev
+    get_value_stop_bits_dev,
 )
 from src.pop_up_window import (
     msg_err_address,
@@ -115,7 +115,6 @@ class UpFrame(Frame):
         self.btn_set_param_sigma.config(btn_conf)
         self.btn_set_param_sigma.grid(column=5, row=2,)
 
-
         self.btn_address = Button(self, text="Изменить адрес устройства", command=self.set_address)
         self.btn_address.config(btn_conf)
         self.btn_address.grid(column=5, row=3)
@@ -132,7 +131,7 @@ class UpFrame(Frame):
         self.btn_stop_bit.config(btn_conf)
         self.btn_stop_bit.grid(column=5, row=6)
 
-        self.btn_connect_sigma = Button(self, text="----------", )
+        self.btn_connect_sigma = Button(self, text="----------", command=self.diag_info)
         self.btn_connect_sigma.config(btn_conf)
         self.btn_connect_sigma.grid(column=5, row=7,)
 
@@ -161,6 +160,11 @@ class UpFrame(Frame):
             else:
                 self.table.insert('', END, values=row_info, tags=('oddrow',))
             count += 1
+
+    def diag_info(self):
+        dev = self.get_conn_params()
+        dev.get_diagnostic_info()
+
 
     def set_stop_bit(self):
         dev = self.get_conn_params()

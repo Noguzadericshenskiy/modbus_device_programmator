@@ -1,8 +1,9 @@
 #ИЗВЕЩАТЕЛЬ пожарный ручной взрывозащищенный адресный
 # ИП535-07еа-RS
+
 import pymodbus.framer
 from pymodbus.client import ModbusSerialClient as Client_mb
-
+from pymodbus import bit_read_message, bit_write_message, register_write_message
 
 class SignalingDeviceIP53_507EA_RS(Client_mb):
     """
@@ -26,17 +27,19 @@ class SignalingDeviceIP53_507EA_RS(Client_mb):
     )
     VERIFICATION_BITS = ((1, "N"), (2, "E"), (3, "O"))
     STOP_BITS = ((1, "1"), (2, "1.5"), (3, '2'))
+
+    SLAVE = 1
+    SPEED_DEFAULT = 19200
+    PARITY = "E"
+    NUMS_STOP_BIT = 1
+
     CONTROL_REGISTER = (
         (0, "норма"),
         (1, "пеезагрузка"),
         (2, "сброс настроек по умолчанию"),
         (4, "сброс зафиксированных событий"),
         (8, "квитирование события"),
-        (16, "установка адреса МВ равного последним 2 цифрам сер. ном."))
-    SLAVE = 1
-    SPEED_DEFAULT = 19200
-    PARITY = "E"
-    NUMS_STOP_BIT = 1
+        (16, "установка адреса МВ равного последним 2 цифрам сер.№"))
 
     STATUS = {
         1: "Загрузка",
@@ -95,16 +98,30 @@ class SignalingDeviceIP53_507EA_RS(Client_mb):
     def set_parity(self, new_parity: int, slave: int) -> None:
         self.write_register(2, new_parity, slave)
         self.close()
+
     def set_stop_bit(self, new_stop_bit: int, slave: int) -> None:
         self.write_register(3, new_stop_bit, slave)
         self.close()
 
-    def clear_status(self):
-        self.write_registers(address=12, values=4, slave=1)
+    def change_status(self):
+        self.write_registers(address=50, values=4, slave=3)
         self.close()
         # self.get_info()
 
+    def get_diagnostic_info(self):
+        per = self.read_holding_registers(address=11, slave=3)
+        print(per)
+        print(per.registers)
+        print(per.bits)
+        per2 = self.read_holding_registers(address=50, slave=3)
+        print(per2)
+        print(per2.registers)
+        print(per2.bits)
+        print(per2.registers[0])
+        # per3 = bit_read_message.ReadBitsResponseBase()
 
+
+        self.close()
 
 
 

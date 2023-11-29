@@ -5,7 +5,9 @@ from typing import Any
 from devices import (
     ip535_07ea_rs,
     ip535_07ea_rs_START,
+    ip101_07a_rs,
     ip329_330_1_1,
+    ip_330_3_2_3_ik_specpribor,
     mip_i_ex,
 )
 
@@ -40,10 +42,14 @@ def get_device(name: str, port: Any, **kwargs):
         device = ip535_07ea_rs.SignalingDeviceIP53_507EA_RS(port, **kwargs)
     if name == "ИП535-07еа-RS-ПУСК":
         device = ip535_07ea_rs_START.SignalingDeviceIP53_507EA_Start(port, **kwargs)
+    if name == "ИП101-07а-RS":
+        device = ip101_07a_rs.SignalDeviceIP101_07A_RS(port, **kwargs)
     if name == "ИП329/330-1-1":
         device = ip329_330_1_1.FireDetektorFlameIP329_330_re(port, **kwargs)
     if name == "МИП-И-Ех":
         device = mip_i_ex.InterfaceFirefighterModule(port, **kwargs)
+    if name == "ИП330-3-2-ЗИК(Кречет)":
+        device = ip_330_3_2_3_ik_specpribor.SignalingDeviceIP330_3_2_3IK(port, **kwargs)
     return device
 
 
@@ -57,7 +63,7 @@ def get_ports_info() -> list[Any]:
 
 
 def get_port(port_info: str) -> str:
-    "Получить название порта из строки с информацией о порте"
+    "Получить название порта из строки"
     port = ""
     pattern = port_info[0:5]
     for char in pattern:
