@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "Modbus Device Programmator"
 version = "0.1.0"
-description = "SD46-1 Modbus Device Programmator"
+description = "Modbus Device Programmator"
 authors = ["Noguzadericshenskiy <Grgpochta@bk.ru>"]
 readme = "README.md"
 

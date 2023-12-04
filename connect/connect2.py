@@ -5,7 +5,7 @@ from pymodbus.client import ModbusSerialClient
 
 
 client = ModbusSerialClient(port="COM6",
-                            baudrate=19200,
+                            baudrate=9600,
                             framer=pymodbus.framer.ModbusRtuFramer,
                             parity="E",
                             timeout=0.5

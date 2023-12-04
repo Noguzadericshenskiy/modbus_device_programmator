@@ -1,4 +1,6 @@
 import time
+import tkinter
+import sys
 
 from tkinter import (
     Tk,
@@ -11,6 +13,7 @@ from tkinter import (
     CENTER,
     END,
     IntVar,
+    Menu,
 )
 from tkinter.ttk import (
     Combobox,
@@ -37,6 +40,8 @@ from src.pop_up_window import (
     DialogEnterNewParity,
     DialogEnterNewStopBit,
 )
+# from src.scan_frame import Scan
+# from PySide6.QtWidgets import QApplication
 
 
 class Root(Tk):
@@ -46,16 +51,29 @@ class Root(Tk):
         self.configure(
             background="#171212",
             border=8,
-            height=1000,
+            height=600,
             width=800,
             relief="groove",
         )
         self.resizable(False, False)
+        self.option_add("*tearOff", tkinter.FALSE)
+
+        main_menu = Menu()
+        main_menu.configure(bg="#008080")
+        main_menu.add_cascade(label="Lite", command=self.start_up_frame)
+        main_menu.add_cascade(label="Advance")
+        main_menu.add_cascade(label="Scan", command=self.start_scan)
+        main_menu.configure(bg="#A1ABAA", )
+        self.config(menu=main_menu)
+
+    def start_up_frame(self):
         UpFrame()
+
+    def start_scan(self):
+        ...
 
 
 class UpFrame(Frame):
-
     def __init__(self):
         super().__init__()
         self.new_slave = IntVar()
@@ -131,7 +149,7 @@ class UpFrame(Frame):
         self.btn_stop_bit.config(btn_conf)
         self.btn_stop_bit.grid(column=5, row=6)
 
-        self.btn_connect_sigma = Button(self, text="----------", command=self.diag_info)
+        self.btn_connect_sigma = Button(self, text="----------",)
         self.btn_connect_sigma.config(btn_conf)
         self.btn_connect_sigma.grid(column=5, row=7,)
 
@@ -162,6 +180,7 @@ class UpFrame(Frame):
             count += 1
 
     def diag_info(self):
+        """В разработке, олжна выводить диагностическую информацию в этом или другом фрейме"""
         dev = self.get_conn_params()
         dev.get_diagnostic_info()
 

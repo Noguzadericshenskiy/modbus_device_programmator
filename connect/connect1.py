@@ -25,16 +25,7 @@ class HZ1(minimalmodbus.Instrument):
         return self.read_register(1,0)
     def get_serial(self):
         ...
-    def get_dev_type(self):
-        ...
-    def get_soft(self):
-        ...
-    def get_hard(self):
-        return "ok"
-    def get_atatus(self):
-        ...
-    def set_address(self):
-        ...
+
 
 
 
