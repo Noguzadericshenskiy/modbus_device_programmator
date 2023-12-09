@@ -1,3 +1,5 @@
+
+
 from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
     QMetaObject, QObject, QPoint, QRect,
     QSize, QTime, QUrl, Qt)
@@ -6,17 +8,27 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QGroupBox,
-    QHeaderView, QLabel, QLineEdit, QPushButton,
-    QSizePolicy, QTableWidget, QTableWidgetItem, QWidget)
+    QHeaderView, QLabel, QLineEdit, QProgressBar,
+    QPushButton, QSizePolicy, QTableWidget, QTableWidgetItem,
+    QWidget)
 
 class Ui_form_scan(object):
     def setupUi(self, form_scan):
         if not form_scan.objectName():
             form_scan.setObjectName(u"form_scan")
-        form_scan.resize(571, 485)
+        form_scan.resize(569, 481)
+        palette = QPalette()
+        brush = QBrush(QColor(0, 0, 0, 255))
+        brush.setStyle(Qt.SolidPattern)
+        palette.setBrush(QPalette.Active, QPalette.WindowText, brush)
+        palette.setBrush(QPalette.Inactive, QPalette.WindowText, brush)
+        brush1 = QBrush(QColor(120, 120, 120, 255))
+        brush1.setStyle(Qt.SolidPattern)
+        palette.setBrush(QPalette.Disabled, QPalette.WindowText, brush1)
+        form_scan.setPalette(palette)
         self.comboBox_com_port = QComboBox(form_scan)
         self.comboBox_com_port.setObjectName(u"comboBox_com_port")
-        self.comboBox_com_port.setGeometry(QRect(80, 10, 251, 22))
+        self.comboBox_com_port.setGeometry(QRect(90, 10, 431, 22))
         self.com_port = QLabel(form_scan)
         self.com_port.setObjectName(u"com_port")
         self.com_port.setGeometry(QRect(20, 10, 51, 16))
@@ -104,10 +116,31 @@ class Ui_form_scan(object):
         self.check_box_sb2.setGeometry(QRect(10, 60, 62, 17))
         self.pushButton_scan = QPushButton(form_scan)
         self.pushButton_scan.setObjectName(u"pushButton_scan")
-        self.pushButton_scan.setGeometry(QRect(20, 190, 161, 81))
+        self.pushButton_scan.setGeometry(QRect(20, 190, 201, 81))
         self.table_devices = QTableWidget(form_scan)
+        if (self.table_devices.columnCount() < 2):
+            self.table_devices.setColumnCount(2)
+        __qtablewidgetitem = QTableWidgetItem()
+        __qtablewidgetitem.setTextAlignment(Qt.AlignCenter);
+        __qtablewidgetitem.setBackground(QColor(255, 170, 0));
+        self.table_devices.setHorizontalHeaderItem(0, __qtablewidgetitem)
+        __qtablewidgetitem1 = QTableWidgetItem()
+        __qtablewidgetitem1.setTextAlignment(Qt.AlignHCenter|Qt.AlignBottom);
+        __qtablewidgetitem1.setBackground(QColor(255, 170, 0));
+        self.table_devices.setHorizontalHeaderItem(1, __qtablewidgetitem1)
         self.table_devices.setObjectName(u"table_devices")
-        self.table_devices.setGeometry(QRect(20, 280, 311, 192))
+        self.table_devices.setGeometry(QRect(350, 50, 171, 181))
+        palette1 = QPalette()
+        palette1.setBrush(QPalette.Active, QPalette.WindowText, brush)
+        palette1.setBrush(QPalette.Inactive, QPalette.WindowText, brush)
+        palette1.setBrush(QPalette.Disabled, QPalette.WindowText, brush1)
+        self.table_devices.setPalette(palette1)
+        self.table_devices.setColumnCount(2)
+        self.table_devices.horizontalHeader().setDefaultSectionSize(42)
+        self.progressBar_ = QProgressBar(form_scan)
+        self.progressBar_.setObjectName(u"progressBar_")
+        self.progressBar_.setGeometry(QRect(350, 250, 171, 23))
+        self.progressBar_.setValue(24)
 
         self.retranslateUi(form_scan)
 
@@ -144,5 +177,9 @@ class Ui_form_scan(object):
         self.check_box_sb15.setText(QCoreApplication.translate("form_scan", u"1,5", None))
         self.check_box_sb2.setText(QCoreApplication.translate("form_scan", u"2", None))
         self.pushButton_scan.setText(QCoreApplication.translate("form_scan", u"Start Scan", None))
+        ___qtablewidgetitem = self.table_devices.horizontalHeaderItem(0)
+        ___qtablewidgetitem.setText(QCoreApplication.translate("form_scan", u"Slave", None));
+        ___qtablewidgetitem1 = self.table_devices.horizontalHeaderItem(1)
+        ___qtablewidgetitem1.setText(QCoreApplication.translate("form_scan", u"speed, s/bits, parity", None));
     # retranslateUi
 

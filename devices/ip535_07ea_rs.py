@@ -108,20 +108,7 @@ class SignalingDeviceIP53_507EA_RS(Client_mb):
         self.close()
         # self.get_info()
 
-    def get_diagnostic_info(self):
-        per = self.read_holding_registers(address=11, slave=3)
-        print(per)
-        print(per.registers)
-        print(per.bits)
-        per2 = self.read_holding_registers(address=50, slave=3)
-        print(per2)
-        print(per2.registers)
-        print(per2.bits)
-        print(per2.registers[0])
-        # per3 = bit_read_message.ReadBitsResponseBase()
 
-
-        self.close()
 
 
 

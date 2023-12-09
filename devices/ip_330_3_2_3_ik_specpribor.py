@@ -4,7 +4,7 @@
 
 import pymodbus.framer
 from pymodbus.client import ModbusSerialClient as Client_mb
-from pymodbus import bit_read_message, bit_write_message, register_write_message
+
 
 class SignalingDeviceIP330_3_2_3IK(Client_mb):
     """
@@ -28,7 +28,6 @@ class SignalingDeviceIP330_3_2_3IK(Client_mb):
     AV_VERIFICATION_BIT = VERIFICATION_BITS[0][1]
     NUMS_STOP_BIT = 1
     SLAVE = 1
-    switch = {1: "ВКЛ", 2: "ВЫКЛ"}
 
     def __init__(
             self,
@@ -47,9 +46,21 @@ class SignalingDeviceIP330_3_2_3IK(Client_mb):
             timeout=0.05
         )
 
+    def set_slave(self, new_slave: int, slave: int) -> None:
+        self.write_register(0, new_slave, slave)
+        self.close()
+
+    def set_baudrate(self, new_spd: int, slave: int) -> None:
+        self.close()
+
+    def set_parity(self, new_parity: int, slave: int) -> None:
+        self.close()
+
+    def set_stop_bit(self, new_stop_bit: int, slave: int) -> None:
+        self.close()
+
     def get_info(self, slave=SLAVE) -> tuple:
-        # registr_setup = bin(self.read_holding_registers(address=2, slave=slave).registers[0])
-        registr_setup = self.read_holding_registers(address=2, slave=slave).registers
+        register_setup = self.read_holding_registers(address=1, slave=slave).registers[0]
         delay_triggering = 1
         signal_switch = 1
         bit = 1
@@ -57,22 +68,53 @@ class SignalingDeviceIP330_3_2_3IK(Client_mb):
         sensitivity = 1
         params = (
             ("Адрес устройства", self.read_holding_registers(address=0, slave=slave).registers[0]),
-            ("Тип извещателя", self.read_input_registers(address=0, slave=slave).registers ),
+            ("Тип извещателя", self.read_input_registers(address=0, slave=slave).registers),
             ("Статус", self.read_input_registers(address=2, slave=slave).registers),
             ("Подробный статус", self.read_input_registers(address=3, slave=slave).registers),
-            ("Серийный номер", self.read_input_registers(address=1, slave=slave).registers),
-            ("Внутренняя температура", self.read_input_registers(address=11, slave=slave).registers),
+            ("Серийный номер", self.read_input_registers(address=1, slave=slave).registers[0]),
+            ("Внутренняя температура", self.read_input_registers(address=11, slave=slave).registers[0]),
             ("Версия ПО", self.read_input_registers(address=257, count=31, slave=slave).registers),
-            ("Задержка срабатывания сигнализации (сек)", delay_triggering),
-            ("Сигнальная защелка", signal_switch),
-            ("Автоматический и ручной БИТ", bit),
-            ("Срабатывание реле от ручного разряда", switching_relay),
-            ("Чувствительность обнаружения", sensitivity),
+            ("Задержка срабатывания сигнализации (сек)", self.get_delay_triggering(register_setup)),
+            ("Сигнальная защелка", self.get_signal_switch(register_setup)),
+            ("Автоматический и ручной БИТ", self.get_hand_bit(register_setup)),
+            ("Срабатывание реле от ручного разряда", self.get_manual_switch(register_setup)),
+            ("Чувствительность обнаружения", self.get_range_sensitivity(register_setup)),
         )
         self.close()
         return params
 
-    def get_delay_triggering(self, registers_data):
+    @classmethod
+    def get_manual_switch(self, data):
+        mask0 = 0b0000100000000000
+        mask1 = 0b0000000000000000
+
+        if data & mask0 == mask0:
+            return "Ручной разряд ВКЛ"
+        if data & mask1 == mask1:
+            return "Ручной разряз ВЫКЛ"
+
+    @classmethod
+    def get_signal_switch(self, data):
+        mask0 = 0b0000000010000000
+        mask1 = 0b0000000000000000
+
+        if data & mask0 == mask0:
+            return "ВКЛ"
+        if data & mask1 == mask1:
+            return "ВЫКЛ"
+
+    @classmethod
+    def get_hand_bit(self, data):
+        mask0 = 0b0000010000000000
+        mask1 = 0b0000000000000000
+
+        if data & mask0 == mask0:
+            return "Автоматический и ручной"
+        if data & mask1 == mask1:
+            return "Только ручной"
+
+    @classmethod
+    def get_delay_triggering(self, data):
         mask0 = 0b0000000000000000
         mask1 = 0b0000000000010000
         mask3 = 0b0000000000100000
@@ -82,37 +124,35 @@ class SignalingDeviceIP330_3_2_3IK(Client_mb):
         mask20 = 0b0000000001100000
         mask30 = 0b0000000001110000
 
-        if registers_data & mask0 == mask0:
+        if data & mask0 == mask0:
             return "0 сек"
-        if registers_data & mask1 == mask1:
+        if data & mask1 == mask1:
             return "Защита от вспышек"
-        if registers_data & mask3 == mask3:
+        if data & mask3 == mask3:
             return "3 сек"
-        if registers_data & mask5 == mask5:
+        if data & mask5 == mask5:
             return "5 сек"
-        if registers_data & mask10 == mask10:
+        if data & mask10 == mask10:
             return "10 сек"
-        if registers_data & mask15 == mask15:
+        if data & mask15 == mask15:
             return "15 сек"
-        if registers_data & mask20 == mask20:
+        if data & mask20 == mask20:
             return "20 сек"
-        if registers_data & mask30 == mask30:
+        if data & mask30 == mask30:
             return "30 cек"
 
-    def get_range_sensitivity(self, registers_data):
+    @classmethod
+    def get_range_sensitivity(self, data):
         mask1 = 0b0000000000000000
         mask2 = 0b0001000000000000
         mask3 = 0b0010000000000000
         mask4 = 0b0011000000000000
 
-        if registers_data & mask1 == mask1:
+        if data & mask1 == mask1:
             return "1- low"
-        if registers_data & mask2 == mask2:
+        if data & mask2 == mask2:
             return "2- low-middle"
-        if registers_data & mask3 == mask3:
+        if data & mask3 == mask3:
             return "3- high-middle"
-        if registers_data & mask4 == mask4:
+        if data & mask4 == mask4:
             return "4- high"
-
-
-

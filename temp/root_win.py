@@ -1,15 +1,11 @@
 import time
 import tkinter
-import sys
 
 from tkinter import (
     Tk,
     Button,
-    filedialog,
     Frame,
     StringVar,
-    Listbox,
-    LabelFrame,
     CENTER,
     END,
     IntVar,
@@ -19,7 +15,6 @@ from tkinter.ttk import (
     Combobox,
     Entry,
     Label,
-    Progressbar,
     Treeview)
 from src.config import *
 from src.utils import (
@@ -31,7 +26,7 @@ from src.utils import (
     get_value_parity_dev,
     get_value_stop_bits_dev,
 )
-from src.pop_up_window import (
+from temp.pop_up_window import (
     msg_err_address,
     msg_err_no_connect,
     msg_err_incorect_params,

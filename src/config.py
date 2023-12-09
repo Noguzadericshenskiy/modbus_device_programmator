@@ -5,6 +5,8 @@ from devices import (
     ip_330_3_2_3_ik_specpribor,
     ip101_07a_rs,
     mip_i_ex,
+    ipp_07ea_330_1_gelios,
+    ipes_ik_uv,
 )
 
 LIST_NAMES_DEVICES = [
@@ -13,7 +15,9 @@ LIST_NAMES_DEVICES = [
     ip329_330_1_1.FireDetektorFlameIP329_330_re.NAME,
     ip101_07a_rs.SignalDeviceIP101_07A_RS.NAME,
     mip_i_ex.InterfaceFirefighterModule.NAME,
-    ip_330_3_2_3_ik_specpribor.SignalingDeviceIP330_3_2_3IK.NAME
+    ip_330_3_2_3_ik_specpribor.SignalingDeviceIP330_3_2_3IK.NAME,
+    ipp_07ea_330_1_gelios.SignalingDeviceIPP_07_330_1.NAME,
+    ipes_ik_uv.FireDetektorFlame_IPES_IK_UV.NAME,
 ]
 
 SPEEDS = (1200, 2400, 4800, 9600, 14400, 19200, 28800, 38400, 57600, 115200)

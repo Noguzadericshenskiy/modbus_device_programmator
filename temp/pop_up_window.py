@@ -2,6 +2,8 @@ from tkinter import messagebox
 from tkinter import Toplevel
 from tkinter.ttk import Label, Entry, Button, Combobox
 
+from PySide6.QtWidgets import QDialogButtonBox, QDialog, QVBoxLayout, QLabel, QComboBox
+
 from config import *
 
 
