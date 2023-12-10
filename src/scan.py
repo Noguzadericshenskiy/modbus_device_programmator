@@ -23,6 +23,7 @@ class Scan(QMainWindow):
         # self.ui.table_devices.setColumnWidth(2, 40)
         # self.ui.table_devices.setColumnWidth(3, 40)
         self.ui.progressBar_.setValue(0)
+
     def com_ports(self):
         for i in get_ports_info():
             self.ui.comboBox_com_port.addItem(i[0] + " " + i[1])
