@@ -1,4 +1,10 @@
-from PySide6.QtWidgets import QMainWindow, QApplication, QWidget, QTableWidgetItem, QMessageBox
+from PySide6.QtWidgets import (
+    QMainWindow,
+    QApplication,
+    QWidget,
+    QTableWidgetItem,
+    QMessageBox
+)
 from pymodbus.client import ModbusSerialClient
 from pymodbus.exceptions import ConnectionException
 
@@ -14,17 +20,17 @@ class Scan(QMainWindow):
         self.ui.setupUi(self)
         self.slave_from: int = 0
         self.slave_to: int = 0
-        self.com_ports()
+        self.com_ports_scan()
         self.ui.pushButton_scan.clicked.connect(self.btn_scan_click)
         # self.ui.table_devices.setColumnCount(4)
         # self.ui.table_devices.setHorizontalHeaderLabels(["Speed", "Slave", "S/bits", "Parity"])
         self.ui.table_devices.setColumnWidth(0, 40)
-        self.ui.table_devices.setColumnWidth(1, 120)
+        self.ui.table_devices.setColumnWidth(1, 160)
         # self.ui.table_devices.setColumnWidth(2, 40)
         # self.ui.table_devices.setColumnWidth(3, 40)
         self.ui.progressBar_.setValue(0)
 
-    def com_ports(self):
+    def com_ports_scan(self):
         for i in get_ports_info():
             self.ui.comboBox_com_port.addItem(i[0] + " " + i[1])
 
