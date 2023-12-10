@@ -10,10 +10,16 @@ from PySide6.QtWidgets import (
 )
 from pymodbus.client import ModbusSerialClient
 from pymodbus.exceptions import ConnectionException
-from PySide6.QtCore import QCoreApplication
 
-from src.view.base_view import Ui_form_base
-from src.config import LIST_NAMES_DEVICES, BITS, PARITY, SPEEDS, BAUDRATE_SIGMA, PARITY_SIGMA, S_BITS_SIGMA
+from src.config import (
+    LIST_NAMES_DEVICES,
+    BITS,
+    PARITY,
+    SPEEDS,
+    BAUDRATE_SIGMA,
+    PARITY_SIGMA,
+    S_BITS_SIGMA
+)
 from src.view.main1 import Ui_MainWindow
 from src.utils import (
     get_device,
