@@ -1,5 +1,5 @@
-import serial.tools.list_ports
-import serial.tools.list_ports_windows
+# import serial.tools.list_ports_windows
+from serial.tools import list_ports_windows
 from typing import Any
 
 from devices import (
@@ -39,7 +39,6 @@ def get_value_baudrate_dev(dev, bdr: int) -> int:
 
 def get_device(name: str, port: Any, **kwargs):
     "Получить объект устройства по названию"
-    # device = None
     if name == "ИП535-07еа-RS":
         return ip535_07ea_rs.SignalingDeviceIP53_507EA_RS(port, **kwargs)
     if name == "ИП535-07еа-RS-ПУСК":
@@ -61,7 +60,7 @@ def get_device(name: str, port: Any, **kwargs):
 def get_ports_info() -> list[Any]:
     "Получить список портов"
     ports = []
-    usb_port = serial.tools.list_ports_windows.comports()
+    usb_port = list_ports_windows.comports()
     for i_port in usb_port:
         ports.append((i_port.device, i_port.description))
     return ports

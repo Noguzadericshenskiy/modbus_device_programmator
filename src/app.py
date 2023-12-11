@@ -1,12 +1,9 @@
 from PySide6.QtWidgets import (
     QMainWindow,
     QApplication,
-    QWidget,
     QTableWidgetItem,
     QMessageBox,
-    QDialogButtonBox,
     QInputDialog,
-    QComboBox,
 )
 from pymodbus.client import ModbusSerialClient
 from pymodbus.exceptions import ConnectionException
@@ -31,6 +28,7 @@ from src.utils import (
     get_value_stop_bits_dev,
 )
 
+
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
@@ -53,7 +51,6 @@ class MainWindow(QMainWindow):
         self.ui.btn_set_param_sigma.clicked.connect(self.set_params_sigma)
         self.ui.pushButton_scan.clicked.connect(self.btn_scan_click)
 
-        # self.ui.pushButton_stop_scan.clicked.connect(self.stop_scan)
         self.ui.tableWidget.setColumnCount(2)
         self.ui.tableWidget.setHorizontalHeaderLabels(["Параметр", "Значение"])
         self.ui.tableWidget.setColumnWidth(0, 300)
@@ -165,19 +162,15 @@ class MainWindow(QMainWindow):
         if new_slave and ok:
             dev = get_device(name, port)
             dev.set_slave(new_slave, dev.SLAVE)
-            # time.sleep(0.2)
         dev = get_device(name, port)
         baudrate: int = get_value_baudrate_dev(dev, BAUDRATE_SIGMA)
         dev.set_baudrate(baudrate, new_slave)
-        # time.sleep(0.2)
         dev = get_device(name, port, baudrate=BAUDRATE_SIGMA)
         parity = get_value_parity_dev(dev, PARITY_SIGMA)
         dev.set_parity(parity, slave=new_slave)
-        # time.sleep(0.2)
         dev = get_device(name, port, baudrate=BAUDRATE_SIGMA, parity=PARITY_SIGMA)
         stop_bits = get_value_stop_bits_dev(dev, S_BITS_SIGMA)
         dev.set_stop_bit(stop_bits, slave=new_slave)
-        # time.sleep(0.2)
         dev = get_device(
             name, port, baudrate=BAUDRATE_SIGMA, parity=PARITY_SIGMA, stopbits=stop_bits)
         self.table_output(dev.get_info(new_slave))
@@ -249,7 +242,6 @@ class MainWindow(QMainWindow):
             dev.set_slave(int(value), int(self.ui.etr_address.text()))
             dev = self.get_conn_params()
             self.table_output(dev.get_info(int(value)))
-            # self.ui.etr_address.setText(int(value))
 
     def com_ports_scan(self):
         for i in get_ports_info():
@@ -289,8 +281,6 @@ class MainWindow(QMainWindow):
             parity.append("O")
         if self.ui.check_box_sb1_3.isChecked():
             s_bits.append(1)
-        # if self.ui.check_box_sb15.isChecked():
-        #     s_bits.append(1.5)
         if self.ui.check_box_sb2_3.isChecked():
             s_bits.append(2)
         return speeds, s_bits, parity
@@ -362,8 +352,6 @@ class MainWindow(QMainWindow):
                                 QTableWidgetItem(f'{i_baudrate} {i_bits} {i_parity} '))
                             self.ui.table_devices.executeDelayedItemsLayout()
                             count_table += 1
-                        # if self.ui.pushButton_scan.clicked:
-                        #     print("ok")
 
                         client.close()
 

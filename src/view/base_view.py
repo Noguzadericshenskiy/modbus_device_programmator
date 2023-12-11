@@ -1,13 +1,7 @@
-from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
-    QMetaObject, QObject, QPoint, QRect,
-    QSize, QTime, QUrl, Qt)
-from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
-    QFont, QFontDatabase, QGradient, QIcon,
-    QImage, QKeySequence, QLinearGradient, QPainter,
-    QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QComboBox, QHeaderView, QLabel,
-    QLineEdit, QPushButton, QSizePolicy, QTableWidget,
-    QTableWidgetItem, QWidget)
+from PySide6.QtCore import QCoreApplication, QMetaObject,  QRect, QSize
+from PySide6.QtGui import QFont
+from PySide6.QtWidgets import QComboBox,  QLabel, QLineEdit, QPushButton,  QTableWidget
+
 
 class Ui_form_base(object):
     def setupUi(self, form_base):
