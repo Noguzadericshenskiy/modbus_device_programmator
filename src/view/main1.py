@@ -1,13 +1,3 @@
-# -*- coding: utf-8 -*-
-
-################################################################################
-## Form generated from reading UI file 'main_win.ui'
-##
-## Created by: Qt User Interface Compiler version 6.6.1
-##
-## WARNING! All changes made in this file will be lost when recompiling UI file!
-################################################################################
-
 from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
     QMetaObject, QObject, QPoint, QRect,
     QSize, QTime, QUrl, Qt)
@@ -20,16 +10,6 @@ from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFrame,
     QMainWindow, QMenuBar, QProgressBar, QPushButton,
     QSizePolicy, QStatusBar, QTabWidget, QTableWidget,
     QTableWidgetItem, QWidget)
-
-from src.utils import (
-    get_device,
-    get_ports_info,
-    get_port,
-    check_slave,
-    get_value_baudrate_dev,
-    get_value_parity_dev,
-    get_value_stop_bits_dev,
-)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -172,6 +152,7 @@ class Ui_MainWindow(object):
         self.checkBox_9602 = QCheckBox(self.groupBox_speeds)
         self.checkBox_9602.setObjectName(u"checkBox_9602")
         self.checkBox_9602.setGeometry(QRect(10, 80, 62, 17))
+        self.checkBox_9602.setChecked(True)
         self.checkBox_14402 = QCheckBox(self.groupBox_speeds)
         self.checkBox_14402.setObjectName(u"checkBox_14402")
         self.checkBox_14402.setGeometry(QRect(10, 100, 62, 17))
@@ -222,6 +203,10 @@ class Ui_MainWindow(object):
         self.check_box_none_3 = QCheckBox(self.groupBox_parity)
         self.check_box_none_3.setObjectName(u"check_box_none_3")
         self.check_box_none_3.setGeometry(QRect(10, 20, 62, 17))
+        self.check_box_none_3.setChecked(True)
+        self.check_box_none_3.setAutoRepeat(False)
+        self.check_box_none_3.setAutoExclusive(False)
+        self.check_box_none_3.setTristate(False)
         self.check_box_even_3 = QCheckBox(self.groupBox_parity)
         self.check_box_even_3.setObjectName(u"check_box_even_3")
         self.check_box_even_3.setGeometry(QRect(10, 40, 62, 17))
@@ -254,13 +239,20 @@ class Ui_MainWindow(object):
         self.etr_slave_from_3.setFont(font2)
         self.pushButton_scan = QPushButton(self.frame_scan)
         self.pushButton_scan.setObjectName(u"pushButton_scan")
-        self.pushButton_scan.setGeometry(QRect(10, 190, 201, 81))
+        self.pushButton_scan.setGeometry(QRect(10, 190, 131, 81))
+        font3 = QFont()
+        font3.setPointSize(10)
+        font3.setBold(False)
+        font3.setItalic(False)
+        font3.setStrikeOut(False)
+        self.pushButton_scan.setFont(font3)
         self.groupBox_s_bits = QGroupBox(self.frame_scan)
         self.groupBox_s_bits.setObjectName(u"groupBox_s_bits")
         self.groupBox_s_bits.setGeometry(QRect(130, 100, 81, 80))
         self.check_box_sb1_3 = QCheckBox(self.groupBox_s_bits)
         self.check_box_sb1_3.setObjectName(u"check_box_sb1_3")
         self.check_box_sb1_3.setGeometry(QRect(10, 20, 62, 17))
+        self.check_box_sb1_3.setChecked(True)
         self.check_box_sb15_3 = QCheckBox(self.groupBox_s_bits)
         self.check_box_sb15_3.setObjectName(u"check_box_sb15_3")
         self.check_box_sb15_3.setGeometry(QRect(10, 40, 62, 17))
@@ -271,6 +263,13 @@ class Ui_MainWindow(object):
         self.com_port.setObjectName(u"com_port")
         self.com_port.setGeometry(QRect(10, 10, 51, 16))
         self.com_port.setFont(font1)
+        self.pushButton_stop_scan = QPushButton(self.frame_scan)
+        self.pushButton_stop_scan.setObjectName(u"pushButton_stop_scan")
+        self.pushButton_stop_scan.setGeometry(QRect(150, 190, 71, 81))
+        font4 = QFont()
+        font4.setPointSize(10)
+        font4.setBold(False)
+        self.pushButton_stop_scan.setFont(font4)
         self.tabWidget_main.addTab(self.tab_scan, "")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
@@ -285,7 +284,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.tabWidget_main.setCurrentIndex(0)
+        self.tabWidget_main.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -338,6 +337,7 @@ class Ui_MainWindow(object):
         self.check_box_sb15_3.setText(QCoreApplication.translate("MainWindow", u"1,5", None))
         self.check_box_sb2_3.setText(QCoreApplication.translate("MainWindow", u"2", None))
         self.com_port.setText(QCoreApplication.translate("MainWindow", u"COM Port", None))
+        self.pushButton_stop_scan.setText(QCoreApplication.translate("MainWindow", u"Stop", None))
         self.tabWidget_main.setTabText(self.tabWidget_main.indexOf(self.tab_scan), QCoreApplication.translate("MainWindow", u"Scan", None))
     # retranslateUi
 

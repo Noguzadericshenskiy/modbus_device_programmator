@@ -545,6 +545,9 @@
         <property name="text">
          <string>9600</string>
         </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
        </widget>
        <widget class="QCheckBox" name="checkBox_14402">
         <property name="geometry">
@@ -739,6 +742,18 @@
         <property name="text">
          <string>None</string>
         </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+        <property name="autoRepeat">
+         <bool>false</bool>
+        </property>
+        <property name="autoExclusive">
+         <bool>false</bool>
+        </property>
+        <property name="tristate">
+         <bool>false</bool>
+        </property>
        </widget>
        <widget class="QCheckBox" name="check_box_even_3">
         <property name="geometry">
@@ -873,9 +888,18 @@
         <rect>
          <x>10</x>
          <y>190</y>
-         <width>201</width>
+         <width>131</width>
          <height>81</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+         <strikeout>false</strikeout>
+        </font>
        </property>
        <property name="text">
         <string>Start Scan</string>
@@ -904,6 +928,9 @@
         </property>
         <property name="text">
          <string>1</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
         </property>
        </widget>
        <widget class="QCheckBox" name="check_box_sb15_3">
@@ -950,6 +977,26 @@
        </property>
        <property name="text">
         <string>COM Port</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="pushButton_stop_scan">
+       <property name="geometry">
+        <rect>
+         <x>150</x>
+         <y>190</y>
+         <width>71</width>
+         <height>81</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>Stop</string>
        </property>
       </widget>
      </widget>

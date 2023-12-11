@@ -47,8 +47,8 @@ class FireDetektorFlame_IPES_IK_UV(Client_mb):
         )
 
     def get_info(self, slave=SLAVE) -> tuple:
-        data_reg_0: str = bin(self.read_holding_registers(address=0, slave=slave).registers[0])[2:]
-        data_reg_1: str = bin(self.read_holding_registers(address=1, slave=slave).registers[0])[2:]
+        data_reg_0: str = bin(self.read_holding_registers(address=0, slave=slave).registers[0])[2:].zfill(16)
+        data_reg_1: str = bin(self.read_holding_registers(address=1, slave=slave).registers[0])[2:].zfill(16)
         params = (
             ("Адрес устройства", self.get_slave(data_reg_0)),
             ("Скорость", self.get_speed(data_reg_0)),
@@ -59,7 +59,6 @@ class FireDetektorFlame_IPES_IK_UV(Client_mb):
             ("Авария", "Авария" if data_reg_1[14] == "1" else "Норма"),
             ("Пожар", "Пожар" if data_reg_1[15] == "1" else "Норма"),
         )
-        print(data_reg_1)
         self.close()
         return params
 
@@ -91,7 +90,7 @@ class FireDetektorFlame_IPES_IK_UV(Client_mb):
         data_reg_0: int = self.read_holding_registers(address=0, slave=slave).registers[0]
         h_byte, l_byte = data_reg_0.to_bytes(2, "big")
         data = ((h_byte & 0xff) << 8) | (new_spd & 0xff)
-        self.write_register(2, data, slave)
+        self.write_register(0, data, slave)
         self.close()
 
     def set_parity(self, new_parity: int, slave: int) -> None:

@@ -56,7 +56,6 @@ def get_device(name: str, port: Any, **kwargs):
         return ipp_07ea_330_1_gelios.SignalingDeviceIPP_07_330_1(port, **kwargs)
     if name == "ИПЭС–ИК/УФ (Электронстандарт)":
         return ipes_ik_uv.FireDetektorFlame_IPES_IK_UV(port, **kwargs)
-    # return device
 
 
 def get_ports_info() -> list[Any]:

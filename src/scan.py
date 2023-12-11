@@ -83,8 +83,8 @@ class Scan(QMainWindow):
             slave_from: str = self.ui.etr_slave_from.text()
             slave_to: str = self.ui.etr_slave_to.text()
             if self.check_enter(slave_from, slave_to):
-                devices = self.scan(com_port, speeds, s_bits, parity, int(slave_from), int(slave_to))
-                self.output_info(devices)
+                self.scan(com_port, speeds, s_bits, parity, int(slave_from), int(slave_to))
+                # self.output_info(devices)
             else:
                 QMessageBox.critical(
                     self,
@@ -102,26 +102,6 @@ class Scan(QMainWindow):
                 defaultButton=QMessageBox.Discard,
             )
 
-    def output_info(self, devices_list_info):
-        self.ui.table_devices.setRowCount(len(devices_list_info))
-
-        for i_row in range(len(devices_list_info)):
-            # if i_row % 2 == 0:
-            #     ...
-            self.ui.table_devices.setItem(
-                i_row, 0, QTableWidgetItem(str(devices_list_info[i_row][1])))
-            self.ui.table_devices.setItem(
-                i_row, 1, QTableWidgetItem(
-                    f'({devices_list_info[i_row][0]}--{devices_list_info[i_row][2]}--{devices_list_info[i_row][3]})'))
-
-            # self.ui.table_devices.setItem(
-            #     i_row, 0, QTableWidgetItem(str(devices_list_info[i_row][0])))
-
-            # self.ui.table_devices.setItem(
-            #     i_row, 2, QTableWidgetItem(str(devices_list_info[i_row][2])))
-            # self.ui.table_devices.setItem(
-            #     i_row, 3, QTableWidgetItem(str(devices_list_info[i_row][3])))
-
     def check_enter(self, data1: str, data2: str):
         if data1.isdigit() and data2.isdigit():
             d1 = int(data1)
@@ -133,9 +113,9 @@ class Scan(QMainWindow):
     def scan(self, port: str, speeds: list[int], s_bits: list, parity: list, address_from: int, address_to: int):
         count_iter = len(speeds) * len(s_bits) * len(parity) * (address_to - address_from)
         self.ui.progressBar_.setMaximum(count_iter)
-        # self.ui.progressBar_.setValue(50)
+        self.ui.table_devices.clear()
         count = 0
-        device_list = []
+        count_table = 0
         for i_bits in s_bits:
             for i_parity in parity:
                 for i_baudrate in speeds:
@@ -150,10 +130,29 @@ class Scan(QMainWindow):
                         count += 1
                         self.ui.progressBar_.setValue(count)
                         if not client.read_holding_registers(address=0, slave=i_slave).isError():
-                            device = (i_baudrate, i_slave, i_bits, i_parity)
-                            device_list.append(device)
+                            # device = (i_baudrate, i_slave, i_bits, i_parity)
+                            self.ui.table_devices.setRowCount(count_table+1)
+                            self.ui.table_devices.setItem(
+                                count_table,
+                                0,
+                                QTableWidgetItem(str(i_slave)))
+                            self.ui.table_devices.setItem(
+                                count_table,
+                                1,
+                                QTableWidgetItem(f'{i_baudrate} {i_parity} {i_bits}'))
+                            self.ui.table_devices.executeDelayedItemsLayout()
+                            count_table += 1
                         client.close()
-        return device_list
+
+
+    # def output_1(self, dev, num_row):
+    #     self.ui.table_devices.setRowCount(num_row + 1)
+    #     self.ui.table_devices.setItem(
+    #         num_row, 0, QTableWidgetItem(str(dev[1])))
+    #     self.ui.table_devices.setItem(
+    #         num_row, 1, QTableWidgetItem(f'{num_row} {num_row} {num_row}'))
+    #
+
 
 
 if __name__ == "__main__":
