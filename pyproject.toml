@@ -11,8 +11,7 @@ pymodbus = "^3.5.2"
 loguru = "^0.7.2"
 pyside6 = "^6.6.1"
 pytest = "^7.4.3"
-serial = "^0.0.97"
-pyserial = "^3.5"
+pyserial = ">3.5"
 
 
 [build-system]

@@ -1,3 +1,7 @@
+import sys
+import threading
+from PySide6 import QtCore
+from PySide6.QtGui import QValidator
 from PySide6.QtWidgets import (
     QMainWindow,
     QApplication,
@@ -8,7 +12,7 @@ from PySide6.QtWidgets import (
 from pymodbus.client import ModbusSerialClient
 from pymodbus.exceptions import ConnectionException
 
-from src.config import (
+from config import (
     LIST_NAMES_DEVICES,
     BITS,
     PARITY,
@@ -17,8 +21,8 @@ from src.config import (
     PARITY_SIGMA,
     S_BITS_SIGMA
 )
-from src.view.main1 import Ui_MainWindow
-from src.utils import (
+from view.main1 import Ui_MainWindow
+from utils import (
     get_device,
     get_ports_info,
     get_port,
@@ -36,6 +40,7 @@ class MainWindow(QMainWindow):
         self.ui.setupUi(self)
         self.slave_from: int = 0
         self.slave_to: int = 0
+        self.is_killed = False
 
         self.com_ports(get_ports_info())
         self.com_ports_scan()
@@ -49,7 +54,7 @@ class MainWindow(QMainWindow):
         self.ui.btn_parity.clicked.connect(self.set_parity)
         self.ui.btn_stop_bit.clicked.connect(self.set_stop_bit)
         self.ui.btn_set_param_sigma.clicked.connect(self.set_params_sigma)
-        self.ui.pushButton_scan.clicked.connect(self.btn_scan_click)
+
 
         self.ui.tableWidget.setColumnCount(2)
         self.ui.tableWidget.setHorizontalHeaderLabels(["Параметр", "Значение"])
@@ -58,7 +63,11 @@ class MainWindow(QMainWindow):
         self.ui.progressBar_.setValue(0)
         self.ui.table_devices.setColumnWidth(0, 40)
         self.ui.table_devices.setColumnWidth(1, 110)
-
+        self.ui.pushButton_scan.clicked.connect(self.btn_scan_click)
+        # self.ui.pushButton_scan.clicked.connect(self.stop_scan)
+        self.ui.pushButton_stop_scan.clicked.connect(self.stop_scan)
+        self.ui.etr_slave_from_3.insert("1")
+        self.ui.etr_slave_to_3.insert("10")
 
     def com_ports(self, value):
         for i in value:
@@ -286,11 +295,14 @@ class MainWindow(QMainWindow):
         return speeds, s_bits, parity
 
     def btn_scan_click(self):
+        self.is_killed = False
+
         try:
             com_port = get_port(self.ui.comboBox_com_port.currentText())
             speeds, s_bits, parity = self.get_value_checkBox()
             slave_from: str = self.ui.etr_slave_from_3.text()
             slave_to: str = self.ui.etr_slave_to_3.text()
+
             if self.check_enter(slave_from, slave_to):
                 self.scan(com_port, speeds, s_bits, parity, int(slave_from), int(slave_to))
             else:
@@ -322,11 +334,11 @@ class MainWindow(QMainWindow):
         count_iter = len(speeds) * len(s_bits) * len(parity) * (address_to - address_from)
         self.ui.progressBar_.setMaximum(count_iter)
         self.ui.table_devices.clear()
-        self.ui.pushButton_scan.setCheckable(True)
-        self.ui.pushButton_scan.setText("Stop")
-        self.ui.pushButton_scan.clicked.connect(self.stop_scan)
+        self.ui.pushButton_scan.setText("и шо мы ждем? ")
+        self.ui.pushButton_scan.setStyleSheet('pushButton_scan {background-color: #A3C1DA; color: red;}')
         count = 0
         count_table = 0
+
         for i_bits in s_bits:
             for i_parity in parity:
                 for i_baudrate in speeds:
@@ -340,6 +352,8 @@ class MainWindow(QMainWindow):
                         )
                         count += 1
                         self.ui.progressBar_.setValue(count)
+                        if self.is_killed:
+                            break
                         if not client.read_holding_registers(address=0, slave=i_slave).isError():
                             self.ui.table_devices.setRowCount(count_table + 1)
                             self.ui.table_devices.setItem(
@@ -354,15 +368,17 @@ class MainWindow(QMainWindow):
                             count_table += 1
 
                         client.close()
+                        QApplication.processEvents()
+        self.ui.pushButton_scan.setText("Start")
 
     def stop_scan(self):
-        print("ok")
-        self.close()
+        self.ui.pushButton_scan.setText("Start")
+        self.is_killed = True
 
 
 if __name__ == "__main__":
     app = QApplication()
     window = MainWindow()
     window.show()
-    # sys.exit(app.exec())
-    app.exec()
+    sys.exit(app.exec())
+    # app.exec()

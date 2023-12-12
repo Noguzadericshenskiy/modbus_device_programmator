@@ -1,13 +1,5 @@
-from devices import (
-    ip535_07ea_rs,
-    ip535_07ea_rs_START,
-    ip329_330_1_1,
-    ip_330_3_2_3_ik_specpribor,
-    ip101_07a_rs,
-    mip_i_ex,
-    ipp_07ea_330_1_gelios,
-    ipes_ik_uv,
-)
+from src.devices import mip_i_ex, ipp_07ea_330_1_gelios, ip535_07ea_rs_START, ip_330_3_2_3_ik_specpribor, ip329_330_1_1, \
+    ip535_07ea_rs, ipes_ik_uv, ip101_07a_rs
 
 LIST_NAMES_DEVICES = [
     ip535_07ea_rs.SignalingDeviceIP53_507EA_RS.NAME,

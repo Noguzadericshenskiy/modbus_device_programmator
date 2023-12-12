@@ -1,16 +1,18 @@
-# import serial.tools.list_ports_windows
+# import serial.tools
+# from serial import tools
 from serial.tools import list_ports_windows
+
 from typing import Any
 
-from devices import (
-    ip535_07ea_rs,
-    ip535_07ea_rs_START,
-    ip101_07a_rs,
-    ip329_330_1_1,
-    ip_330_3_2_3_ik_specpribor,
+from src.devices import (
     mip_i_ex,
     ipp_07ea_330_1_gelios,
+    ip535_07ea_rs_START,
+    ip_330_3_2_3_ik_specpribor,
+    ip329_330_1_1,
+    ip535_07ea_rs,
     ipes_ik_uv,
+    ip101_07a_rs
 )
 
 
