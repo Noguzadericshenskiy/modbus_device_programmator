@@ -26,7 +26,9 @@ class SignalingDeviceIP53_507EA_RS(Client_mb):
         (10, 115200)
     )
     VERIFICATION_BITS = ((1, "N"), (2, "E"), (3, "O"))
-    STOP_BITS = ((1, "1"), (2, "1.5"), (3, '2'))
+    STOP_BITS = ((1, "1"),
+                 # (2, "1.5"),
+                 (3, '2'))
 
     SLAVE = 1
     SPEED_DEFAULT = 19200

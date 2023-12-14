@@ -27,7 +27,9 @@ class SignalingDeviceIPP_07_330_1(Client_mb):
     )
 
     VERIFICATION_BITS = ((1, "N"), (2, "E"), (3, "O"))
-    STOP_BITS = ((1, "1"), (2, "1.5"), (3, '2'))
+    STOP_BITS = ((1, "1"),
+                 # (2, "1.5"),
+                 (3, '2'))
     NAME = "ИПП-07еа-330-1(Гелиос-3 ИК)"
     SPEED_DEFAULT = SPEEDS_DEVICE[5][1]
     AV_VERIFICATION_BIT = VERIFICATION_BITS[0][1]

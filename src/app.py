@@ -55,7 +55,6 @@ class MainWindow(QMainWindow):
         self.ui.btn_stop_bit.clicked.connect(self.set_stop_bit)
         self.ui.btn_set_param_sigma.clicked.connect(self.set_params_sigma)
 
-
         self.ui.tableWidget.setColumnCount(2)
         self.ui.tableWidget.setHorizontalHeaderLabels(["Параметр", "Значение"])
         self.ui.tableWidget.setColumnWidth(0, 300)
@@ -97,22 +96,24 @@ class MainWindow(QMainWindow):
         speed: str = self.ui.combobox_speed.currentText()
         parity: str = self.ui.combobox_parity.currentText()
         bits: str = self.ui.combobox_bits.currentText()
-        if speed != "" and parity != "" and bits != "":
-            return get_device(name=name, port=port, baudrate=int(speed), parity=parity, stopbits=int(bits))
-        elif speed != "" and parity != "":
-            return get_device(name=name, port=port, baudrate=int(speed), parity=parity)
-        elif parity != "" and bits != "":
-            return get_device(name=name, port=port, parity=parity, stopbits=int(bits))
-        elif speed != "" and bits != "":
-            return get_device(name=name, port=port, baudrate=int(speed), stopbits=int(bits))
-        elif speed != "":
-            return get_device(name=name, port=port, baudrate=int(speed))
-        elif parity != "":
-            return get_device(name=name, port=port, parity=parity)
-        elif bits != "":
-            return get_device(name=name, port=port, stopbits=int(bits))
-        else:
-            return get_device(name=name, port=port)
+        return get_device(name=name, port=port, baudrate=int(speed), parity=parity, stopbits=int(bits))
+
+        # if speed != "" and parity != "" and bits != "":
+        #     return get_device(name=name, port=port, baudrate=int(speed), parity=parity, stopbits=int(bits))
+        # elif speed != "" and parity != "":
+        #     return get_device(name=name, port=port, baudrate=int(speed), parity=parity)
+        # elif parity != "" and bits != "":
+        #     return get_device(name=name, port=port, parity=parity, stopbits=int(bits))
+        # elif speed != "" and bits != "":
+        #     return get_device(name=name, port=port, baudrate=int(speed), stopbits=int(bits))
+        # elif speed != "":
+        #     return get_device(name=name, port=port, baudrate=int(speed))
+        # elif parity != "":
+        #     return get_device(name=name, port=port, parity=parity)
+        # elif bits != "":
+        #     return get_device(name=name, port=port, stopbits=int(bits))
+        # else:
+        #     return get_device(name=name, port=port)
 
     def get_info_dev(self):
         "Получить информацию об устройстве"
@@ -187,40 +188,58 @@ class MainWindow(QMainWindow):
     def set_stop_bit(self):
         dev = self.get_conn_params()
         stop_bis = [str(i_s_bits[1]) for i_s_bits in dev.STOP_BITS]
-        slave = int(self.ui.etr_address.text())
-        value, ok = QInputDialog.getItem(
-            self,
-            "Изменение стоп бит",
-            "Выберите число стоп бит",
-            stop_bis,
-            0,
-            False
-        )
-        if ok and value:
-            dev.set_stop_bit(get_value_stop_bits_dev(dev, value), slave)
-            self.ui.combobox_bits.setCurrentText(value)
-            dev = self.get_conn_params()
-            self.table_output(dev.get_info(slave))
+        try:
+            slave = int(self.ui.etr_address.text())
+            value, ok = QInputDialog.getItem(
+                self,
+                "Изменение стоп бит",
+                "Выберите число стоп бит",
+                stop_bis,
+                0,
+                False
+            )
+            if ok and value:
+                dev.set_stop_bit(get_value_stop_bits_dev(dev, value), slave)
+                self.ui.combobox_bits.setCurrentText(value)
+                dev = self.get_conn_params()
+                self.table_output(dev.get_info(slave))
+        except (ValueError, AttributeError):
+            QMessageBox.critical(
+                self,
+                "Error",
+                "Не верно указаны параметры для подключения!",
+                buttons=QMessageBox.Discard,
+                defaultButton=QMessageBox.Discard,
+            )
 
     def set_parity(self):
         dev = self.get_conn_params()
-        slave = int(self.ui.etr_address.text())
-        parity_dev = [str(i_par[1]) for i_par in dev.VERIFICATION_BITS]
-        value, ok = QInputDialog.getItem(
-            self,
-            "Изменение проверки четности",
-            "Выберите проверку четности",
-            parity_dev,
-            0,
-            False
-        )
-        if ok and value:
-            dev.set_parity(get_value_parity_dev(dev, value), slave)
-            self.ui.combobox_parity.setCurrentText(value)
-            dev = self.get_conn_params()
-            self.table_output(dev.get_info(slave))
+        try:
+            slave = int(self.ui.etr_address.text())
+            parity_dev = [str(i_par[1]) for i_par in dev.VERIFICATION_BITS]
+            value, ok = QInputDialog.getItem(
+                self,
+                "Изменение проверки четности",
+                "Выберите проверку четности",
+                parity_dev,
+                0,
+                False
+            )
+            if ok and value:
+                dev.set_parity(get_value_parity_dev(dev, value), slave)
+                self.ui.combobox_parity.setCurrentText(value)
+                dev = self.get_conn_params()
+                self.table_output(dev.get_info(slave))
+        except (ValueError, AttributeError):
+            QMessageBox.critical(
+                self,
+                "Error",
+                "Не верно указаны параметры для подключения!",
+                buttons=QMessageBox.Discard,
+                defaultButton=QMessageBox.Discard,
+            )
 
-    def set_speed_dev(self, sp):
+    def set_speed_dev(self):
         dev = self.get_conn_params()
         speeds_dev = [str(i_spd[1]) for i_spd in dev.SPEEDS_DEVICE]
         value, ok = QInputDialog.getItem(
@@ -308,16 +327,16 @@ class MainWindow(QMainWindow):
             else:
                 QMessageBox.critical(
                     self,
-                    "Кривой ввод!",
-                    "Лошадь копытом вводит лучше! \nАдрес может быть только числом от 1 до 255",
+                    "Error!",
+                    "Адрес может быть только число от 1 до 255",
                     buttons=QMessageBox.Discard,
                     defaultButton=QMessageBox.Discard,
                 )
         except (ConnectionException, FileNotFoundError):
             QMessageBox.critical(
                 self,
-                "Кривой ввод!",
-                "А порт лошадь будет указывать? \nНеобходимо выбрать СОМ порт!",
+                "Error!",
+                "Необходимо выбрать СОМ порт!",
                 buttons=QMessageBox.Discard,
                 defaultButton=QMessageBox.Discard,
             )
@@ -334,8 +353,7 @@ class MainWindow(QMainWindow):
         count_iter = len(speeds) * len(s_bits) * len(parity) * (address_to - address_from)
         self.ui.progressBar_.setMaximum(count_iter)
         self.ui.table_devices.clear()
-        self.ui.pushButton_scan.setText("и шо мы ждем? ")
-        self.ui.pushButton_scan.setStyleSheet('pushButton_scan {background-color: #A3C1DA; color: red;}')
+        self.ui.pushButton_scan.setText("Ожидайте")
         count = 0
         count_table = 0
 
@@ -367,6 +385,7 @@ class MainWindow(QMainWindow):
                             self.ui.table_devices.executeDelayedItemsLayout()
                             count_table += 1
 
+                        self.ui.table_devices.setHorizontalHeaderLabels(["Slave", "speed, s/bits, parity"])
                         client.close()
                         QApplication.processEvents()
         self.ui.pushButton_scan.setText("Start")

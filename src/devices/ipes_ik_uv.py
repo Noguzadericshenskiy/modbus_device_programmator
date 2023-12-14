@@ -62,12 +62,14 @@ class FireDetektorFlame_IPES_IK_UV(Client_mb):
         self.close()
         return params
 
+    @classmethod
     def get_speed(self, data: str) -> int:
         hb = int(data[8:], 2)
         for i in self.SPEEDS_DEVICE:
             if i[0] == hb:
                 return i[1]
 
+    @classmethod
     def get_slave(self, data: str) -> int:
         return int(data[:8], 2)
 

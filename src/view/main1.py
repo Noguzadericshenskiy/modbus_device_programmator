@@ -11,6 +11,7 @@ from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFrame,
     QSizePolicy, QStatusBar, QTabWidget, QTableWidget,
     QTableWidgetItem, QWidget)
 
+
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
@@ -253,9 +254,9 @@ class Ui_MainWindow(object):
         self.check_box_sb1_3.setObjectName(u"check_box_sb1_3")
         self.check_box_sb1_3.setGeometry(QRect(10, 20, 62, 17))
         self.check_box_sb1_3.setChecked(True)
-        self.check_box_sb15_3 = QCheckBox(self.groupBox_s_bits)
-        self.check_box_sb15_3.setObjectName(u"check_box_sb15_3")
-        self.check_box_sb15_3.setGeometry(QRect(10, 40, 62, 17))
+        # self.check_box_sb15_3 = QCheckBox(self.groupBox_s_bits)
+        # self.check_box_sb15_3.setObjectName(u"check_box_sb15_3")
+        # self.check_box_sb15_3.setGeometry(QRect(10, 40, 62, 17))
         self.check_box_sb2_3 = QCheckBox(self.groupBox_s_bits)
         self.check_box_sb2_3.setObjectName(u"check_box_sb2_3")
         self.check_box_sb2_3.setGeometry(QRect(10, 60, 62, 17))
@@ -291,7 +292,7 @@ class Ui_MainWindow(object):
     # setupUi
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
+        MainWindow.setWindowTitle(QCoreApplication.translate("Программатор ModBUS", u"Программатор ModBUS", None))
         self.btn_set_param_sigma.setText(QCoreApplication.translate("MainWindow", u"\u0423\u0441\u0442\u0430\u043d\u043e\u0432\u0438\u0442\u044c \u043f\u0430\u0440\u0430\u043c\u0435\u0442\u0440\u044b Sigma", None))
         self.lbl_port.setText(QCoreApplication.translate("MainWindow", u"COM Port", None))
         self.lbl_parity.setText(QCoreApplication.translate("MainWindow", u"Parity", None))
@@ -334,7 +335,7 @@ class Ui_MainWindow(object):
         self.pushButton_scan.setText(QCoreApplication.translate("MainWindow", u"Start Scan", None))
         self.groupBox_s_bits.setTitle(QCoreApplication.translate("MainWindow", u"Stop Bits", None))
         self.check_box_sb1_3.setText(QCoreApplication.translate("MainWindow", u"1", None))
-        self.check_box_sb15_3.setText(QCoreApplication.translate("MainWindow", u"1,5", None))
+        # self.check_box_sb15_3.setText(QCoreApplication.translate("MainWindow", u"1,5", None))
         self.check_box_sb2_3.setText(QCoreApplication.translate("MainWindow", u"2", None))
         self.com_port.setText(QCoreApplication.translate("MainWindow", u"COM Port", None))
         self.pushButton_stop_scan.setText(QCoreApplication.translate("MainWindow", u"Stop", None))
