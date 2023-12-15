@@ -98,23 +98,6 @@ class MainWindow(QMainWindow):
         bits: str = self.ui.combobox_bits.currentText()
         return get_device(name=name, port=port, baudrate=int(speed), parity=parity, stopbits=int(bits))
 
-        # if speed != "" and parity != "" and bits != "":
-        #     return get_device(name=name, port=port, baudrate=int(speed), parity=parity, stopbits=int(bits))
-        # elif speed != "" and parity != "":
-        #     return get_device(name=name, port=port, baudrate=int(speed), parity=parity)
-        # elif parity != "" and bits != "":
-        #     return get_device(name=name, port=port, parity=parity, stopbits=int(bits))
-        # elif speed != "" and bits != "":
-        #     return get_device(name=name, port=port, baudrate=int(speed), stopbits=int(bits))
-        # elif speed != "":
-        #     return get_device(name=name, port=port, baudrate=int(speed))
-        # elif parity != "":
-        #     return get_device(name=name, port=port, parity=parity)
-        # elif bits != "":
-        #     return get_device(name=name, port=port, stopbits=int(bits))
-        # else:
-        #     return get_device(name=name, port=port)
-
     def get_info_dev(self):
         "Получить информацию об устройстве"
         slave: str = self.ui.etr_address.text()
