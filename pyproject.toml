@@ -8,11 +8,8 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = ">=3.11,<3.13"
 pymodbus = "^3.5.2"
-loguru = "^0.7.2"
 pyside6 = "^6.6.1"
-pytest = "^7.4.3"
 pyserial = ">3.5"
-
 
 [build-system]
 requires = ["poetry-core"]

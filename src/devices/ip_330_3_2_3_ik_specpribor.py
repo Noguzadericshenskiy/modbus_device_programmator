@@ -61,11 +61,6 @@ class SignalingDeviceIP330_3_2_3IK(Client_mb):
 
     def get_info(self, slave=SLAVE) -> tuple:
         register_setup = self.read_holding_registers(address=1, slave=slave).registers[0]
-        delay_triggering = 1
-        signal_switch = 1
-        bit = 1
-        switching_relay = 1
-        sensitivity = 1
         params = (
             ("Адрес устройства", self.read_holding_registers(address=0, slave=slave).registers[0]),
             ("Тип извещателя", self.read_input_registers(address=0, slave=slave).registers),

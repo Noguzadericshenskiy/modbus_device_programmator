@@ -2,7 +2,7 @@
 # ИП535-07еа-RS-“ПУСК”:
 import pymodbus.framer
 from pymodbus.client import ModbusSerialClient as Client_mb
-from pymodbus import bit_read_message, bit_write_message, register_write_message
+
 
 class SignalingDeviceIP53_507EA_Start(Client_mb):
     """
@@ -95,4 +95,3 @@ class SignalingDeviceIP53_507EA_Start(Client_mb):
     def clear_status(self):
         self.write_registers(address=12, values=4, slave=1)
         self.close()
-        # self.get_info()

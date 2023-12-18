@@ -42,8 +42,6 @@ class FireDetektorFlame_IPES_IK_UV(Client_mb):
             stopbits=stopbits,
             parity=parity,
             framer=pymodbus.framer.ModbusRtuFramer,
-            # framer=pymodbus.framer.ModbusBinaryFramer,
-            # timeout=0.05
         )
 
     def get_info(self, slave=SLAVE) -> tuple:

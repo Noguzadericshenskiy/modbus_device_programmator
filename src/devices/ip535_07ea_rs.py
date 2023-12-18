@@ -3,7 +3,7 @@
 
 import pymodbus.framer
 from pymodbus.client import ModbusSerialClient as Client_mb
-from pymodbus import bit_read_message, bit_write_message, register_write_message
+
 
 class SignalingDeviceIP53_507EA_RS(Client_mb):
     """
@@ -108,7 +108,6 @@ class SignalingDeviceIP53_507EA_RS(Client_mb):
     def change_status(self):
         self.write_registers(address=50, values=4, slave=3)
         self.close()
-        # self.get_info()
 
 
 

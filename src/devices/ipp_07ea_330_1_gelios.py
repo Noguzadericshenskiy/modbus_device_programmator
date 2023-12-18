@@ -3,14 +3,13 @@
 
 import pymodbus.framer
 from pymodbus.client import ModbusSerialClient as Client_mb
-from pymodbus import bit_read_message, bit_write_message, register_write_message
+
 
 class SignalingDeviceIPP_07_330_1(Client_mb):
     """
     Извещатель пламени пожарный взрывозащищенный
     ИПП 07еа-330-1- Vrs "Гелиос-3 ИК" (Эридан)
     (протокол Modbus RTU)
-
     """
 
     SPEEDS_DEVICE = (

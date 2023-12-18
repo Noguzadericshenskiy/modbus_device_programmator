@@ -6,7 +6,7 @@
 
 import pymodbus.framer
 from pymodbus.client import ModbusSerialClient as Client_mb
-from pymodbus import bit_read_message, bit_write_message, register_write_message
+
 
 class SignalDeviceIP101_07A_RS(Client_mb):
     """

@@ -1,5 +1,3 @@
-# import serial.tools
-# from serial import tools
 from serial.tools import list_ports_windows
 
 from typing import Any
