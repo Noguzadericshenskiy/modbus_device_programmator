@@ -73,7 +73,6 @@ def get_port(port_info: str) -> str:
     for char in pattern:
         if char != " " and char != "":
             port += char
-
     return port
 
 
