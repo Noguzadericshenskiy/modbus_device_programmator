@@ -10,7 +10,8 @@ from src.devices import (
     ip329_330_1_1,
     ip535_07ea_rs,
     ipes_ik_uv,
-    ip101_07a_rs
+    ip101_07a_rs,
+    nls_16ai_i,
 )
 
 
@@ -55,6 +56,8 @@ def get_device(name: str, port: Any, **kwargs):
         return ipp_07ea_330_1_gelios.SignalingDeviceIPP_07_330_1(port, **kwargs)
     if name == "ИПЭС–ИК/УФ (Электронстандарт)":
         return ipes_ik_uv.FireDetektorFlame_IPES_IK_UV(port, **kwargs)
+    if name == "NLS-16AI-I RealLab":
+        return nls_16ai_i.Analog_Input_NLS_16AII(port, **kwargs)
 
 
 def get_ports_info() -> list[Any]:

@@ -69,17 +69,16 @@ class SignalingDeviceIP330_3_2_3IK(Client_mb):
             ("Серийный номер", self.read_input_registers(address=1, slave=slave).registers[0]),
             ("Внутренняя температура", self.read_input_registers(address=11, slave=slave).registers[0]),
             ("Версия ПО", self.read_input_registers(address=257, count=31, slave=slave).registers),
-            ("Задержка срабатывания сигнализации (сек)", self.get_delay_triggering(register_setup)),
-            ("Сигнальная защелка", self.get_signal_switch(register_setup)),
-            ("Автоматический и ручной БИТ", self.get_hand_bit(register_setup)),
-            ("Срабатывание реле от ручного разряда", self.get_manual_switch(register_setup)),
-            ("Чувствительность обнаружения", self.get_range_sensitivity(register_setup)),
+            ("Задержка срабатывания сигнализации (сек)", self._get_delay_triggering(register_setup)),
+            ("Сигнальная защелка", self._get_signal_switch(register_setup)),
+            ("Автоматический и ручной БИТ", self._get_hand_bit(register_setup)),
+            ("Срабатывание реле от ручного разряда", self._get_manual_switch(register_setup)),
+            ("Чувствительность обнаружения", self._get_range_sensitivity(register_setup)),
         )
         self.close()
         return params
 
-    @classmethod
-    def get_manual_switch(self, data):
+    def _get_manual_switch(self, data):
         mask0 = 0b0000100000000000
         mask1 = 0b0000000000000000
 
@@ -88,8 +87,7 @@ class SignalingDeviceIP330_3_2_3IK(Client_mb):
         if data & mask1 == mask1:
             return "Ручной разряз ВЫКЛ"
 
-    @classmethod
-    def get_signal_switch(self, data):
+    def _get_signal_switch(self, data):
         mask0 = 0b0000000010000000
         mask1 = 0b0000000000000000
 
@@ -98,8 +96,7 @@ class SignalingDeviceIP330_3_2_3IK(Client_mb):
         if data & mask1 == mask1:
             return "ВЫКЛ"
 
-    @classmethod
-    def get_hand_bit(self, data):
+    def _get_hand_bit(self, data):
         mask0 = 0b0000010000000000
         mask1 = 0b0000000000000000
 
@@ -108,8 +105,7 @@ class SignalingDeviceIP330_3_2_3IK(Client_mb):
         if data & mask1 == mask1:
             return "Только ручной"
 
-    @classmethod
-    def get_delay_triggering(self, data):
+    def _get_delay_triggering(self, data):
         mask0 = 0b0000000000000000
         mask1 = 0b0000000000010000
         mask3 = 0b0000000000100000
@@ -136,8 +132,7 @@ class SignalingDeviceIP330_3_2_3IK(Client_mb):
         if data & mask30 == mask30:
             return "30 cек"
 
-    @classmethod
-    def get_range_sensitivity(self, data):
+    def _get_range_sensitivity(self, data):
         mask1 = 0b0000000000000000
         mask2 = 0b0001000000000000
         mask3 = 0b0010000000000000

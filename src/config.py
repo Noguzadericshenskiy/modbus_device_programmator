@@ -6,7 +6,8 @@ from src.devices import (
     ip329_330_1_1,
     ip535_07ea_rs,
     ipes_ik_uv,
-    ip101_07a_rs
+    ip101_07a_rs,
+    nls_16ai_i,
 )
 
 
@@ -19,6 +20,7 @@ LIST_NAMES_DEVICES = [
     ip_330_3_2_3_ik_specpribor.SignalingDeviceIP330_3_2_3IK.NAME,
     ipp_07ea_330_1_gelios.SignalingDeviceIPP_07_330_1.NAME,
     ipes_ik_uv.FireDetektorFlame_IPES_IK_UV.NAME,
+    nls_16ai_i.Analog_Input_NLS_16AII.NAME,
 ]
 
 SPEEDS = (1200, 2400, 4800, 9600, 14400, 19200, 28800, 38400, 57600, 115200)
