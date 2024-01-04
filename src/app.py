@@ -1,5 +1,7 @@
 import sys
 import threading
+import time
+
 from PySide6 import QtCore
 from PySide6.QtGui import QValidator
 from PySide6.QtWidgets import (
@@ -21,7 +23,7 @@ from config import (
     PARITY_SIGMA,
     S_BITS_SIGMA
 )
-from view.main1 import Ui_MainWindow
+from view.main import Ui_MainWindow
 from utils import (
     get_device,
     get_ports_info,
@@ -63,7 +65,6 @@ class MainWindow(QMainWindow):
         self.ui.table_devices.setColumnWidth(0, 40)
         self.ui.table_devices.setColumnWidth(1, 110)
         self.ui.pushButton_scan.clicked.connect(self.btn_scan_click)
-        # self.ui.pushButton_scan.clicked.connect(self.stop_scan)
         self.ui.pushButton_stop_scan.clicked.connect(self.stop_scan)
         self.ui.etr_slave_from_3.insert("1")
         self.ui.etr_slave_to_3.insert("10")
@@ -100,6 +101,7 @@ class MainWindow(QMainWindow):
 
     def get_info_dev(self):
         "Получить информацию об устройстве"
+        self.ui.tableWidget.clear()
         slave: str = self.ui.etr_address.text()
         dev = self.get_conn_params()
         try:
@@ -344,18 +346,19 @@ class MainWindow(QMainWindow):
             for i_parity in parity:
                 for i_baudrate in speeds:
                     for i_slave in range(address_from, address_to+1):
+                        count += 1
                         client = ModbusSerialClient(
                             port=port,
                             baudrate=i_baudrate,
                             parity=i_parity,
                             stopbits=i_bits,
-                            timeout=0.02
+                            timeout=0.5
                         )
-                        count += 1
-                        self.ui.progressBar_.setValue(count)
                         if self.is_killed:
                             break
-                        if not client.read_holding_registers(address=0, slave=i_slave).isError():
+                        self.ui.progressBar_.setValue(count)
+                        # if (not client.read_holding_registers(address=0, slave=i_slave).isError()) or \
+                        if not client.read_input_registers(slave=i_slave, address=0).isError():
                             self.ui.table_devices.setRowCount(count_table + 1)
                             self.ui.table_devices.setItem(
                                 count_table,
@@ -370,12 +373,16 @@ class MainWindow(QMainWindow):
 
                         self.ui.table_devices.setHorizontalHeaderLabels(["Slave", "speed, s/bits, parity"])
                         client.close()
+                        # time.sleep(0.5)
                         QApplication.processEvents()
         self.ui.pushButton_scan.setText("Start")
 
     def stop_scan(self):
         self.ui.pushButton_scan.setText("Start")
         self.is_killed = True
+
+    def change_protokol(self):
+        ...
 
 
 if __name__ == "__main__":

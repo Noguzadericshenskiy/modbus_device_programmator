@@ -5,7 +5,6 @@ RealLab NLS-16AI-I модуль аналогового ввода
 """
 
 import time
-import pymodbus.framer
 from pymodbus.framer import ModbusRtuFramer
 from pymodbus.client import ModbusSerialClient as Client_mb
 from loguru import logger
@@ -48,40 +47,60 @@ class Analog_Input_NLS_16AII(Client_mb):
             framer=ModbusRtuFramer,
             timeout=0.5
           )
+
     @logger.catch()
     def get_info(self, slave=SLAVE) -> tuple:
+        time.sleep(0.5)
         data_conn = bin(self.read_holding_registers(address=522, slave=slave).registers[0])[2:].zfill(16)
+        time.sleep(0.05)
+        address = self.read_holding_registers(address=512, slave=slave).registers[0]
+        time.sleep(0.05)
+        name = self._get_string(self.read_holding_registers(address=200, slave=slave, count=4).registers)
+        time.sleep(0.05)
+        speed = self._get_speed(self.read_holding_registers(address=513, slave=slave).registers[0])
+        time.sleep(0.05)
+        protocol = self._get_protocol(self.read_holding_registers(address=517, slave=slave).registers[0])
+        time.sleep(0.05)
+        count = self.read_holding_registers(address=521, slave=slave).registers[0]
+        time.sleep(0.05)
+        deley = self.read_holding_registers(address=800, slave=slave).registers[0]
+        time.sleep(0.05)
+        version = self._get_string(self.read_holding_registers(address=212, slave=slave, count=4).registers)
+
         params = (
-            # ("Имя устройства", self.get_string(self.read_holding_registers(address=200, slave=slave, count=4).registers)),
-            ("Адрес устройства", self.read_holding_registers(address=512, slave=slave).registers[0]),
-            # ("Скорость интерфейса", self.get_speed(
-            #     self.read_holding_registers(address=513, slave=slave).registers[0])),
-            # # # ("Контроль пвритета", self.read_holding_registers(address=0, slave=slave).registers),
-            # # # ("Кол-во стоп бит", self.read_holding_registers(address=0, slave=slave).registers),
-            # ("Протокол",  self.get_protocol(
-            #     self.read_holding_registers(address=517, slave=slave).registers[0])),
-            # ("Счетчик ответов на команды", self.read_holding_registers(address=521, slave=slave).registers[0]),
-            # ("Задержка ответа на команды", self.read_holding_registers(address=800, slave=slave).registers[0]),
-            # ("Версия программы", self.get_string(
-            #     self.read_holding_registers(address=212, slave=slave, count=4).registers)),
+            ("Имя устройства", name),
+            ("Адрес устройства", address),
             ("Паритет", self._get_parity(data_conn)),
             ("Кол-во стоп бит", self._get_s_bit(data_conn)),
+            ("Скорость интерфейса", speed),
+            ("Протокол", protocol),
+            ("Счетчик ответов на команды", count),
+            ("Задержка ответа на команды", deley),
+            ("Версия программы", version),
         )
-
+        # time.sleep(0.05)
         self.close()
         return params
 
     def set_slave(self, new_slave: int, slave: int) -> None:
         self.write_register(512, new_slave, slave)
         time.sleep(1)
-        # self.write_register(288, )
+        self.write_register(288, 43981, slave)
+        time.sleep(2)
         self.close()
 
+    @logger.catch()
     def set_baudrate(self, new_spd: int, slave: int) -> None:
-        ...
+        "(6, 9600),(7, 19200), "
+        for i_speed in self.SPEEDS_DEVICE:
+            if i_speed[1] == new_spd:
+                self.write_register(513, i_speed[0], slave)
+                time.sleep(1)
+                self.close()
 
     def set_parity(self, new_parity: int, slave: int) -> None:
-        ...
+        data = bin(self.read_holding_registers(address=522, slave=slave).registers[0])[2:].zfill(16)
+        print(data)
 
     def set_stop_bit(self, new_stop_bit: int, slave: int) -> None:
         ...
@@ -115,12 +134,8 @@ class Analog_Input_NLS_16AII(Client_mb):
         string = ""
         for i in data:
             string += i.to_bytes(2, "big").decode()
-
         return string
 
 
-def check_protocol():
-    ...
-
-def get_name():
+def change_protocol_mb():
     ...
