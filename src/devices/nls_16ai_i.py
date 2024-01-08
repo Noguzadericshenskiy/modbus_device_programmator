@@ -50,9 +50,9 @@ class Analog_Input_NLS_16AII(Client_mb):
 
     @logger.catch()
     def get_info(self, slave=SLAVE) -> tuple:
-        time.sleep(0.5)
-        data_conn = bin(self.read_holding_registers(address=522, slave=slave).registers[0])[2:].zfill(16)
-        time.sleep(0.05)
+        # time.sleep(0.5)
+        # data_conn = bin(self.read_holding_registers(address=522, slave=slave).registers[0])[2:].zfill(16)
+        # time.sleep(0.05)
         address = self.read_holding_registers(address=512, slave=slave).registers[0]
         time.sleep(0.05)
         name = self._get_string(self.read_holding_registers(address=200, slave=slave, count=4).registers)
@@ -67,11 +67,16 @@ class Analog_Input_NLS_16AII(Client_mb):
         time.sleep(0.05)
         version = self._get_string(self.read_holding_registers(address=212, slave=slave, count=4).registers)
 
+        input_data: int = self.read_holding_registers(address=522, slave=slave).registers[0]
+        h_byte, l_byte = input_data.to_bytes(2, "big")
+
         params = (
             ("Имя устройства", name),
             ("Адрес устройства", address),
-            ("Паритет", self._get_parity(data_conn)),
-            ("Кол-во стоп бит", self._get_s_bit(data_conn)),
+            # ("Паритет", self._get_parity(data_conn)),
+            # ("Кол-во стоп бит", self._get_s_bit(data_conn)),
+            ("Паритет1", self._get_parity(h_byte)),
+            ("Кол-во стоп бит1", self._get_s_bit(l_byte)),
             ("Скорость интерфейса", speed),
             ("Протокол", protocol),
             ("Счетчик ответов на команды", count),
@@ -84,40 +89,62 @@ class Analog_Input_NLS_16AII(Client_mb):
 
     def set_slave(self, new_slave: int, slave: int) -> None:
         self.write_register(512, new_slave, slave)
-        time.sleep(1)
-        self.write_register(288, 43981, slave)
+        # time.sleep(1)
+        # self.write_register(288, 43981, slave)
         time.sleep(2)
         self.close()
 
     @logger.catch()
     def set_baudrate(self, new_spd: int, slave: int) -> None:
-        "(6, 9600),(7, 19200), "
+        "Устанавливает скорость устройства"
         for i_speed in self.SPEEDS_DEVICE:
             if i_speed[1] == new_spd:
                 self.write_register(513, i_speed[0], slave)
-                time.sleep(1)
+                time.sleep(0.5)
                 self.close()
 
+    @logger.catch()
     def set_parity(self, new_parity: int, slave: int) -> None:
-        data = bin(self.read_holding_registers(address=522, slave=slave).registers[0])[2:].zfill(16)
-        print(data)
+        """
+        HB - parity
+        LB - stop bit
+        """
+        input_data: int = self.read_holding_registers(address=522, slave=slave).registers[0]
+        h_byte, l_byte = input_data.to_bytes(2, "big")
+        output_data = ((new_parity & 0xff) << 8) | (l_byte & 0xff)
+        self.write_register(0, output_data, slave)
+        self.close()
 
+    @logger.catch()
     def set_stop_bit(self, new_stop_bit: int, slave: int) -> None:
-        ...
+        """
+         HB - parity
+         LB - stop bit
+         """
+        input_data: int = self.read_holding_registers(address=522, slave=slave).registers[0]
+        h_byte, l_byte = input_data.to_bytes(2, "big")
+        output_data = ((h_byte & 0xff) << 8) | (new_stop_bit & 0xff)
+        self.write_register(0, output_data, slave)
+        self.close()
 
     def _get_parity(self, data: str) -> str:
-        hb = int(data[8:], 2)
+        # hb = int(data[8:], 2)
+        hb = int(data)
         for i in self.VERIFICATION_BITS:
             if i[0] == hb:
                 return i[1]
 
     def _get_s_bit(self, data: str) -> str:
-        if int(data[8:16], 2) == 1:
+        if int(data) == 1:
             return "1"
-        if int(data[8:16], 2) == 2:
-            return "2"
         else:
-            raise AttributeError
+            return "2"
+
+        # if int(data[8:16], 2) == 1:
+        #     return "1"
+        # if int(data[8:16], 2) == 2:
+        #     return "2"
+
 
     def _get_speed(self, speed_dev: int) -> str:
         for i_spd in self.SPEEDS_DEVICE:
@@ -136,6 +163,7 @@ class Analog_Input_NLS_16AII(Client_mb):
             string += i.to_bytes(2, "big").decode()
         return string
 
-
-def change_protocol_mb():
-    ...
+    def nls_change_protocol_on_dcon(self, address: int) -> None:
+        "Установить протокол DCON"
+        self.write_register(517, 0, address)
+        self.close()

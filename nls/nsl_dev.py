@@ -18,7 +18,7 @@ SPEEDS = (
     (10, 115200),
 )
 
-port = "COM6"
+port = "COM14"
 speed = 9600
 parity = "N"
 address = 1
@@ -46,11 +46,11 @@ def dcon_read():
 
 def dcon_1():
     com_det_name_b = com_det_name.encode("ASCII")
-    com_port = serial.Serial(port, speed, 8, parity, s_bits, timeout=0.5)
-    no = com_port.write(com_det_name_b)
-    ans = com_port.readline(16)
+    dev = serial.Serial(port, speed, 8, parity, s_bits, timeout=0.5)
+    no = dev.write(com_det_name_b)
+    ans = dev.readline(16)
     print("Ans", ans)
-    com_port.close()
+    dev.close()
 
 
 def dcon_1_1():
