@@ -22,10 +22,8 @@ class Analog_Input_NLS_16AII(Client_mb):
         (9, 57600),
         (10, 115200),
     )
-    VERIFICATION_BITS = ((1, "N"), (2, "E"), (3, "O"))
-    STOP_BITS = ((1, "1"),
-                 # (2, "1.5"),
-                 (3, '2'))
+    VERIFICATION_BITS = ((0, "N"), (2, "E"), (1, "O"))
+    STOP_BITS = ((1, "1"), (2, '2'))
     SLAVE = 1
     SPEED_DEFAULT = 9600
     PARITY = "E"
@@ -50,55 +48,39 @@ class Analog_Input_NLS_16AII(Client_mb):
 
     @logger.catch()
     def get_info(self, slave=SLAVE) -> tuple:
-        # time.sleep(0.5)
-        # data_conn = bin(self.read_holding_registers(address=522, slave=slave).registers[0])[2:].zfill(16)
-        # time.sleep(0.05)
-        address = self.read_holding_registers(address=512, slave=slave).registers[0]
-        time.sleep(0.05)
-        name = self._get_string(self.read_holding_registers(address=200, slave=slave, count=4).registers)
-        time.sleep(0.05)
-        speed = self._get_speed(self.read_holding_registers(address=513, slave=slave).registers[0])
-        time.sleep(0.05)
-        protocol = self._get_protocol(self.read_holding_registers(address=517, slave=slave).registers[0])
-        time.sleep(0.05)
-        count = self.read_holding_registers(address=521, slave=slave).registers[0]
-        time.sleep(0.05)
-        deley = self.read_holding_registers(address=800, slave=slave).registers[0]
-        time.sleep(0.05)
-        version = self._get_string(self.read_holding_registers(address=212, slave=slave, count=4).registers)
-
         input_data: int = self.read_holding_registers(address=522, slave=slave).registers[0]
         h_byte, l_byte = input_data.to_bytes(2, "big")
-        print(h_byte, l_byte)
 
         params = (
-            ("Имя устройства", name),
-            ("Адрес устройства", address),
-            # ("Паритет", self._get_parity(data_conn)),
-            # ("Кол-во стоп бит", self._get_s_bit(data_conn)),
-            ("Паритет1", self._get_parity(h_byte)),
-            ("Кол-во стоп бит1", self._get_s_bit(l_byte)),
-            ("Скорость интерфейса", speed),
-            ("Протокол", protocol),
-            ("Счетчик ответов на команды", count),
-            ("Задержка ответа на команды", deley),
-            ("Версия программы", version),
+            ("Имя устройства", self._get_string(
+                self.read_holding_registers(address=200, slave=slave, count=4).registers)),
+            ("Адрес устройства", self.read_holding_registers(address=512, slave=slave).registers[0]),
+            ("Паритет", self._get_parity(h_byte)),
+            ("Кол-во стоп бит", self._get_s_bit(l_byte)),
+            ("Скорость интерфейса", self._get_speed(
+                self.read_holding_registers(address=513, slave=slave).registers[0])),
+            ("Протокол", self._get_protocol(
+                self.read_holding_registers(address=517, slave=slave).registers[0])),
+            ("Счетчик ответов на команды", self.read_holding_registers(address=521, slave=slave).registers[0]),
+            ("Задержка ответа на команды", self.read_holding_registers(address=800, slave=slave).registers[0]),
+            ("Версия программы", self._get_string(
+                self.read_holding_registers(address=212, slave=slave, count=4).registers)),
         )
-        # time.sleep(0.05)
         self.close()
         return params
 
     def set_slave(self, new_slave: int, slave: int) -> None:
         self.write_register(512, new_slave, slave)
-        # time.sleep(1)
-        # self.write_register(288, 43981, slave)
-        time.sleep(2)
+        self.write_register(288, 43981, slave)
+        time.sleep(1)
         self.close()
 
     @logger.catch()
     def set_baudrate(self, new_spd: int, slave: int) -> None:
         "Устанавливает скорость устройства"
         self.write_register(513, new_spd, slave)
+        self.write_register(288, 43981, slave)
+        time.sleep(1)
         self.close()
 
 
@@ -110,14 +92,10 @@ class Analog_Input_NLS_16AII(Client_mb):
         """
         input_data: int = self.read_holding_registers(address=522, slave=slave).registers[0]
         h_byte, l_byte = input_data.to_bytes(2, "big")
-        logger.info(h_byte)
-        logger.info(l_byte)
-        logger.info()
         output_data = ((new_parity & 0xff) << 8) | (l_byte & 0xff)
-        a1, a2 = output_data.to_bytes(2, "big")
-        logger.info(a1)
-        logger.info(a2)
-        self.write_register(0, output_data, slave)
+        self.write_register(522, output_data, slave)
+        self.write_register(288, 43981, slave)
+        time.sleep(1)
         self.close()
 
     @logger.catch()
@@ -129,29 +107,24 @@ class Analog_Input_NLS_16AII(Client_mb):
         input_data: int = self.read_holding_registers(address=522, slave=slave).registers[0]
         h_byte, l_byte = input_data.to_bytes(2, "big")
         output_data = ((h_byte & 0xff) << 8) | (new_stop_bit & 0xff)
-        self.write_register(0, output_data, slave)
+        self.write_register(522, output_data, slave)
+        self.write_register(288, 43981, slave)
+        time.sleep(1)
         self.close()
-        print(h_byte, l_byte)
+
 
 
     def _get_parity(self, data: str) -> str:
         # hb = int(data[8:], 2)
+        # return str(data)
         hb = int(data)
         for i in self.VERIFICATION_BITS:
             if i[0] == hb:
                 return i[1]
 
     def _get_s_bit(self, data: str) -> str:
-        if int(data) == 1:
-            return "1"
-        else:
-            return "2"
-
-        # if int(data[8:16], 2) == 1:
-        #     return "1"
-        # if int(data[8:16], 2) == 2:
-        #     return "2"
-
+        print(data)
+        return str(data)
 
     def _get_speed(self, speed_dev: int) -> str:
         for i_spd in self.SPEEDS_DEVICE:

@@ -208,7 +208,8 @@ class MainWindow(QMainWindow):
         value, flag = dialog_address(self)
         try:
             if flag:
-                dev.set_slave(int(value), self.ui.spinBox_address.value())
+                dev.set_slave(value, self.ui.spinBox_address.value())
+                self.ui.spinBox_address.setValue(value)
                 dev = self.get_conn_params()
                 self.table_output(dev.get_info(value))
 
