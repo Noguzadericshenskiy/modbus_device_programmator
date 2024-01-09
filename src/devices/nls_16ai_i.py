@@ -69,6 +69,7 @@ class Analog_Input_NLS_16AII(Client_mb):
 
         input_data: int = self.read_holding_registers(address=522, slave=slave).registers[0]
         h_byte, l_byte = input_data.to_bytes(2, "big")
+        print(h_byte, l_byte)
 
         params = (
             ("Имя устройства", name),
@@ -97,11 +98,9 @@ class Analog_Input_NLS_16AII(Client_mb):
     @logger.catch()
     def set_baudrate(self, new_spd: int, slave: int) -> None:
         "Устанавливает скорость устройства"
-        for i_speed in self.SPEEDS_DEVICE:
-            if i_speed[1] == new_spd:
-                self.write_register(513, i_speed[0], slave)
-                time.sleep(0.5)
-                self.close()
+        self.write_register(513, new_spd, slave)
+        self.close()
+
 
     @logger.catch()
     def set_parity(self, new_parity: int, slave: int) -> None:
@@ -111,7 +110,13 @@ class Analog_Input_NLS_16AII(Client_mb):
         """
         input_data: int = self.read_holding_registers(address=522, slave=slave).registers[0]
         h_byte, l_byte = input_data.to_bytes(2, "big")
+        logger.info(h_byte)
+        logger.info(l_byte)
+        logger.info()
         output_data = ((new_parity & 0xff) << 8) | (l_byte & 0xff)
+        a1, a2 = output_data.to_bytes(2, "big")
+        logger.info(a1)
+        logger.info(a2)
         self.write_register(0, output_data, slave)
         self.close()
 
@@ -126,6 +131,8 @@ class Analog_Input_NLS_16AII(Client_mb):
         output_data = ((h_byte & 0xff) << 8) | (new_stop_bit & 0xff)
         self.write_register(0, output_data, slave)
         self.close()
+        print(h_byte, l_byte)
+
 
     def _get_parity(self, data: str) -> str:
         # hb = int(data[8:], 2)
