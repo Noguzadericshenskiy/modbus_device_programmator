@@ -1,15 +1,16 @@
 import sys
-import threading
+import serial
+import serial.rs485
+
+from serial import SerialException
 from PySide6 import QtCore
-from PySide6.QtGui import QValidator
+from PySide6.QtGui import QIntValidator
 from PySide6.QtWidgets import (
     QMainWindow,
     QApplication,
     QTableWidgetItem,
-    QMessageBox,
-    QInputDialog,
 )
-from pymodbus.client import ModbusSerialClient
+
 from pymodbus.exceptions import ConnectionException
 
 from config import (
@@ -21,25 +22,29 @@ from config import (
     PARITY_SIGMA,
     S_BITS_SIGMA
 )
-from view.main1 import Ui_MainWindow
+from view.main import Ui_MainWindow
 from utils import (
     get_device,
     get_ports_info,
     get_port,
-    check_slave,
     get_value_baudrate_dev,
     get_value_parity_dev,
     get_value_stop_bits_dev,
+    nls_change_protocol_mb,
+    nls_change_protocol_dcon,
+    send_decon_command,
+    device_dcon,
+    device_mb,
 )
+
+from src.dialogues import *
 
 
 class MainWindow(QMainWindow):
-    def __init__(self, parent=None):
-        super(MainWindow, self).__init__(parent)
+    def __init__(self):
+        super().__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-        self.slave_from: int = 0
-        self.slave_to: int = 0
         self.is_killed = False
 
         self.com_ports(get_ports_info())
@@ -47,26 +52,25 @@ class MainWindow(QMainWindow):
         self.output_devices(LIST_NAMES_DEVICES)
         self.output_s_bitts(BITS)
         self.output_speeds(SPEEDS)
-        self.otput_parity(PARITY)
+        self.output_parity(PARITY)
+        self.com_ports_dcon()
+        self.output_speeds_dcon(SPEEDS)
+        self.output_parity_dcon(PARITY)
+        self.output_s_bits_dcon(BITS)
         self.ui.btn_connect.clicked.connect(self.get_info_dev)
-        self.ui.btn_speed.clicked.connect(self.set_speed_dev)
-        self.ui.btn_address.clicked.connect(self.set_address)
-        self.ui.btn_parity.clicked.connect(self.set_parity)
-        self.ui.btn_stop_bit.clicked.connect(self.set_stop_bit)
+        self.ui.btn_speed.clicked.connect(self.changing_speed)
+        self.ui.btn_address.clicked.connect(self.changing_address)
+        self.ui.btn_parity.clicked.connect(self.changing_parity)
+        self.ui.btn_stop_bit.clicked.connect(self.changing_stop_bit)
         self.ui.btn_set_param_sigma.clicked.connect(self.set_params_sigma)
 
-        self.ui.tableWidget.setColumnCount(2)
-        self.ui.tableWidget.setHorizontalHeaderLabels(["Параметр", "Значение"])
-        self.ui.tableWidget.setColumnWidth(0, 300)
-        self.ui.tableWidget.setColumnWidth(1, 280)
-        self.ui.progressBar_.setValue(0)
-        self.ui.table_devices.setColumnWidth(0, 40)
-        self.ui.table_devices.setColumnWidth(1, 110)
-        self.ui.pushButton_scan.clicked.connect(self.btn_scan_click)
-        # self.ui.pushButton_scan.clicked.connect(self.stop_scan)
-        self.ui.pushButton_stop_scan.clicked.connect(self.stop_scan)
-        self.ui.etr_slave_from_3.insert("1")
-        self.ui.etr_slave_to_3.insert("10")
+        self.ui.btn_start_scan.clicked.connect(self.btn_scan_click)
+        self.ui.btn_stop_scan.clicked.connect(self.stop_scan)
+
+        self.ui.btn_chenge_protocol_on_dcon.clicked.connect(self.change_protokol_nls_dcon)
+        self.ui.btn_change_protocol_on_modbus.clicked.connect(self.change_protokol_nls_mb)
+        self.ui.btn_send_command_dcon.clicked.connect(self.send_command_dcon)
+        self.ui.etr_command_dcon.returnPressed.connect(self.send_command_dcon)
 
     def com_ports(self, value):
         for i in value:
@@ -81,7 +85,7 @@ class MainWindow(QMainWindow):
             self.ui.combobox_speed.addItem(str(speed))
         self.ui.combobox_speed.setCurrentText("9600")
 
-    def otput_parity(self, parity_list):
+    def output_parity(self, parity_list):
         for parity in parity_list:
             self.ui.combobox_parity.addItem(parity)
 
@@ -93,45 +97,33 @@ class MainWindow(QMainWindow):
         "Получить информацию для соединения"
         port: str = get_port(self.ui.combobox_port.currentText())
         name: str = self.ui.combobox_type.currentText()
-        speed: str = self.ui.combobox_speed.currentText()
+        speed: int = int(self.ui.combobox_speed.currentText())
         parity: str = self.ui.combobox_parity.currentText()
-        bits: str = self.ui.combobox_bits.currentText()
-        return get_device(name=name, port=port, baudrate=int(speed), parity=parity, stopbits=int(bits))
+        bits: int = int(self.ui.combobox_bits.currentText())
+        return get_device(name=name, port=port, baudrate=speed, parity=parity, stopbits=bits)
 
     def get_info_dev(self):
         "Получить информацию об устройстве"
-        slave: str = self.ui.etr_address.text()
+        self.ui.tableWidget.clear()
+        slave: int = self.ui. spinBox_address.value()
         dev = self.get_conn_params()
         try:
-            if slave != "":
-                if check_slave(slave):
-                    self.table_output(dev.get_info(int(slave)))
-                    dev.close()
-                else:
-                    QMessageBox.critical(
-                        self,
-                        "Кривой ввод",
-                        "Не верно введен адрес устройства"
-                    )
-            else:
-                self.table_output(dev.get_info())
+            self.table_output(dev.get_info(slave))
 
-        except AttributeError:
-            dev.close()
+        except (AttributeError, TypeError):
             QMessageBox.critical(self, "Error connect",
                                  "Не удалось подключиться к устройству, проверьте настройки подключения")
         except ValueError:
-            dev.close()
-            QMessageBox.critical(self, "Error incorrect params2",
+            QMessageBox.critical(self, "Error incorrect params",
                                  "Не верные данные для подключения")
         except ConnectionException:
-            dev.close()
-            QMessageBox.critical(self, "Error incorrect params3",
+            QMessageBox.critical(self, "Error incorrect params",
                                  "Не верные данные для подключения")
         except IndexError:
+            QMessageBox.critical(self, "Error incorrect param",
+                                 "Не верно выбрано устройство для подключения или его параметры")
+        finally:
             dev.close()
-            QMessageBox.critical(self, "Error incorrect param4",
-                                 "Не верно выбрано устройство для подклюения или его параметры")
 
     def table_output(self, list_params: tuple) -> None:
         self.ui.tableWidget.setRowCount(len(list_params))
@@ -145,115 +137,86 @@ class MainWindow(QMainWindow):
         "Меняем значения по умолчанию на сигму"
         port: str = get_port(self.ui.combobox_port.currentText())
         name: str = self.ui.combobox_type.currentText()
-        new_slave, ok = QInputDialog.getInt(
-            self,
-            "Изменение адреса устройства",
-            "Введите ноый адрес.\nАдрес должен быть числом от 1 до 255 включительно.",
-            minValue=1,
-            maxValue=255,
-        )
-        if new_slave and ok:
-            dev = get_device(name, port)
-            dev.set_slave(new_slave, dev.SLAVE)
-        dev = get_device(name, port)
-        baudrate: int = get_value_baudrate_dev(dev, BAUDRATE_SIGMA)
-        dev.set_baudrate(baudrate, new_slave)
-        dev = get_device(name, port, baudrate=BAUDRATE_SIGMA)
-        parity = get_value_parity_dev(dev, PARITY_SIGMA)
-        dev.set_parity(parity, slave=new_slave)
-        dev = get_device(name, port, baudrate=BAUDRATE_SIGMA, parity=PARITY_SIGMA)
-        stop_bits = get_value_stop_bits_dev(dev, S_BITS_SIGMA)
-        dev.set_stop_bit(stop_bits, slave=new_slave)
-        dev = get_device(
-            name, port, baudrate=BAUDRATE_SIGMA, parity=PARITY_SIGMA, stopbits=stop_bits)
-        self.table_output(dev.get_info(new_slave))
-
-    def set_stop_bit(self):
-        dev = self.get_conn_params()
-        stop_bis = [str(i_s_bits[1]) for i_s_bits in dev.STOP_BITS]
+        new_slave, flag = dialog_address(self)
         try:
-            slave = int(self.ui.etr_address.text())
-            value, ok = QInputDialog.getItem(
-                self,
-                "Изменение стоп бит",
-                "Выберите число стоп бит",
-                stop_bis,
-                0,
-                False
-            )
-            if ok and value:
+            if flag:
+                dev = get_device(name, port)
+                dev.set_slave(new_slave, dev.SLAVE)
+            self.ui.spinBox_address.setValue(new_slave)
+            dev = get_device(name, port)
+            baudrate: int = get_value_baudrate_dev(dev, BAUDRATE_SIGMA)
+            dev.set_baudrate(baudrate, new_slave)
+            dev = get_device(name, port, baudrate=BAUDRATE_SIGMA)
+            parity = get_value_parity_dev(dev, PARITY_SIGMA)
+            dev.set_parity(parity, slave=new_slave)
+            dev = get_device(name, port, baudrate=BAUDRATE_SIGMA, parity=PARITY_SIGMA)
+            stop_bits = get_value_stop_bits_dev(dev, S_BITS_SIGMA)
+            dev.set_stop_bit(stop_bits, slave=new_slave)
+            dev = get_device(
+                name, port, baudrate=BAUDRATE_SIGMA, parity=PARITY_SIGMA, stopbits=stop_bits)
+            self.table_output(dev.get_info(new_slave))
+
+        except (ValueError, AttributeError):
+            err_connect(self)
+
+    def changing_stop_bit(self):
+        dev = self.get_conn_params()
+        stop_bits = [str(i_s_bits[1]) for i_s_bits in dev.STOP_BITS]
+        slave: int = self.ui.spinBox_address.value()
+        value, flag = dialog_s_bits(self, stop_bits)
+        try:
+            if flag:
                 dev.set_stop_bit(get_value_stop_bits_dev(dev, value), slave)
                 self.ui.combobox_bits.setCurrentText(value)
                 dev = self.get_conn_params()
                 self.table_output(dev.get_info(slave))
-        except (ValueError, AttributeError):
-            QMessageBox.critical(
-                self,
-                "Error",
-                "Не верно указаны параметры для подключения!",
-                buttons=QMessageBox.Discard,
-                defaultButton=QMessageBox.Discard,
-            )
 
-    def set_parity(self):
+        except (ValueError, AttributeError):
+            err_connect(self)
+
+    def changing_parity(self):
         dev = self.get_conn_params()
+        slave = self.ui.spinBox_address.value()
+        parity_dev = [str(i_par[1]) for i_par in dev.VERIFICATION_BITS]
+        value, flag = dialog_parity(self, parity_dev)
         try:
-            slave = int(self.ui.etr_address.text())
-            parity_dev = [str(i_par[1]) for i_par in dev.VERIFICATION_BITS]
-            value, ok = QInputDialog.getItem(
-                self,
-                "Изменение проверки четности",
-                "Выберите проверку четности",
-                parity_dev,
-                0,
-                False
-            )
-            if ok and value:
+            if flag:
                 dev.set_parity(get_value_parity_dev(dev, value), slave)
                 self.ui.combobox_parity.setCurrentText(value)
                 dev = self.get_conn_params()
                 self.table_output(dev.get_info(slave))
-        except (ValueError, AttributeError):
-            QMessageBox.critical(
-                self,
-                "Error",
-                "Не верно указаны параметры для подключения!",
-                buttons=QMessageBox.Discard,
-                defaultButton=QMessageBox.Discard,
-            )
 
-    def set_speed_dev(self):
+        except (ValueError, AttributeError):
+            err_connect(self)
+
+    def changing_speed(self):
         dev = self.get_conn_params()
         speeds_dev = [str(i_spd[1]) for i_spd in dev.SPEEDS_DEVICE]
-        value, ok = QInputDialog.getItem(
-            self,
-            "Изменение скорости",
-            "Выберите скорость из списка:",
-            speeds_dev,
-            0,
-            False
-        )
-        if ok and value:
-            dev.set_baudrate(get_value_baudrate_dev(dev, int(value)), int(self.ui.etr_address.text()))
-            self.ui.combobox_speed.setCurrentText(value)
-            dev = self.get_conn_params()
-            self.table_output(dev.get_info(int(self.ui.etr_address.text())))
+        value, flag = dialog_speed(self, speeds_dev)
+        try:
+            if flag:
+                dev.set_baudrate(get_value_baudrate_dev(dev, int(value)), self.ui.spinBox_address.value())
+                self.ui.combobox_speed.setCurrentText(value)
+                dev = self.get_conn_params()
+                self.table_output(dev.get_info(self.ui.spinBox_address.value()))
 
-    def set_address(self):
+        except (ValueError, AttributeError):
+            err_connect(self)
+
+    def changing_address(self):
         dev = self.get_conn_params()
-        value, ok = QInputDialog.getInt(
-            self,
-            "Изменение адреса устройства",
-            "Введите ноый адрес.\nАдрес должен быть числом от 1 до 255 включительно.",
-            minValue=1,
-            maxValue=255,
+        value, flag = dialog_address(self)
+        try:
+            if flag:
+                dev.set_slave(value, self.ui.spinBox_address.value())
+                self.ui.spinBox_address.setValue(value)
+                dev = self.get_conn_params()
+                self.table_output(dev.get_info(value))
 
-        )
-        if ok:
-            dev.set_slave(int(value), int(self.ui.etr_address.text()))
-            dev = self.get_conn_params()
-            self.table_output(dev.get_info(int(value)))
+        except (ValueError, AttributeError):
+            err_connect(self)
 
+# scan modbus ==========================================================
     def com_ports_scan(self):
         for i in get_ports_info():
             self.ui.comboBox_com_port.addItem(i[0] + " " + i[1])
@@ -294,6 +257,9 @@ class MainWindow(QMainWindow):
             s_bits.append(1)
         if self.ui.check_box_sb2_3.isChecked():
             s_bits.append(2)
+
+        if len(speeds) == 0 or len(s_bits) == 0 or len(parity) == 0:
+            raise ValueError
         return speeds, s_bits, parity
 
     def btn_scan_click(self):
@@ -302,80 +268,131 @@ class MainWindow(QMainWindow):
         try:
             com_port = get_port(self.ui.comboBox_com_port.currentText())
             speeds, s_bits, parity = self.get_value_checkBox()
-            slave_from: str = self.ui.etr_slave_from_3.text()
-            slave_to: str = self.ui.etr_slave_to_3.text()
+            slave_from: int = self.ui.spinBox_from_scan.value()
+            slave_to: int = self.ui.spinBox_to_scan.value()
 
-            if self.check_enter(slave_from, slave_to):
-                self.scan(com_port, speeds, s_bits, parity, int(slave_from), int(slave_to))
+            if slave_from <= slave_to:
+                self.scan(com_port, speeds, s_bits, parity, slave_from, slave_to)
             else:
-                QMessageBox.critical(
-                    self,
-                    "Error!",
-                    "Адрес может быть только число от 1 до 255",
-                    buttons=QMessageBox.Discard,
-                    defaultButton=QMessageBox.Discard,
-                )
-        except (ConnectionException, FileNotFoundError):
-            QMessageBox.critical(
-                self,
-                "Error!",
-                "Необходимо выбрать СОМ порт!",
-                buttons=QMessageBox.Discard,
-                defaultButton=QMessageBox.Discard,
-            )
+                err_address_scan(self)
 
-    def check_enter(self, data1: str, data2: str):
-        if data1.isdigit() and data2.isdigit():
-            d1 = int(data1)
-            d2 = int(data2)
-            if (0 < d1 <= 255) and (0 < d2 <= 255) and (d1 <= d2):
-                return True
-        return False
+        except (SerialException, ConnectionException):
+            err_port(self)
+        except ValueError:
+            err_params(self)
 
     def scan(self, port: str, speeds: list[int], s_bits: list, parity: list, address_from: int, address_to: int):
         count_iter = len(speeds) * len(s_bits) * len(parity) * (address_to - address_from)
         self.ui.progressBar_.setMaximum(count_iter)
         self.ui.table_devices.clear()
-        self.ui.pushButton_scan.setText("Ожидайте")
+        self.ui.table_devices.setRowCount(0)
+        self.ui.btn_start_scan.setText("Ожидайте")
         count = 0
-        count_table = 0
+
+        if self.ui.radioButton_madbus.isChecked():
+            flag_protokol = True
+        else:
+            flag_protokol = False
 
         for i_bits in s_bits:
             for i_parity in parity:
                 for i_baudrate in speeds:
                     for i_slave in range(address_from, address_to+1):
-                        client = ModbusSerialClient(
-                            port=port,
-                            baudrate=i_baudrate,
-                            parity=i_parity,
-                            stopbits=i_bits,
-                            timeout=0.02
-                        )
-                        count += 1
-                        self.ui.progressBar_.setValue(count)
                         if self.is_killed:
                             break
-                        if not client.read_holding_registers(address=0, slave=i_slave).isError():
-                            self.ui.table_devices.setRowCount(count_table + 1)
-                            self.ui.table_devices.setItem(
-                                count_table,
-                                0,
-                                QTableWidgetItem(str(i_slave)))
-                            self.ui.table_devices.setItem(
-                                count_table,
-                                1,
-                                QTableWidgetItem(f'{i_baudrate} {i_bits} {i_parity} '))
-                            self.ui.table_devices.executeDelayedItemsLayout()
-                            count_table += 1
 
-                        self.ui.table_devices.setHorizontalHeaderLabels(["Slave", "speed, s/bits, parity"])
-                        client.close()
+                        count += 1
+                        self.ui.progressBar_.setValue(count)
+                        if not flag_protokol:
+                            ans = device_dcon(port, i_slave, i_baudrate, i_parity, i_bits)
+                            if ans:
+                                self.out_info_scan(i_slave, i_baudrate, i_parity, i_bits)
+                        else:
+                            ans = device_mb(port, i_slave, i_baudrate, i_parity, i_bits)
+                            if ans:
+                                self.out_info_scan(i_slave, i_baudrate, i_parity, i_bits)
+
                         QApplication.processEvents()
-        self.ui.pushButton_scan.setText("Start")
+        self.ui.btn_start_scan.setText("Start")
+
+    def out_info_scan(self, slave, baudrate, parity, bits):
+        count = self.ui.table_devices.rowCount()
+        self.ui.table_devices.setRowCount(count + 1)
+        self.ui.table_devices.setItem(count, 0, QTableWidgetItem(f'{slave} ({baudrate} {parity} {bits})'))
+        self.ui.table_devices.executeDelayedItemsLayout()
 
     def stop_scan(self):
-        self.ui.pushButton_scan.setText("Start")
+        self.ui.btn_start_scan.setText("Start")
         self.is_killed = True
+
+# dcon scan ==========================================================
+    def com_ports_dcon(self):
+        for i in get_ports_info():
+            self.ui.comboBox_com_port_dcon.addItem(i[0] + " " + i[1])
+
+    def output_speeds_dcon(self, speeds):
+        for speed in speeds:
+            self.ui.comboBox_speed_dcon.addItem(str(speed))
+        self.ui.comboBox_speed_dcon.setCurrentText("9600")
+
+    def output_parity_dcon(self, parity_list):
+        for parity in parity_list:
+            self.ui.comboBox_parity_dcon.addItem(parity)
+
+    def output_s_bits_dcon(self, s_bits_list):
+        for s_bit in s_bits_list:
+            self.ui.comboBox_s_bit_dcon.addItem(s_bit)
+
+    def get_params_dcon(self):
+        address: int = self.ui.spinBox_address_dcon.value()
+        port: str = get_port(self.ui.comboBox_com_port_dcon.currentText())
+        speed: int = int(self.ui.comboBox_speed_dcon.currentText())
+        parity: str = self.ui.comboBox_parity_dcon.currentText()
+        s_bits: int = int(self.ui.comboBox_s_bit_dcon.currentText())
+        return address, port, speed, parity, s_bits
+
+    def change_protokol_nls_dcon(self):
+        address, port, speed, parity, s_bits = self.get_params_dcon()
+        try:
+            nls_change_protocol_dcon(address, port, speed, parity, s_bits)
+            info_restart_device(self)
+
+        except ConnectionException:
+            err_port(self)
+        except ValueError:
+            err_connect(self)
+
+    def change_protokol_nls_mb(self):
+        address, port, speed, parity, s_bits = self.get_params_dcon()
+        count = self.ui.table_out_info_dcon.rowCount()
+        try:
+            answer = nls_change_protocol_mb(address, port, speed, parity, s_bits)
+            self.ui.table_out_info_dcon.setRowCount(count + 1)
+            self.ui.table_out_info_dcon.setItem(count, 0, QTableWidgetItem(answer))
+            self.ui.table_out_info_dcon.executeDelayedItemsLayout()
+            info_restart_device(self)
+
+        except SerialException:
+            err_port(self)
+        except ValueError:
+            err_connect(self)
+
+    def send_command_dcon(self) -> None:
+        command: bytes = (self.ui.etr_command_dcon.text() + "\r").encode("ASCII")
+        address, port, speed, parity, s_bits = self.get_params_dcon()
+        count = self.ui.table_out_info_dcon.rowCount()
+        try:
+            answer = send_decon_command(command, address, port, speed, parity, s_bits)
+            self.ui.table_out_info_dcon.setRowCount(count + 1)
+            self.ui.table_out_info_dcon.setItem(count, 0, QTableWidgetItem("-> " + command.decode("ASCII")))
+            count = self.ui.table_out_info_dcon.rowCount()
+            self.ui.table_out_info_dcon.executeDelayedItemsLayout()
+            self.ui.table_out_info_dcon.setRowCount(count + 1)
+            self.ui.table_out_info_dcon.setItem(count, 0, QTableWidgetItem("<- " + answer))
+            self.ui.table_out_info_dcon.executeDelayedItemsLayout()
+
+        except SerialException:
+            err_port(self)
 
 
 if __name__ == "__main__":

@@ -1,5 +1,9 @@
-from serial.tools import list_ports_windows
+import serial
 
+from serial.tools import list_ports_windows
+from pymodbus.client import ModbusSerialClient
+from pymodbus.framer import ModbusRtuFramer, rtu_framer
+from pymodbus.exceptions import ConnectionException
 from typing import Any
 
 from src.devices import (
@@ -10,7 +14,8 @@ from src.devices import (
     ip329_330_1_1,
     ip535_07ea_rs,
     ipes_ik_uv,
-    ip101_07a_rs
+    ip101_07a_rs,
+    nls_16ai_i,
 )
 
 
@@ -55,6 +60,8 @@ def get_device(name: str, port: Any, **kwargs):
         return ipp_07ea_330_1_gelios.SignalingDeviceIPP_07_330_1(port, **kwargs)
     if name == "ИПЭС–ИК/УФ (Электронстандарт)":
         return ipes_ik_uv.FireDetektorFlame_IPES_IK_UV(port, **kwargs)
+    if name == "NLS-16AI-I RealLab":
+        return nls_16ai_i.Analog_Input_NLS_16AII(port, **kwargs)
 
 
 def get_ports_info() -> list[Any]:
@@ -76,10 +83,80 @@ def get_port(port_info: str) -> str:
     return port
 
 
-def check_slave(slave: str) -> bool:
-    "Проверка введенного адреса"
-    if slave.isdigit():
-        if int(slave) > 0 and int(slave) <= 255:
-            return True
+def device_dcon(port, slave, baudrate, parity, bits):
+    "Получает данные(ответ) от устройства dcon"
+    dev = serial.Serial(
+        port=port,
+        baudrate=baudrate,
+        bytesize=8,
+        parity=parity,
+        stopbits=bits,
+        timeout=0.5
+    )
+    s_comm = "^" + format(slave, "x").zfill(2) + "M\r"
+    dev.write(s_comm.encode("ASCII"))
+    data: bytes = dev.readline(16)
+    dev.close()
+    return data
+
+
+def device_mb(port, slave,  baudrate, parity, bits):
+    client = ModbusSerialClient(
+        port=port,
+        baudrate=baudrate,
+        parity=parity,
+        stopbits=bits,
+        timeout=0.2
+    )
+    # if (not client.read_holding_registers(address=0, slave=i_slave).isError()) or \
+    if not client.read_input_registers(slave=slave, address=0).isError():
+        client.close()
+        return True
+    else:
+        client.close()
         return False
-    return False
+
+
+def send_decon_command(
+        command: bytes,
+        address: int,
+        port: str,
+        speed: int,
+        parity: str,
+        s_bits: int) -> str:
+    conn = serial.Serial(port, speed, 8, parity, s_bits, timeout=0.5)
+    conn.write(command)
+    data = conn.readline(16)
+    conn.close()
+    return str(data.decode("ASCII"))
+
+
+def nls_change_protocol_mb(address, port, speed, parity, s_bits) -> Any:
+    "Установить протокол ModBus"
+    string_command: str = "~" + format(address, "x").zfill(2) + "P1\r"
+    command: bytes = string_command.encode("ASCII")
+    conn = serial.Serial(port, speed, 8, parity, s_bits, timeout=0.5)
+    conn.write(command)
+    data = conn.readline(16)
+    conn.close()
+    check_str = str(data.decode("ASCII"))
+    if check_str[:3] == "!" + format(address, "x").zfill(2):
+        return check_str
+    else:
+        raise ValueError
+
+
+def nls_change_protocol_dcon(address, port, speed, parity, s_bits) -> None:
+    "Установить протокол DCON"
+    dev = nls_16ai_i.Analog_Input_NLS_16AII(port=port, baudrate=speed, parity=parity, stopbits=s_bits)
+    dev.nls_change_protocol_on_dcon(address)
+    protocol = dev.read_holding_registers(address=517, slave=address).registers[0]
+    dev.close()
+    if protocol != 0:
+        raise ValueError
+
+
+
+
+
+

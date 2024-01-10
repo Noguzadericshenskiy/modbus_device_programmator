@@ -48,8 +48,8 @@ class FireDetektorFlame_IPES_IK_UV(Client_mb):
         data_reg_0: str = bin(self.read_holding_registers(address=0, slave=slave).registers[0])[2:].zfill(16)
         data_reg_1: str = bin(self.read_holding_registers(address=1, slave=slave).registers[0])[2:].zfill(16)
         params = (
-            ("Адрес устройства", self.get_slave(data_reg_0)),
-            ("Скорость", self.get_speed(data_reg_0)),
+            ("Адрес устройства", self._get_slave(data_reg_0)),
+            ("Скорость", self._get_speed(data_reg_0)),
             ("Скорость срабатывания", "Быстор" if data_reg_1[7] == "1" else "Медленно"),
             ("Расстояние", "Далеко" if data_reg_1[6] == "1" else "Близко"),
             ("Фиксация", "Вкл" if data_reg_1[5] == "1" else "ВЫКЛ"),
@@ -60,15 +60,13 @@ class FireDetektorFlame_IPES_IK_UV(Client_mb):
         self.close()
         return params
 
-    @classmethod
-    def get_speed(self, data: str) -> int:
+    def _get_speed(self, data: str) -> int:
         hb = int(data[8:], 2)
         for i in self.SPEEDS_DEVICE:
             if i[0] == hb:
                 return i[1]
 
-    @classmethod
-    def get_slave(self, data: str) -> int:
+    def _get_slave(self, data: str) -> int:
         return int(data[:8], 2)
 
     def set_slave(self, new_slave: int, slave: int) -> None:
