@@ -108,8 +108,8 @@ def device_mb(port, slave,  baudrate, parity, bits):
         stopbits=bits,
         timeout=0.2
     )
-    # if (not client.read_holding_registers(address=0, slave=i_slave).isError()) or \
-    if not client.read_input_registers(slave=slave, address=0).isError():
+    if (not client.read_holding_registers(address=0, slave=slave).isError()) or \
+        not client.read_input_registers(slave=slave, address=0).isError():
         client.close()
         return True
     else:
