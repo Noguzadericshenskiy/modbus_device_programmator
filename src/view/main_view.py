@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'main_win_v_3_5.ui'
+## Form generated from reading UI file 'main_win_v_3_5_2.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.6.1
 ##
@@ -28,6 +28,11 @@ class Ui_MainWindow(object):
             MainWindow.setObjectName(u"MainWindow")
         MainWindow.setEnabled(True)
         MainWindow.resize(673, 485)
+        MainWindow.setBaseSize(QSize(0, 0))
+        icon = QIcon()
+        icon.addFile(u"../src/img/logo_m.png", QSize(), QIcon.Normal, QIcon.Off)
+        MainWindow.setWindowIcon(icon)
+        MainWindow.setAutoFillBackground(False)
         MainWindow.setStyleSheet(u"background-color: rgb(0, 85, 127);\n"
 "color: rgb(255, 255, 255);")
         self.centralwidget = QWidget(MainWindow)
@@ -72,16 +77,54 @@ class Ui_MainWindow(object):
         self.gridLayout_4 = QGridLayout(self.base_central_left_frame)
         self.gridLayout_4.setObjectName(u"gridLayout_4")
         self.gridLayout_4.setContentsMargins(10, 10, 10, 0)
-        self.btn_stop_bit = QPushButton(self.base_central_left_frame)
-        self.btn_stop_bit.setObjectName(u"btn_stop_bit")
-        sizePolicy1 = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        sizePolicy1.setHorizontalStretch(200)
+        self.btn_parity = QPushButton(self.base_central_left_frame)
+        self.btn_parity.setObjectName(u"btn_parity")
+        self.btn_parity.setEnabled(True)
+        sizePolicy1 = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Minimum)
+        sizePolicy1.setHorizontalStretch(0)
         sizePolicy1.setVerticalStretch(0)
-        sizePolicy1.setHeightForWidth(self.btn_stop_bit.sizePolicy().hasHeightForWidth())
-        self.btn_stop_bit.setSizePolicy(sizePolicy1)
-        self.btn_stop_bit.setMinimumSize(QSize(200, 0))
+        sizePolicy1.setHeightForWidth(self.btn_parity.sizePolicy().hasHeightForWidth())
+        self.btn_parity.setSizePolicy(sizePolicy1)
+        self.btn_parity.setMinimumSize(QSize(200, 0))
+        self.btn_parity.setMaximumSize(QSize(200, 16777215))
         font = QFont()
         font.setPointSize(10)
+        self.btn_parity.setFont(font)
+        self.btn_parity.setCursor(QCursor(Qt.PointingHandCursor))
+        self.btn_parity.setStyleSheet(u"QPushButton {\n"
+"	background-color: rgb(0, 74, 109);\n"
+"	color: rgb(255, 255, 127);\n"
+"	border: none;\n"
+"	border-left: 2px solid rgb(0, 83, 122);\n"
+"	border-top: 2px solid rgb(0, 83, 122);\n"
+"	border-right: 2px solid rgb(0, 50, 74);	\n"
+"	border-bottom: 2px solid rgb(0, 50, 74);\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"	background-color: rgb(0, 74, 109);\n"
+"	color:rgb(0, 255, 0);\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"	background-color: rgb(0, 74, 109);\n"
+"	color: rgb(0, 255, 0);\n"
+"	border-left: 2px solid rgb(0, 64, 94);\n"
+"	border-top: 2px solid rgb(0, 64, 94);\n"
+"	border-right: 2px solid rgb(0, 83, 122);	\n"
+"	border-bottom: 2px solid rgb(0, 83, 122);\n"
+"}")
+
+        self.gridLayout_4.addWidget(self.btn_parity, 4, 3, 1, 1)
+
+        self.btn_stop_bit = QPushButton(self.base_central_left_frame)
+        self.btn_stop_bit.setObjectName(u"btn_stop_bit")
+        sizePolicy2 = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        sizePolicy2.setHorizontalStretch(200)
+        sizePolicy2.setVerticalStretch(0)
+        sizePolicy2.setHeightForWidth(self.btn_stop_bit.sizePolicy().hasHeightForWidth())
+        self.btn_stop_bit.setSizePolicy(sizePolicy2)
+        self.btn_stop_bit.setMinimumSize(QSize(200, 0))
         self.btn_stop_bit.setFont(font)
         self.btn_stop_bit.setCursor(QCursor(Qt.PointingHandCursor))
         self.btn_stop_bit.setStyleSheet(u"QPushButton {\n"
@@ -108,40 +151,62 @@ class Ui_MainWindow(object):
 "	border-bottom: 2px solid rgb(0, 83, 122);\n"
 "}")
 
-        self.gridLayout_4.addWidget(self.btn_stop_bit, 4, 3, 1, 1)
+        self.gridLayout_4.addWidget(self.btn_stop_bit, 6, 3, 1, 1)
 
-        self.combobox_speed = QComboBox(self.base_central_left_frame)
-        self.combobox_speed.setObjectName(u"combobox_speed")
-        self.combobox_speed.setMinimumSize(QSize(70, 0))
-        self.combobox_speed.setFont(font)
-        self.combobox_speed.setCursor(QCursor(Qt.PointingHandCursor))
-        self.combobox_speed.setStyleSheet(u"QComboBox {\n"
-"background-color: rgb(0, 74, 109);\n"
-"color: rgb(4, 255, 0);\n"
+        self.btn_speed = QPushButton(self.base_central_left_frame)
+        self.btn_speed.setObjectName(u"btn_speed")
+        sizePolicy3 = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        sizePolicy3.setHorizontalStretch(0)
+        sizePolicy3.setVerticalStretch(0)
+        sizePolicy3.setHeightForWidth(self.btn_speed.sizePolicy().hasHeightForWidth())
+        self.btn_speed.setSizePolicy(sizePolicy3)
+        self.btn_speed.setMinimumSize(QSize(200, 0))
+        self.btn_speed.setMaximumSize(QSize(200, 16777215))
+        self.btn_speed.setFont(font)
+        self.btn_speed.setCursor(QCursor(Qt.PointingHandCursor))
+        self.btn_speed.setStyleSheet(u"QPushButton {\n"
+"	background-color: rgb(0, 74, 109);\n"
+"	color: rgb(255, 255, 127);\n"
+"	border: none;\n"
+"	border-left: 2px solid rgb(0, 83, 122);\n"
+"	border-top: 2px solid rgb(0, 83, 122);\n"
+"	border-right: 2px solid rgb(0, 50, 74);	\n"
+"	border-bottom: 2px solid rgb(0, 50, 74);\n"
 "}\n"
 "\n"
-"QToolTip {\n"
-"	color: rgb(0, 0, 127);\n"
+"QPushButton:hover {\n"
+"	background-color: rgb(0, 74, 109);\n"
+"	color:rgb(0, 255, 0);\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"	background-color: rgb(0, 74, 109);\n"
+"	color: rgb(0, 255, 0);\n"
+"	border-left: 2px solid rgb(0, 64, 94);\n"
+"	border-top: 2px solid rgb(0, 64, 94);\n"
+"	border-right: 2px solid rgb(0, 83, 122);	\n"
+"	border-bottom: 2px solid rgb(0, 83, 122);\n"
 "}")
 
-        self.gridLayout_4.addWidget(self.combobox_speed, 1, 2, 1, 1)
+        self.gridLayout_4.addWidget(self.btn_speed, 2, 3, 1, 1)
 
-        self.lbl_stop_bit = QLabel(self.base_central_left_frame)
-        self.lbl_stop_bit.setObjectName(u"lbl_stop_bit")
-        self.lbl_stop_bit.setMinimumSize(QSize(100, 20))
-        self.lbl_stop_bit.setMaximumSize(QSize(0, 0))
-        self.lbl_stop_bit.setFont(font)
+        self.spinBox_address = QSpinBox(self.base_central_left_frame)
+        self.spinBox_address.setObjectName(u"spinBox_address")
+        self.spinBox_address.setMinimumSize(QSize(70, 0))
+        self.spinBox_address.setStyleSheet(u"QSpinBox {\n"
+"	background-color: rgb(0, 74, 109);\n"
+"	color: rgb(4, 255, 0);\n"
+"}")
+        self.spinBox_address.setMaximum(247)
+        self.spinBox_address.setValue(1)
 
-        self.gridLayout_4.addWidget(self.lbl_stop_bit, 4, 0, 1, 1)
+        self.gridLayout_4.addWidget(self.spinBox_address, 0, 2, 1, 1)
 
         self.btn_address = QPushButton(self.base_central_left_frame)
         self.btn_address.setObjectName(u"btn_address")
         self.btn_address.setEnabled(True)
-        sizePolicy2 = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        sizePolicy2.setHorizontalStretch(0)
-        sizePolicy2.setVerticalStretch(0)
-        sizePolicy2.setHeightForWidth(self.btn_address.sizePolicy().hasHeightForWidth())
-        self.btn_address.setSizePolicy(sizePolicy2)
+        sizePolicy3.setHeightForWidth(self.btn_address.sizePolicy().hasHeightForWidth())
+        self.btn_address.setSizePolicy(sizePolicy3)
         self.btn_address.setMinimumSize(QSize(200, 0))
         self.btn_address.setMaximumSize(QSize(200, 16777215))
         font1 = QFont()
@@ -175,39 +240,22 @@ class Ui_MainWindow(object):
 
         self.gridLayout_4.addWidget(self.btn_address, 0, 3, 1, 1)
 
-        self.btn_speed = QPushButton(self.base_central_left_frame)
-        self.btn_speed.setObjectName(u"btn_speed")
-        sizePolicy2.setHeightForWidth(self.btn_speed.sizePolicy().hasHeightForWidth())
-        self.btn_speed.setSizePolicy(sizePolicy2)
-        self.btn_speed.setMinimumSize(QSize(200, 0))
-        self.btn_speed.setMaximumSize(QSize(200, 16777215))
-        self.btn_speed.setFont(font)
-        self.btn_speed.setCursor(QCursor(Qt.PointingHandCursor))
-        self.btn_speed.setStyleSheet(u"QPushButton {\n"
-"	background-color: rgb(0, 74, 109);\n"
-"	color: rgb(255, 255, 127);\n"
-"	border: none;\n"
-"	border-left: 2px solid rgb(0, 83, 122);\n"
-"	border-top: 2px solid rgb(0, 83, 122);\n"
-"	border-right: 2px solid rgb(0, 50, 74);	\n"
-"	border-bottom: 2px solid rgb(0, 50, 74);\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"	background-color: rgb(0, 74, 109);\n"
-"	color:rgb(0, 255, 0);\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"	background-color: rgb(0, 74, 109);\n"
-"	color: rgb(0, 255, 0);\n"
-"	border-left: 2px solid rgb(0, 64, 94);\n"
-"	border-top: 2px solid rgb(0, 64, 94);\n"
-"	border-right: 2px solid rgb(0, 83, 122);	\n"
-"	border-bottom: 2px solid rgb(0, 83, 122);\n"
-"}")
+        self.lbl_parity = QLabel(self.base_central_left_frame)
+        self.lbl_parity.setObjectName(u"lbl_parity")
+        self.lbl_parity.setMinimumSize(QSize(100, 20))
+        self.lbl_parity.setMaximumSize(QSize(0, 0))
+        self.lbl_parity.setFont(font)
+        self.lbl_parity.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
 
-        self.gridLayout_4.addWidget(self.btn_speed, 1, 3, 1, 1)
+        self.gridLayout_4.addWidget(self.lbl_parity, 4, 0, 1, 1, Qt.AlignTop)
+
+        self.lbl_stop_bit = QLabel(self.base_central_left_frame)
+        self.lbl_stop_bit.setObjectName(u"lbl_stop_bit")
+        self.lbl_stop_bit.setMinimumSize(QSize(100, 20))
+        self.lbl_stop_bit.setMaximumSize(QSize(0, 0))
+        self.lbl_stop_bit.setFont(font)
+
+        self.gridLayout_4.addWidget(self.lbl_stop_bit, 6, 0, 1, 1, Qt.AlignTop)
 
         self.combobox_parity = QComboBox(self.base_central_left_frame)
         self.combobox_parity.setObjectName(u"combobox_parity")
@@ -223,7 +271,7 @@ class Ui_MainWindow(object):
 "	color: rgb(0, 0, 127);\n"
 "}")
 
-        self.gridLayout_4.addWidget(self.combobox_parity, 3, 2, 1, 1)
+        self.gridLayout_4.addWidget(self.combobox_parity, 4, 2, 1, 1)
 
         self.combobox_bits = QComboBox(self.base_central_left_frame)
         self.combobox_bits.setObjectName(u"combobox_bits")
@@ -239,82 +287,40 @@ class Ui_MainWindow(object):
 "	color: rgb(0, 0, 127);\n"
 "}")
 
-        self.gridLayout_4.addWidget(self.combobox_bits, 4, 2, 1, 1)
+        self.gridLayout_4.addWidget(self.combobox_bits, 6, 2, 1, 1)
 
-        self.btn_parity = QPushButton(self.base_central_left_frame)
-        self.btn_parity.setObjectName(u"btn_parity")
-        self.btn_parity.setEnabled(True)
-        sizePolicy3 = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Minimum)
-        sizePolicy3.setHorizontalStretch(0)
-        sizePolicy3.setVerticalStretch(0)
-        sizePolicy3.setHeightForWidth(self.btn_parity.sizePolicy().hasHeightForWidth())
-        self.btn_parity.setSizePolicy(sizePolicy3)
-        self.btn_parity.setMinimumSize(QSize(200, 0))
-        self.btn_parity.setMaximumSize(QSize(200, 16777215))
-        self.btn_parity.setFont(font)
-        self.btn_parity.setCursor(QCursor(Qt.PointingHandCursor))
-        self.btn_parity.setStyleSheet(u"QPushButton {\n"
-"	background-color: rgb(0, 74, 109);\n"
-"	color: rgb(255, 255, 127);\n"
-"	border: none;\n"
-"	border-left: 2px solid rgb(0, 83, 122);\n"
-"	border-top: 2px solid rgb(0, 83, 122);\n"
-"	border-right: 2px solid rgb(0, 50, 74);	\n"
-"	border-bottom: 2px solid rgb(0, 50, 74);\n"
+        self.combobox_speed = QComboBox(self.base_central_left_frame)
+        self.combobox_speed.setObjectName(u"combobox_speed")
+        self.combobox_speed.setMinimumSize(QSize(70, 0))
+        self.combobox_speed.setFont(font)
+        self.combobox_speed.setCursor(QCursor(Qt.PointingHandCursor))
+        self.combobox_speed.setStyleSheet(u"QComboBox {\n"
+"background-color: rgb(0, 74, 109);\n"
+"color: rgb(4, 255, 0);\n"
 "}\n"
 "\n"
-"QPushButton:hover {\n"
-"	background-color: rgb(0, 74, 109);\n"
-"	color:rgb(0, 255, 0);\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"	background-color: rgb(0, 74, 109);\n"
-"	color: rgb(0, 255, 0);\n"
-"	border-left: 2px solid rgb(0, 64, 94);\n"
-"	border-top: 2px solid rgb(0, 64, 94);\n"
-"	border-right: 2px solid rgb(0, 83, 122);	\n"
-"	border-bottom: 2px solid rgb(0, 83, 122);\n"
+"QToolTip {\n"
+"	color: rgb(0, 0, 127);\n"
 "}")
 
-        self.gridLayout_4.addWidget(self.btn_parity, 3, 3, 1, 1)
-
-        self.lbl_slave = QLabel(self.base_central_left_frame)
-        self.lbl_slave.setObjectName(u"lbl_slave")
-        self.lbl_slave.setMinimumSize(QSize(100, 20))
-        self.lbl_slave.setMaximumSize(QSize(43, 16777215))
-        self.lbl_slave.setFont(font)
-
-        self.gridLayout_4.addWidget(self.lbl_slave, 0, 0, 1, 1)
+        self.gridLayout_4.addWidget(self.combobox_speed, 2, 2, 1, 1)
 
         self.lbl_speed = QLabel(self.base_central_left_frame)
         self.lbl_speed.setObjectName(u"lbl_speed")
         self.lbl_speed.setMinimumSize(QSize(100, 20))
-        self.lbl_speed.setMaximumSize(QSize(43, 16777215))
+        self.lbl_speed.setMaximumSize(QSize(43, 0))
         self.lbl_speed.setFont(font)
 
-        self.gridLayout_4.addWidget(self.lbl_speed, 1, 0, 1, 1)
+        self.gridLayout_4.addWidget(self.lbl_speed, 2, 0, 1, 1, Qt.AlignTop)
 
-        self.lbl_parity = QLabel(self.base_central_left_frame)
-        self.lbl_parity.setObjectName(u"lbl_parity")
-        self.lbl_parity.setMinimumSize(QSize(100, 20))
-        self.lbl_parity.setMaximumSize(QSize(0, 0))
-        self.lbl_parity.setFont(font)
-        self.lbl_parity.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
+        self.lbl_slave = QLabel(self.base_central_left_frame)
+        self.lbl_slave.setObjectName(u"lbl_slave")
+        self.lbl_slave.setMinimumSize(QSize(100, 20))
+        self.lbl_slave.setMaximumSize(QSize(43, 0))
+        self.lbl_slave.setFont(font)
+        self.lbl_slave.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
 
-        self.gridLayout_4.addWidget(self.lbl_parity, 3, 0, 1, 1)
-
-        self.spinBox_address = QSpinBox(self.base_central_left_frame)
-        self.spinBox_address.setObjectName(u"spinBox_address")
-        self.spinBox_address.setMinimumSize(QSize(70, 0))
-        self.spinBox_address.setStyleSheet(u"QSpinBox {\n"
-"	background-color: rgb(0, 74, 109);\n"
-"	color: rgb(4, 255, 0);\n"
-"}")
-        self.spinBox_address.setMaximum(247)
-        self.spinBox_address.setValue(1)
-
-        self.gridLayout_4.addWidget(self.spinBox_address, 0, 2, 1, 1)
+        self.gridLayout_4.addWidget(self.lbl_slave, 0, 0, 1, 1, Qt.AlignTop)
 
 
         self.gridLayout_2.addWidget(self.base_central_left_frame, 1, 0, 1, 1)
@@ -328,7 +334,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.setContentsMargins(10, 10, 10, 0)
         self.btn_set_param_sigma = QPushButton(self.base_central_right_frame)
         self.btn_set_param_sigma.setObjectName(u"btn_set_param_sigma")
-        self.btn_set_param_sigma.setMinimumSize(QSize(200, 50))
+        self.btn_set_param_sigma.setMinimumSize(QSize(200, 45))
         self.btn_set_param_sigma.setFont(font)
         self.btn_set_param_sigma.setCursor(QCursor(Qt.PointingHandCursor))
         self.btn_set_param_sigma.setContextMenuPolicy(Qt.NoContextMenu)
@@ -359,11 +365,11 @@ class Ui_MainWindow(object):
 "	color: rgb(0, 0, 127);\n"
 "}")
 
-        self.verticalLayout_2.addWidget(self.btn_set_param_sigma)
+        self.verticalLayout_2.addWidget(self.btn_set_param_sigma, 0, Qt.AlignTop)
 
         self.btn_connect = QPushButton(self.base_central_right_frame)
         self.btn_connect.setObjectName(u"btn_connect")
-        self.btn_connect.setMinimumSize(QSize(200, 50))
+        self.btn_connect.setMinimumSize(QSize(200, 45))
         self.btn_connect.setFont(font)
         self.btn_connect.setCursor(QCursor(Qt.PointingHandCursor))
         self.btn_connect.setStyleSheet(u"QPushButton {\n"
@@ -395,7 +401,7 @@ class Ui_MainWindow(object):
 "}\n"
 "")
 
-        self.verticalLayout_2.addWidget(self.btn_connect)
+        self.verticalLayout_2.addWidget(self.btn_connect, 0, Qt.AlignTop)
 
 
         self.gridLayout_2.addWidget(self.base_central_right_frame, 1, 1, 1, 1)
@@ -634,8 +640,8 @@ class Ui_MainWindow(object):
 
         self.frame_7 = QFrame(self.frame_5)
         self.frame_7.setObjectName(u"frame_7")
-        sizePolicy2.setHeightForWidth(self.frame_7.sizePolicy().hasHeightForWidth())
-        self.frame_7.setSizePolicy(sizePolicy2)
+        sizePolicy3.setHeightForWidth(self.frame_7.sizePolicy().hasHeightForWidth())
+        self.frame_7.setSizePolicy(sizePolicy3)
         self.frame_7.setContextMenuPolicy(Qt.NoContextMenu)
         self.frame_7.setStyleSheet(u"")
         self.frame_7.setFrameShape(QFrame.StyledPanel)
@@ -662,6 +668,9 @@ class Ui_MainWindow(object):
         self.group_box_slave.setObjectName(u"group_box_slave")
         self.group_box_slave.setMinimumSize(QSize(220, 60))
         self.group_box_slave.setFont(font2)
+        self.group_box_slave.setStyleSheet(u"QToolTip {\n"
+"	color: rgb(0, 0, 127);\n"
+"}")
         self.horizontalLayout_2 = QHBoxLayout(self.group_box_slave)
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
         self.lbl_from_3 = QLabel(self.group_box_slave)
@@ -698,6 +707,7 @@ class Ui_MainWindow(object):
 "	background-color: rgb(0, 74, 109);\n"
 "	color: rgb(4, 255, 0);\n"
 "}")
+        self.spinBox_to_scan.setMinimum(1)
         self.spinBox_to_scan.setMaximum(255)
         self.spinBox_to_scan.setValue(10)
 
@@ -708,8 +718,8 @@ class Ui_MainWindow(object):
 
         self.btn_stop_scan = QPushButton(self.frame_7)
         self.btn_stop_scan.setObjectName(u"btn_stop_scan")
-        sizePolicy2.setHeightForWidth(self.btn_stop_scan.sizePolicy().hasHeightForWidth())
-        self.btn_stop_scan.setSizePolicy(sizePolicy2)
+        sizePolicy3.setHeightForWidth(self.btn_stop_scan.sizePolicy().hasHeightForWidth())
+        self.btn_stop_scan.setSizePolicy(sizePolicy3)
         self.btn_stop_scan.setMinimumSize(QSize(81, 81))
         font4 = QFont()
         font4.setFamilies([u"Georgia"])
@@ -743,14 +753,17 @@ class Ui_MainWindow(object):
 "	border-top: 2px solid rgb(180, 60, 0);\n"
 "	border-right: 2px solid rgb(180, 60, 0);	\n"
 "	border-bottom: 2px solid rgb(180, 60, 0);\n"
+"}\n"
+"QToolTip {\n"
+"	color: rgb(0, 0, 127);\n"
 "}")
 
         self.gridLayout_5.addWidget(self.btn_stop_scan, 5, 1, 1, 1)
 
         self.btn_start_scan = QPushButton(self.frame_7)
         self.btn_start_scan.setObjectName(u"btn_start_scan")
-        sizePolicy2.setHeightForWidth(self.btn_start_scan.sizePolicy().hasHeightForWidth())
-        self.btn_start_scan.setSizePolicy(sizePolicy2)
+        sizePolicy3.setHeightForWidth(self.btn_start_scan.sizePolicy().hasHeightForWidth())
+        self.btn_start_scan.setSizePolicy(sizePolicy3)
         self.btn_start_scan.setMinimumSize(QSize(121, 81))
         font5 = QFont()
         font5.setFamilies([u"Georgia"])
@@ -786,6 +799,9 @@ class Ui_MainWindow(object):
 "	border-right: 2px solid rgb(0, 130, 0);	\n"
 "	border-bottom: 2px solid rgb(0, 130, 0);\n"
 "}\n"
+"QToolTip {\n"
+"	color: rgb(0, 0, 127);\n"
+"}\n"
 "")
 
         self.gridLayout_5.addWidget(self.btn_start_scan, 5, 0, 1, 1)
@@ -793,6 +809,9 @@ class Ui_MainWindow(object):
         self.groupBox_speeds = QGroupBox(self.frame_7)
         self.groupBox_speeds.setObjectName(u"groupBox_speeds")
         self.groupBox_speeds.setMinimumSize(QSize(95, 230))
+        self.groupBox_speeds.setStyleSheet(u"QToolTip {\n"
+"	color: rgb(0, 0, 127);\n"
+"}")
         self.checkBox_1202 = QCheckBox(self.groupBox_speeds)
         self.checkBox_1202.setObjectName(u"checkBox_1202")
         self.checkBox_1202.setGeometry(QRect(10, 20, 62, 17))
@@ -830,6 +849,9 @@ class Ui_MainWindow(object):
         self.groupBox_parity = QGroupBox(self.frame_7)
         self.groupBox_parity.setObjectName(u"groupBox_parity")
         self.groupBox_parity.setMinimumSize(QSize(0, 90))
+        self.groupBox_parity.setStyleSheet(u"QToolTip {\n"
+"	color: rgb(0, 0, 127);\n"
+"}")
         self.check_box_none_3 = QCheckBox(self.groupBox_parity)
         self.check_box_none_3.setObjectName(u"check_box_none_3")
         self.check_box_none_3.setGeometry(QRect(10, 20, 62, 17))
@@ -849,6 +871,9 @@ class Ui_MainWindow(object):
         self.groupBox_protokol_scan = QGroupBox(self.frame_7)
         self.groupBox_protokol_scan.setObjectName(u"groupBox_protokol_scan")
         self.groupBox_protokol_scan.setMinimumSize(QSize(0, 40))
+        self.groupBox_protokol_scan.setStyleSheet(u"QToolTip {\n"
+"	color: rgb(0, 0, 127);\n"
+"}")
         self.horizontalLayout_8 = QHBoxLayout(self.groupBox_protokol_scan)
         self.horizontalLayout_8.setSpacing(6)
         self.horizontalLayout_8.setObjectName(u"horizontalLayout_8")
@@ -925,8 +950,8 @@ class Ui_MainWindow(object):
         self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
         self.lbl_port_dcon = QLabel(self.frame_4)
         self.lbl_port_dcon.setObjectName(u"lbl_port_dcon")
-        sizePolicy2.setHeightForWidth(self.lbl_port_dcon.sizePolicy().hasHeightForWidth())
-        self.lbl_port_dcon.setSizePolicy(sizePolicy2)
+        sizePolicy3.setHeightForWidth(self.lbl_port_dcon.sizePolicy().hasHeightForWidth())
+        self.lbl_port_dcon.setSizePolicy(sizePolicy3)
         self.lbl_port_dcon.setMinimumSize(QSize(70, 0))
 
         self.horizontalLayout_5.addWidget(self.lbl_port_dcon)
@@ -939,40 +964,6 @@ class Ui_MainWindow(object):
 "color: rgb(4, 255, 0);")
 
         self.horizontalLayout_5.addWidget(self.comboBox_com_port_dcon)
-
-        self.btn_help_dcon = QPushButton(self.frame_4)
-        self.btn_help_dcon.setObjectName(u"btn_help_dcon")
-        sizePolicy2.setHeightForWidth(self.btn_help_dcon.sizePolicy().hasHeightForWidth())
-        self.btn_help_dcon.setSizePolicy(sizePolicy2)
-        self.btn_help_dcon.setMinimumSize(QSize(50, 20))
-        self.btn_help_dcon.setStyleSheet(u"QPushButton {\n"
-"	background-color: rgb(0, 74, 109);\n"
-"	color: rgb(255, 255, 127);\n"
-"	border: none;\n"
-"	border-left: 2px solid rgb(0, 83, 122);\n"
-"	border-top: 2px solid rgb(0, 83, 122);\n"
-"	border-right: 2px solid rgb(0, 50, 74);	\n"
-"	border-bottom: 2px solid rgb(0, 50, 74);\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"	background-color: rgb(0, 74, 109);\n"
-"	color:rgb(0, 255, 0);\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"	background-color: rgb(0, 74, 109);\n"
-"	color: rgb(0, 255, 0);\n"
-"	border-left: 2px solid rgb(0, 64, 94);\n"
-"	border-top: 2px solid rgb(0, 64, 94);\n"
-"	border-right: 2px solid rgb(0, 83, 122);	\n"
-"	border-bottom: 2px solid rgb(0, 83, 122);\n"
-"}\n"
-"QToolTip {\n"
-"	color: rgb(0, 0, 127);\n"
-"}")
-
-        self.horizontalLayout_5.addWidget(self.btn_help_dcon)
 
 
         self.verticalLayout_7.addWidget(self.frame_4)
@@ -989,12 +980,14 @@ class Ui_MainWindow(object):
         self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
         self.groupBox_parameters_dcon = QGroupBox(self.frame_2)
         self.groupBox_parameters_dcon.setObjectName(u"groupBox_parameters_dcon")
-        sizePolicy2.setHeightForWidth(self.groupBox_parameters_dcon.sizePolicy().hasHeightForWidth())
-        self.groupBox_parameters_dcon.setSizePolicy(sizePolicy2)
+        sizePolicy3.setHeightForWidth(self.groupBox_parameters_dcon.sizePolicy().hasHeightForWidth())
+        self.groupBox_parameters_dcon.setSizePolicy(sizePolicy3)
         self.groupBox_parameters_dcon.setMinimumSize(QSize(200, 120))
         self.groupBox_parameters_dcon.setLayoutDirection(Qt.LeftToRight)
         self.groupBox_parameters_dcon.setAutoFillBackground(False)
-        self.groupBox_parameters_dcon.setStyleSheet(u"")
+        self.groupBox_parameters_dcon.setStyleSheet(u"QToolTip {\n"
+"	color: rgb(0, 0, 127);\n"
+"}")
         self.groupBox_parameters_dcon.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignTop)
         self.gridLayout = QGridLayout(self.groupBox_parameters_dcon)
         self.gridLayout.setObjectName(u"gridLayout")
@@ -1022,8 +1015,13 @@ class Ui_MainWindow(object):
         self.comboBox_parity_dcon.setObjectName(u"comboBox_parity_dcon")
         self.comboBox_parity_dcon.setMinimumSize(QSize(70, 20))
         self.comboBox_parity_dcon.setContextMenuPolicy(Qt.NoContextMenu)
-        self.comboBox_parity_dcon.setStyleSheet(u"background-color: rgb(0, 74, 109);\n"
-"color: rgb(4, 255, 0);")
+        self.comboBox_parity_dcon.setStyleSheet(u"QComboBox {\n"
+"background-color: rgb(0, 74, 109);\n"
+"color: rgb(4, 255, 0);\n"
+"}\n"
+"QToolTip {\n"
+"	color: rgb(0, 0, 127);\n"
+"}")
 
         self.gridLayout.addWidget(self.comboBox_parity_dcon, 2, 2, 1, 1)
 
@@ -1073,9 +1071,10 @@ class Ui_MainWindow(object):
         self.verticalLayout_5.setObjectName(u"verticalLayout_5")
         self.btn_chenge_protocol_on_dcon = QPushButton(self.frame_8)
         self.btn_chenge_protocol_on_dcon.setObjectName(u"btn_chenge_protocol_on_dcon")
-        sizePolicy2.setHeightForWidth(self.btn_chenge_protocol_on_dcon.sizePolicy().hasHeightForWidth())
-        self.btn_chenge_protocol_on_dcon.setSizePolicy(sizePolicy2)
+        sizePolicy3.setHeightForWidth(self.btn_chenge_protocol_on_dcon.sizePolicy().hasHeightForWidth())
+        self.btn_chenge_protocol_on_dcon.setSizePolicy(sizePolicy3)
         self.btn_chenge_protocol_on_dcon.setMinimumSize(QSize(200, 20))
+        self.btn_chenge_protocol_on_dcon.setCursor(QCursor(Qt.PointingHandCursor))
         self.btn_chenge_protocol_on_dcon.setStyleSheet(u"QPushButton {\n"
 "	background-color: rgb(0, 74, 109);\n"
 "	color: rgb(255, 255, 127);\n"
@@ -1107,9 +1106,10 @@ class Ui_MainWindow(object):
 
         self.btn_change_protocol_on_modbus = QPushButton(self.frame_8)
         self.btn_change_protocol_on_modbus.setObjectName(u"btn_change_protocol_on_modbus")
-        sizePolicy2.setHeightForWidth(self.btn_change_protocol_on_modbus.sizePolicy().hasHeightForWidth())
-        self.btn_change_protocol_on_modbus.setSizePolicy(sizePolicy2)
+        sizePolicy3.setHeightForWidth(self.btn_change_protocol_on_modbus.sizePolicy().hasHeightForWidth())
+        self.btn_change_protocol_on_modbus.setSizePolicy(sizePolicy3)
         self.btn_change_protocol_on_modbus.setMinimumSize(QSize(200, 20))
+        self.btn_change_protocol_on_modbus.setCursor(QCursor(Qt.PointingHandCursor))
         self.btn_change_protocol_on_modbus.setStyleSheet(u"QPushButton {\n"
 "	background-color: rgb(0, 74, 109);\n"
 "	color: rgb(255, 255, 127);\n"
@@ -1176,16 +1176,16 @@ class Ui_MainWindow(object):
         self.horizontalLayout_4.setContentsMargins(5, 5, 5, 5)
         self.lbl_command_dcon = QLabel(self.frame_6)
         self.lbl_command_dcon.setObjectName(u"lbl_command_dcon")
-        sizePolicy2.setHeightForWidth(self.lbl_command_dcon.sizePolicy().hasHeightForWidth())
-        self.lbl_command_dcon.setSizePolicy(sizePolicy2)
+        sizePolicy3.setHeightForWidth(self.lbl_command_dcon.sizePolicy().hasHeightForWidth())
+        self.lbl_command_dcon.setSizePolicy(sizePolicy3)
         self.lbl_command_dcon.setMinimumSize(QSize(70, 20))
 
         self.horizontalLayout_4.addWidget(self.lbl_command_dcon)
 
         self.etr_command_dcon = QLineEdit(self.frame_6)
         self.etr_command_dcon.setObjectName(u"etr_command_dcon")
-        sizePolicy2.setHeightForWidth(self.etr_command_dcon.sizePolicy().hasHeightForWidth())
-        self.etr_command_dcon.setSizePolicy(sizePolicy2)
+        sizePolicy3.setHeightForWidth(self.etr_command_dcon.sizePolicy().hasHeightForWidth())
+        self.etr_command_dcon.setSizePolicy(sizePolicy3)
         self.etr_command_dcon.setMinimumSize(QSize(100, 20))
         self.etr_command_dcon.setContextMenuPolicy(Qt.NoContextMenu)
         self.etr_command_dcon.setStyleSheet(u"QLineEdit {\n"
@@ -1199,10 +1199,11 @@ class Ui_MainWindow(object):
 
         self.btn_send_command_dcon = QPushButton(self.frame_6)
         self.btn_send_command_dcon.setObjectName(u"btn_send_command_dcon")
-        sizePolicy2.setHeightForWidth(self.btn_send_command_dcon.sizePolicy().hasHeightForWidth())
-        self.btn_send_command_dcon.setSizePolicy(sizePolicy2)
+        sizePolicy3.setHeightForWidth(self.btn_send_command_dcon.sizePolicy().hasHeightForWidth())
+        self.btn_send_command_dcon.setSizePolicy(sizePolicy3)
         self.btn_send_command_dcon.setMinimumSize(QSize(200, 20))
         self.btn_send_command_dcon.setMaximumSize(QSize(190, 25))
+        self.btn_send_command_dcon.setCursor(QCursor(Qt.PointingHandCursor))
         self.btn_send_command_dcon.setStyleSheet(u"QPushButton {\n"
 "	background-color: rgb(0, 74, 109);\n"
 "	color: rgb(255, 255, 127);\n"
@@ -1298,27 +1299,27 @@ class Ui_MainWindow(object):
     # setupUi
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
+        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"\u041f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u0430\u0442\u043e\u0440 \u0443\u0441\u0442\u0440\u043e\u0439\u0441\u0442\u0432 ModBus/Dcon", None))
+        self.btn_parity.setText(QCoreApplication.translate("MainWindow", u"\u0418\u0437\u043c\u0435\u043d\u0438\u0442\u044c \u043f\u0440\u043e\u0432\u0435\u0440\u043a\u0443 \u043d\u0430 \u0447\u0451\u0442\u043d\u043e\u0441\u0442\u044c", None))
         self.btn_stop_bit.setText(QCoreApplication.translate("MainWindow", u"\u0418\u0437\u043c\u0435\u043d\u0438\u0442\u044c Stop bits", None))
-#if QT_CONFIG(tooltip)
-        self.combobox_speed.setToolTip(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>\u0421\u043a\u043e\u0440\u043e\u0441\u0442\u044c</p></body></html>", None))
-#endif // QT_CONFIG(tooltip)
-        self.lbl_stop_bit.setText(QCoreApplication.translate("MainWindow", u"Stop bits", None))
-        self.btn_address.setText(QCoreApplication.translate("MainWindow", u"\u0418\u0437\u043c\u0435\u043d\u0438\u0442\u044c \u0430\u0434\u0440\u0435\u0441 \u0443\u0441\u0442\u0440\u043e\u0439\u0441\u0442\u0432\u0430", None))
         self.btn_speed.setText(QCoreApplication.translate("MainWindow", u"\u0418\u0437\u043c\u0435\u043d\u0438\u0442\u044c \u0441\u043a\u043e\u0440\u043e\u0441\u0442\u044c", None))
+        self.btn_address.setText(QCoreApplication.translate("MainWindow", u"\u0418\u0437\u043c\u0435\u043d\u0438\u0442\u044c \u0430\u0434\u0440\u0435\u0441 \u0443\u0441\u0442\u0440\u043e\u0439\u0441\u0442\u0432\u0430", None))
+        self.lbl_parity.setText(QCoreApplication.translate("MainWindow", u"Parity", None))
+        self.lbl_stop_bit.setText(QCoreApplication.translate("MainWindow", u"Stop bits", None))
 #if QT_CONFIG(tooltip)
-        self.combobox_parity.setToolTip(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>\u041f\u0440\u043e\u0432\u0435\u043a\u0440\u043a\u0430 \u043d\u0430 \u0447\u0435\u0442\u043d\u043e\u0441\u0442\u044c</p></body></html>", None))
+        self.combobox_parity.setToolTip(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>\u0423\u0441\u0442\u0430\u043d\u043e\u0432\u043a\u0430 \u043f\u0430\u0440\u0438\u0442\u0435\u0442\u0430 (\u043f\u0440\u043e\u0432\u0435\u0440\u043a\u0438 \u0447\u0435\u0442\u043d\u043e\u0441\u0442\u044c/\u043d\u0435\u0447\u0435\u0442\u043d\u043e\u0441\u0442\u044c).</p><p><span style=\" font-weight:600; text-decoration: underline;\">N</span>one - \u043d\u0435\u0442</p><p><span style=\" font-weight:600; text-decoration: underline;\">E</span>ven - \u0447\u0435\u0442\u043d\u043e\u0441\u0442\u044c</p><p><span style=\" font-weight:600; text-decoration: underline;\">O</span>dd - \u043d\u0435\u0447\u0435\u0442\u043d\u043e\u0441\u0442\u044c</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
 #if QT_CONFIG(tooltip)
         self.combobox_bits.setToolTip(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>\u041a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u0441\u0442\u043e\u043f \u0431\u0438\u0442</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
-        self.btn_parity.setText(QCoreApplication.translate("MainWindow", u"\u0418\u0437\u043c\u0435\u043d\u0438\u0442\u044c \u043f\u0440\u043e\u0432\u0435\u0440\u043a\u0443 \u043d\u0430 \u0447\u0451\u0442\u043d\u043e\u0441\u0442\u044c", None))
-        self.lbl_slave.setText(QCoreApplication.translate("MainWindow", u"\u0410\u0434\u0440\u0435\u0441 \u0443\u0441\u0442\u0440-\u0432\u0430", None))
-        self.lbl_speed.setText(QCoreApplication.translate("MainWindow", u"\u0421\u043a\u043e\u0440\u043e\u0441\u0442\u044c", None))
-        self.lbl_parity.setText(QCoreApplication.translate("MainWindow", u"Parity", None))
 #if QT_CONFIG(tooltip)
-        self.btn_set_param_sigma.setToolTip(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>\u0418\u0437\u043c\u0435\u043d\u0438\u0442 \u043f\u0430\u0440\u0430\u043c\u0435\u0442\u0440\u044b \u0443\u0441\u0442\u0440\u043e\u0439\u0441\u0442\u0432\u0430 \u043d\u0430 \u0441\u043b\u0435\u0434\u0443\u044e\u0449\u0438\u0435:</p><p>\u0441\u043a\u043e\u0440\u043e\u0441\u0442\u044c - 9600, \u043f\u0440\u043e\u0432\u0435\u0440\u043a\u0430 \u0447\u0435\u0442\u043d\u043e\u0441\u0442\u0438 - N, \u0421\u0442\u043e\u043f \u0431\u0438\u0442 - 1.</p><p>\u0412\u043e \u0432\u0441\u043f\u043b\u044b\u0432\u0430\u044e\u0449\u0435\u043c \u043e\u043a\u043d\u0435 \u043d\u0443\u0436\u043d\u043e \u0431\u0443\u0434\u0435\u0442 \u0437\u0430\u0434\u0430\u0442\u044c \u043d\u043e\u0432\u044b\u0439 </p><p>\u0444\u0434\u0440\u0435\u0441 \u0443\u0441\u0442\u0440\u043e\u0439\u0441\u0442\u0432\u0430.</p><p>\u0418\u0437\u043c\u0435\u043d\u0435\u043d\u0438\u0435 \u0432\u043e\u0437\u043c\u043e\u0436\u043d\u043e, \u0442\u043e\u043b\u044c\u043a\u043e \u043d\u0430 \u0443\u0441\u0442\u0440\u043e\u0439\u0441\u0442\u0432\u0435"
-                        " </p><p>\u0441 \u0437\u0430\u0432\u043e\u0434\u0441\u043a\u0438\u043c\u0438 \u043f\u0430\u0440\u043c\u0435\u0442\u0440\u0430\u043c\u0438.</p><p><br/></p></body></html>", None))
+        self.combobox_speed.setToolTip(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>\u0421\u043a\u043e\u0440\u043e\u0441\u0442\u044c</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.lbl_speed.setText(QCoreApplication.translate("MainWindow", u"\u0421\u043a\u043e\u0440\u043e\u0441\u0442\u044c", None))
+        self.lbl_slave.setText(QCoreApplication.translate("MainWindow", u"\u0410\u0434\u0440\u0435\u0441 \u0443\u0441\u0442\u0440-\u0432\u0430", None))
+#if QT_CONFIG(tooltip)
+        self.btn_set_param_sigma.setToolTip(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>\u0418\u0437\u043c\u0435\u043d\u0438\u0442 \u043f\u0430\u0440\u0430\u043c\u0435\u0442\u0440\u044b \u0443\u0441\u0442\u0440\u043e\u0439\u0441\u0442\u0432\u0430 \u043d\u0430:</p><p>\u0441\u043a\u043e\u0440\u043e\u0441\u0442\u044c - 9600, \u043f\u0440\u043e\u0432\u0435\u0440\u043a\u0430 \u0447\u0435\u0442\u043d\u043e\u0441\u0442\u0438 - N, \u0421\u0442\u043e\u043f \u0431\u0438\u0442 - 1.</p><p>\u0412\u043e \u0432\u0441\u043f\u043b\u044b\u0432\u0430\u044e\u0449\u0435\u043c \u043e\u043a\u043d\u0435 \u043d\u0443\u0436\u043d\u043e \u0431\u0443\u0434\u0435\u0442 \u0437\u0430\u0434\u0430\u0442\u044c \u043d\u043e\u0432\u044b\u0439 </p><p>\u0430\u0434\u0440\u0435\u0441 \u0443\u0441\u0442\u0440\u043e\u0439\u0441\u0442\u0432\u0430.</p><p>\u0418\u0437\u043c\u0435\u043d\u0435\u043d\u0438\u0435 \u0432\u043e\u0437\u043c\u043e\u0436\u043d\u043e, \u0442\u043e\u043b\u044c\u043a\u043e \u043d\u0430 \u0443\u0441\u0442\u0440\u043e\u0439\u0441\u0442\u0432\u0435 </p><p>\u0441 \u0437\u0430\u0432\u043e\u0434\u0441\u043a"
+                        "\u0438\u043c\u0438 \u043f\u0430\u0440\u043c\u0435\u0442\u0440\u0430\u043c\u0438.</p><p><span style=\" font-style:italic; text-decoration: underline;\">\u041f\u0430\u0440\u0430\u043c\u0435\u0442\u0440\u044b \u0434\u043b\u044f \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u044f \u0443\u043a\u0430\u0437\u044b\u0432\u0430\u0442\u044c \u043d\u0435 \u043d\u0443\u0436\u043d\u043e!</span></p><p>\u0414\u043b\u044f \u0438\u0437\u043c\u0435\u043d\u0435\u043d\u0438\u044f \u043d\u0435 \u0437\u0430\u0432\u043e\u0434\u0441\u043a\u0438\u0445 \u043d\u0430\u0441\u0442\u0440\u043e\u0435\u043a, \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u044c \u0441\u043e\u043e\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u044e\u0449\u0438\u0435 \u043a\u043d\u043e\u043f\u043a\u0438.<br/></p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.btn_set_param_sigma.setText(QCoreApplication.translate("MainWindow", u"\u0423\u0441\u0442\u0430\u043d\u043e\u0432\u0438\u0442\u044c \u043f\u0430\u0440\u0430\u043c\u0435\u0442\u0440\u044b Sigma", None))
 #if QT_CONFIG(tooltip)
@@ -1332,7 +1333,7 @@ class Ui_MainWindow(object):
         self.lbl_type.setText(QCoreApplication.translate("MainWindow", u"\u0423\u0441\u0442\u0440\u043e\u0439\u0441\u0442\u0432\u043e", None))
         self.lbl_port.setText(QCoreApplication.translate("MainWindow", u"COM Port", None))
 #if QT_CONFIG(tooltip)
-        self.combobox_type.setToolTip(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>\u0423\u0441\u0442\u0440\u043e\u0439\u0441\u0442\u0432\u043e \u0434\u043b\u044f \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u044f</p></body></html>", None))
+        self.combobox_type.setToolTip(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>\u0412\u044b\u0431\u043e\u0440 \u0443\u0441\u0442\u0440\u043e\u0439\u0441\u0442\u0432\u0430 \u0434\u043b\u044f \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u044f.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
 #if QT_CONFIG(tooltip)
         self.combobox_port.setToolTip(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>\u0421\u041e\u041c \u043f\u043e\u0440\u0442 \u0434\u043b\u044f \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u044f \u043a \u0443\u0441\u0442\u0440\u043e\u0439\u0441\u0442\u0432\u0443</p></body></html>", None))
@@ -1342,16 +1343,28 @@ class Ui_MainWindow(object):
         ___qtablewidgetitem2 = self.table_devices.horizontalHeaderItem(0)
         ___qtablewidgetitem2.setText(QCoreApplication.translate("MainWindow", u"device", None));
 #if QT_CONFIG(tooltip)
-        self.table_devices.setToolTip(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>\u0412\u044b\u0432\u043e\u0434\u0438\u0442 \u0438\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0438\u044e \u043e \u043d\u0430\u0439\u0434\u0435\u043d\u043d\u044b\u0445 \u0443\u0441\u0442\u0440\u043e\u0439\u0441\u0442\u0432\u0430\u0445.</p><p>\u0424\u043e\u0440\u043c\u0430\u0442 \u0432\u044b\u0432\u043e\u0434\u0430 ModBus:</p><p>\u0430\u0434\u0440\u0435\u0441,(\u0441\u043a\u043e\u0440\u043e\u0441\u0442\u044c, \u043f\u0430\u0440\u0438\u0442\u0435\u0442, \u0441\u0442\u043e\u043f \u0431\u0438\u0442)</p><p>\u0424\u043e\u0440\u043c\u0430\u0442 \u0432\u044b\u0432\u043e\u0434\u0430 Dcon:</p><p>\u0430\u0434\u0440\u0435\u0441, \u0443\u0441\u0442\u0440\u043e\u0439\u0441\u0442\u0432\u043e</p></body></html>", None))
+        self.table_devices.setToolTip(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>\u0412\u044b\u0432\u043e\u0434 \u0438\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0438\u0438 \u043e \u043d\u0430\u0439\u0434\u0435\u043d\u043d\u044b\u0445 \u0443\u0441\u0442\u0440\u043e\u0439\u0441\u043a\u0432\u0430\u0445.</p><p>\u0424\u043e\u0440\u043c\u0430\u0442 \u0432\u044b\u0432\u043e\u0434\u0430:</p><p>\u0430\u0434\u0440\u0435\u0441, (\u0441\u043a\u043e\u0440\u043e\u0441\u0442\u044c, \u043f\u0430\u0440\u0438\u0442\u0435\u0442, \u0441\u0442\u043e\u043f \u0431\u0438\u0442)</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.groupBox_s_bits.setTitle(QCoreApplication.translate("MainWindow", u"Stop Bits", None))
         self.check_box_sb1_3.setText(QCoreApplication.translate("MainWindow", u"1", None))
         self.check_box_sb2_3.setText(QCoreApplication.translate("MainWindow", u"2", None))
+#if QT_CONFIG(tooltip)
+        self.group_box_slave.setToolTip(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>\u0412\u044b\u0431\u043e\u0440 \u043d\u0430\u0447\u0430\u043b\u044c\u043d\u043e\u0433\u043e \u0438 \u043a\u043e\u043d\u0435\u0447\u043d\u043e\u0433\u043e \u0430\u0434\u0440\u0435\u0441\u043e\u0432 \u0434\u043b\u044f \u043f\u043e\u0438\u0441\u043a\u0430.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
         self.group_box_slave.setTitle(QCoreApplication.translate("MainWindow", u"Slave", None))
         self.lbl_from_3.setText(QCoreApplication.translate("MainWindow", u"From", None))
         self.lbl_to_3.setText(QCoreApplication.translate("MainWindow", u"To", None))
+#if QT_CONFIG(tooltip)
+        self.btn_stop_scan.setToolTip(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>\u041e\u0441\u0442\u0430\u043d\u043e\u0432\u0438\u0442\u044c \u0441\u043a\u0430\u043d\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
         self.btn_stop_scan.setText(QCoreApplication.translate("MainWindow", u"Stop", None))
+#if QT_CONFIG(tooltip)
+        self.btn_start_scan.setToolTip(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>\u0417\u0430\u043f\u0443\u0441\u043a \u0441\u043a\u0430\u043d\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u044f</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
         self.btn_start_scan.setText(QCoreApplication.translate("MainWindow", u"Start Scan", None))
+#if QT_CONFIG(tooltip)
+        self.groupBox_speeds.setToolTip(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>\u0412\u044b\u0431\u043e\u0440 \u0441\u043a\u043e\u0440\u043e\u0441\u0442\u0435\u0439 \u0434\u043b\u044f \u043f\u043e\u0438\u0441\u043a\u0430.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
         self.groupBox_speeds.setTitle(QCoreApplication.translate("MainWindow", u"Speed", None))
         self.checkBox_1202.setText(QCoreApplication.translate("MainWindow", u"1200", None))
         self.checkBox_2402.setText(QCoreApplication.translate("MainWindow", u"2400", None))
@@ -1363,22 +1376,30 @@ class Ui_MainWindow(object):
         self.checkBox_38402.setText(QCoreApplication.translate("MainWindow", u"38400", None))
         self.checkBox_57602.setText(QCoreApplication.translate("MainWindow", u"57600", None))
         self.checkBox_115202.setText(QCoreApplication.translate("MainWindow", u"115200", None))
+#if QT_CONFIG(tooltip)
+        self.groupBox_parity.setToolTip(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>\u0412\u044b\u0431\u043e\u0440 \u043f\u0440\u043e\u0432\u0435\u0440\u043a\u0438 \u0447\u0435\u0442\u043d\u043e\u0441\u0442\u0438/\u043d\u0435\u0447\u0435\u0442\u043d\u043e\u0441\u0442\u0438.</p><p/></body></html>", None))
+#endif // QT_CONFIG(tooltip)
         self.groupBox_parity.setTitle(QCoreApplication.translate("MainWindow", u"Parity", None))
         self.check_box_none_3.setText(QCoreApplication.translate("MainWindow", u"None", None))
         self.check_box_even_3.setText(QCoreApplication.translate("MainWindow", u"Even", None))
         self.check_box_odd_3.setText(QCoreApplication.translate("MainWindow", u"Odd", None))
+#if QT_CONFIG(tooltip)
+        self.groupBox_protokol_scan.setToolTip(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>\u0412\u044b\u0431\u043e\u0440 \u043f\u0440\u043e\u0442\u043e\u043a\u043e\u043b\u0430 \u0434\u043b\u044f \u043f\u043e\u0438\u0441\u043a\u0430.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
         self.groupBox_protokol_scan.setTitle(QCoreApplication.translate("MainWindow", u"\u041f\u0440\u043e\u0442\u043e\u043a\u043e\u043b", None))
         self.radioButton_madbus.setText(QCoreApplication.translate("MainWindow", u"ModBus", None))
         self.radioButton_dcon.setText(QCoreApplication.translate("MainWindow", u"DCON", None))
         self.tab_widget_main.setTabText(self.tab_widget_main.indexOf(self.tab_scan), QCoreApplication.translate("MainWindow", u"Scan", None))
         self.lbl_port_dcon.setText(QCoreApplication.translate("MainWindow", u"COM Port", None))
 #if QT_CONFIG(tooltip)
-        self.btn_help_dcon.setToolTip(QCoreApplication.translate("MainWindow", u"\u041e\u043f\u0438\u0441\u0430\u043d\u0438\u0435 \u0440\u0430\u0431\u043e\u0442\u044b \u0441 \u0443\u0441\u0442\u0440\u043e\u0439\u0441\u0442\u0432\u043e\u043c NLS  \u043f\u043e \u043f\u0440\u043e\u0442\u043e\u043a\u043e\u043b\u0443 DCON ", None))
+        self.groupBox_parameters_dcon.setToolTip(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>\u041f\u0430\u0440\u0430\u043c\u0435\u0442\u044b \u0434\u043b\u044f \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u044f \u0443\u0441\u0442\u0440\u043e\u0439\u0441\u0442\u0432 \u043f\u043e \u043f\u0440\u043e\u0442\u043e\u043a\u043e\u043b\u0443 DCON.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
-        self.btn_help_dcon.setText(QCoreApplication.translate("MainWindow", u"Help", None))
         self.groupBox_parameters_dcon.setTitle(QCoreApplication.translate("MainWindow", u"\u041f\u0430\u0440\u0430\u043c\u0435\u0442\u0440\u044b \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u044f", None))
         self.lbl_speed_dcon.setText(QCoreApplication.translate("MainWindow", u"\u0421\u043a\u043e\u0440\u043e\u0441\u0442\u044c", None))
         self.lbl_address_dcon.setText(QCoreApplication.translate("MainWindow", u"\u0410\u0434\u0440\u0435\u0441", None))
+#if QT_CONFIG(tooltip)
+        self.comboBox_parity_dcon.setToolTip(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>\u0423\u0441\u0442\u0430\u043d\u043e\u0432\u043a\u0430 \u043f\u0430\u0440\u0438\u0442\u0435\u0442\u0430 (\u043f\u0440\u043e\u0432\u0435\u0440\u043a\u0438 \u0447\u0435\u0442\u043d\u043e\u0441\u0442\u044c/\u043d\u0435\u0447\u0435\u0442\u043d\u043e\u0441\u0442\u044c).</p><p><span style=\" font-weight:600; text-decoration: underline;\">N</span>one - \u043d\u0435\u0442</p><p><span style=\" font-weight:600; text-decoration: underline;\">E</span>ven - \u0447\u0435\u0442\u043d\u043e\u0441\u0442\u044c</p><p><span style=\" font-weight:600; text-decoration: underline;\">O</span>dd - \u043d\u0435\u0447\u0435\u0442\u043d\u043e\u0441\u0442\u044c</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
         self.lbl_s_bits_dcon.setText(QCoreApplication.translate("MainWindow", u"\u0421\u0442\u043e\u043f \u0431\u0438\u0442\u044b", None))
         self.lbl_parity_dcon.setText(QCoreApplication.translate("MainWindow", u"\u041f\u0430\u0440\u0438\u0442\u0435\u0442", None))
 #if QT_CONFIG(tooltip)
