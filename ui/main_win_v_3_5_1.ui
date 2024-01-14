@@ -24,7 +24,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>../src/img/logo.png</normaloff>../src/img/logo.png</iconset>
+    <normaloff>../src/img/logo_m.png</normaloff>../src/img/logo_m.png</iconset>
   </property>
   <property name="autoFillBackground">
    <bool>false</bool>
@@ -68,7 +68,7 @@ QTabBar::tab:selected  {
        <enum>QTabWidget::Triangular</enum>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab_base">
        <attribute name="title">
@@ -434,7 +434,7 @@ QPushButton:pressed {
               <cursorShape>PointingHandCursor</cursorShape>
              </property>
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Провекрка на четность&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Установка паритета (проверки четность/нечетность).&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;N&lt;/span&gt;one - нет&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;E&lt;/span&gt;ven - четность&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;O&lt;/span&gt;dd - нечетность&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="styleSheet">
               <string notr="true">QComboBox {
@@ -605,7 +605,7 @@ QToolTip {
               <enum>Qt::NoContextMenu</enum>
              </property>
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Изменит параметры устройства на следующие:&lt;/p&gt;&lt;p&gt;скорость - 9600, проверка четности - N, Стоп бит - 1.&lt;/p&gt;&lt;p&gt;Во всплывающем окне нужно будет задать новый &lt;/p&gt;&lt;p&gt;фдрес устройства.&lt;/p&gt;&lt;p&gt;Изменение возможно, только на устройстве &lt;/p&gt;&lt;p&gt;с заводскими парметрами.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Изменит параметры устройства на:&lt;/p&gt;&lt;p&gt;скорость - 9600, проверка четности - N, Стоп бит - 1.&lt;/p&gt;&lt;p&gt;Во всплывающем окне нужно будет задать новый &lt;/p&gt;&lt;p&gt;адрес устройства.&lt;/p&gt;&lt;p&gt;Изменение возможно, только на устройстве &lt;/p&gt;&lt;p&gt;с заводскими парметрами.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic; text-decoration: underline;&quot;&gt;Параметры для подключения указывать не нужно!&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Для изменения не заводских настроек, использовать соответствующие кнопки.&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="styleSheet">
               <string notr="true">QPushButton {
@@ -742,7 +742,7 @@ QTableWidget {
               <number>0</number>
              </property>
              <attribute name="horizontalHeaderVisible">
-              <bool>false</bool>
+              <bool>true</bool>
              </attribute>
              <attribute name="horizontalHeaderCascadingSectionResizes">
               <bool>true</bool>
@@ -872,7 +872,7 @@ QTableWidget {
               <cursorShape>PointingHandCursor</cursorShape>
              </property>
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Устройство для подключения&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Выбор устройства для подключения.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="styleSheet">
               <string notr="true">QComboBox {
@@ -1252,7 +1252,7 @@ color: rgb(4, 255, 0);</string>
               <enum>Qt::NoContextMenu</enum>
              </property>
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Выводит информацию о найденных устройствах.&lt;/p&gt;&lt;p&gt;Формат вывода ModBus:&lt;/p&gt;&lt;p&gt;адрес,(скорость, паритет, стоп бит)&lt;/p&gt;&lt;p&gt;Формат вывода Dcon:&lt;/p&gt;&lt;p&gt;адрес, устройство&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Вывод информации о найденных устройсквах.&lt;/p&gt;&lt;p&gt;Формат вывода:&lt;/p&gt;&lt;p&gt;адрес, (скорость, паритет, стоп бит)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="styleSheet">
               <string notr="true">QTableWidget {
@@ -1399,6 +1399,14 @@ QToolTip {
                   <bold>true</bold>
                  </font>
                 </property>
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Выбор начального и конечного адресов для поиска.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QToolTip {
+	color: rgb(0, 0, 127);
+}</string>
+                </property>
                 <property name="title">
                  <string>Slave</string>
                 </property>
@@ -1505,6 +1513,9 @@ QToolTip {
                   <bold>false</bold>
                  </font>
                 </property>
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Остановить сканирование.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
                 <property name="styleSheet">
                  <string notr="true">QPushButton {
 	background-color: rgb(240, 85, 0);
@@ -1532,6 +1543,9 @@ QPushButton:pressed {
 	border-top: 2px solid rgb(180, 60, 0);
 	border-right: 2px solid rgb(180, 60, 0);	
 	border-bottom: 2px solid rgb(180, 60, 0);
+}
+QToolTip {
+	color: rgb(0, 0, 127);
 }</string>
                 </property>
                 <property name="text">
@@ -1563,6 +1577,9 @@ QPushButton:pressed {
                   <strikeout>false</strikeout>
                  </font>
                 </property>
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Запуск сканирования&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
                 <property name="styleSheet">
                  <string notr="true">QPushButton {
 	background-color: rgb(0, 170, 0);
@@ -1591,6 +1608,9 @@ QPushButton:pressed {
 	border-right: 2px solid rgb(0, 130, 0);	
 	border-bottom: 2px solid rgb(0, 130, 0);
 }
+QToolTip {
+	color: rgb(0, 0, 127);
+}
 </string>
                 </property>
                 <property name="text">
@@ -1605,6 +1625,14 @@ QPushButton:pressed {
                   <width>95</width>
                   <height>230</height>
                  </size>
+                </property>
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Выбор скоростей для поиска.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QToolTip {
+	color: rgb(0, 0, 127);
+}</string>
                 </property>
                 <property name="title">
                  <string>Speed</string>
@@ -1752,6 +1780,14 @@ QPushButton:pressed {
                   <height>90</height>
                  </size>
                 </property>
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Выбор проверки четности/нечетности.&lt;/p&gt;&lt;p/&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QToolTip {
+	color: rgb(0, 0, 127);
+}</string>
+                </property>
                 <property name="title">
                  <string>Parity</string>
                 </property>
@@ -1815,6 +1851,14 @@ QPushButton:pressed {
                   <width>0</width>
                   <height>40</height>
                  </size>
+                </property>
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Выбор протокола для поиска.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QToolTip {
+	color: rgb(0, 0, 127);
+}</string>
                 </property>
                 <property name="title">
                  <string>Протокол</string>
@@ -2069,6 +2113,9 @@ QToolTip {
                   <height>120</height>
                  </size>
                 </property>
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Параметы для подключения устройств по протоколу DCON.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
                 <property name="layoutDirection">
                  <enum>Qt::LeftToRight</enum>
                 </property>
@@ -2076,7 +2123,9 @@ QToolTip {
                  <bool>false</bool>
                 </property>
                 <property name="styleSheet">
-                 <string notr="true"/>
+                 <string notr="true">QToolTip {
+	color: rgb(0, 0, 127);
+}</string>
                 </property>
                 <property name="title">
                  <string>Параметры подключения</string>
@@ -2133,9 +2182,17 @@ color: rgb(4, 255, 0);</string>
                    <property name="contextMenuPolicy">
                     <enum>Qt::NoContextMenu</enum>
                    </property>
+                   <property name="toolTip">
+                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Установка паритета (проверки четность/нечетность).&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;N&lt;/span&gt;one - нет&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;E&lt;/span&gt;ven - четность&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;O&lt;/span&gt;dd - нечетность&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   </property>
                    <property name="styleSheet">
-                    <string notr="true">background-color: rgb(0, 74, 109);
-color: rgb(4, 255, 0);</string>
+                    <string notr="true">QComboBox {
+background-color: rgb(0, 74, 109);
+color: rgb(4, 255, 0);
+}
+QToolTip {
+	color: rgb(0, 0, 127);
+}</string>
                    </property>
                   </widget>
                  </item>
