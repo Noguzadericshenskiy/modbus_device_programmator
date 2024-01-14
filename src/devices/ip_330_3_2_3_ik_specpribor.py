@@ -29,6 +29,15 @@ class SignalingDeviceIP330_3_2_3IK(Client_mb):
     NUMS_STOP_BIT = 1
     SLAVE = 1
 
+    STATUS = {
+        0: "Ошибка",
+        20: "Ошибка бит_теста",
+        50: "Норма",
+        100: "Предупреждение",
+        150: "Пожар"
+    }
+    FULL_STATUS = ""
+
     def __init__(
             self,
             port,
@@ -63,12 +72,12 @@ class SignalingDeviceIP330_3_2_3IK(Client_mb):
         register_setup = self.read_holding_registers(address=1, slave=slave).registers[0]
         params = (
             ("Адрес устройства", self.read_holding_registers(address=0, slave=slave).registers[0]),
-            ("Тип извещателя", self.read_input_registers(address=0, slave=slave).registers),
-            ("Статус", self.read_input_registers(address=2, slave=slave).registers),
-            ("Подробный статус", self.read_input_registers(address=3, slave=slave).registers),
+            # ("Тип извещателя", self.read_input_registers(address=0, slave=slave).registers),
+            ("Статус", self.read_input_registers(address=2, slave=slave).registers[0]),
+            ("Подробный статус", self.read_input_registers(address=3, slave=slave).registers[0]),
             ("Серийный номер", self.read_input_registers(address=1, slave=slave).registers[0]),
             ("Внутренняя температура", self.read_input_registers(address=11, slave=slave).registers[0]),
-            ("Версия ПО", self.read_input_registers(address=257, count=31, slave=slave).registers),
+            ("Версия ПО", self._get_string(self.read_input_registers(address=257, count=31, slave=slave).registers)),
             ("Задержка срабатывания сигнализации (сек)", self._get_delay_triggering(register_setup)),
             ("Сигнальная защелка", self._get_signal_switch(register_setup)),
             ("Автоматический и ручной БИТ", self._get_hand_bit(register_setup)),
@@ -146,3 +155,9 @@ class SignalingDeviceIP330_3_2_3IK(Client_mb):
             return "3- high-middle"
         if data & mask4 == mask4:
             return "4- high"
+
+    def _get_string(self, data: list) -> str:
+        string = ""
+        for i in data:
+            string += i.to_bytes(2, "big").decode()
+        return string

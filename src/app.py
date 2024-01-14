@@ -22,7 +22,7 @@ from config import (
     PARITY_SIGMA,
     S_BITS_SIGMA
 )
-from view.main import Ui_MainWindow
+from view.main_view import Ui_MainWindow
 from utils import (
     get_device,
     get_ports_info,
