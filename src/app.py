@@ -1,16 +1,11 @@
 import sys
-import serial
-import serial.rs485
 
 from serial import SerialException
-from PySide6 import QtCore
-from PySide6.QtGui import QIntValidator
 from PySide6.QtWidgets import (
     QMainWindow,
     QApplication,
     QTableWidgetItem,
 )
-
 from pymodbus.exceptions import ConnectionException
 
 from config import (
@@ -36,7 +31,6 @@ from utils import (
     device_dcon,
     device_mb,
 )
-
 from src.dialogues import *
 
 

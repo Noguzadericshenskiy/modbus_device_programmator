@@ -2,8 +2,6 @@ import serial
 
 from serial.tools import list_ports_windows
 from pymodbus.client import ModbusSerialClient
-from pymodbus.framer import ModbusRtuFramer, rtu_framer
-from pymodbus.exceptions import ConnectionException
 from typing import Any
 
 from src.devices import (
