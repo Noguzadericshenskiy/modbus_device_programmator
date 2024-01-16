@@ -30,7 +30,7 @@ class Ui_MainWindow(object):
         MainWindow.resize(673, 485)
         MainWindow.setBaseSize(QSize(0, 0))
         icon = QIcon()
-        icon.addFile(u"../src/img/logo_m.png", QSize(), QIcon.Normal, QIcon.Off)
+        icon.addFile(u"../src/img/logo.png", QSize(), QIcon.Normal, QIcon.Off)
         MainWindow.setWindowIcon(icon)
         MainWindow.setAutoFillBackground(False)
         MainWindow.setStyleSheet(u"background-color: rgb(0, 85, 127);\n"
