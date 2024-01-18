@@ -111,6 +111,6 @@ class SignalDeviceIP101_07A_RS(Client_mb):
         self.write_register(3, new_stop_bit, slave)
         self.close()
 
-    def get_diagnostic_info(self):
-        per = self.read_holding_registers(address=11, slave=5).registers[0]
-        print(bin(per))
+    # def get_diagnostic_info(self):
+    #     per = self.read_holding_registers(address=11, slave=5).registers[0]
+    #     print(bin(per))
