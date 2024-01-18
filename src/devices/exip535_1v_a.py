@@ -61,19 +61,60 @@ class SignalDeviceEXIP535_1V_A(Client_mb):
             ("Проверочный бит", self.PARITY),
             ("Количество стоп битов", self.NUMS_STOP_BIT),
             ("Идентификатор устройства", self.read_holding_registers(address=0, slave=slave).registers[0]),
-
-            ("Версия протокола связи", self.read_holding_registers(address=5, slave=slave).registers[0]),
-            ("Версия устройства", self.read_holding_registers(address=6, slave=slave).registers[0]),
-            ("Версия ПО устройства", self.read_holding_registers(address=7, slave=slave).registers[0]),
-            ("Серийный номер", self.read_holding_registers(address=8, slave=slave).registers[0]),
-            ("Состояние устройства", self.STATUS[
-                self.read_holding_registers(address=10, slave=slave).registers[0]]),
-            ("Значение порога ВНИМАНИЕ", self.read_holding_registers(address=51, slave=slave).registers[0]),
-            ("Значение порога СРАБОТАЛ", self.read_holding_registers(address=52, slave=slave).registers[0]),
-            ("Скорость нарастания температуры", self.read_holding_registers(address=53, slave=slave).registers[0]),
-            ("Температура", self.read_holding_registers(address=54, slave=slave).registers[0]),
-            ("Скорость нарастания x10", self.read_holding_registers(address=56, slave=slave).registers[0]),
+            ("Управление вкл. светодиодной индикации срабатывания извещателя", self._value_lcd_indication(
+             self.read_holding_registers(address=3, slave=slave).registers[0])),
+            ("Период мигания светодиода мс", self.read_holding_registers(address=5, slave=slave).registers[0]),
+            ("Время удержания признака срабатывания при установленном в регистре 14 значении «Не удерживать»",
+             self.read_holding_registers(address=11, slave=slave).registers[0]),
+            ("Признак срабатывания извещателя",
+             self._mark_enabling_detector(self.read_holding_registers(address=12, slave=slave).registers[0])),
+            ("Удержание тревожного режима ",
+             self._hold_alarm_mode(self.read_holding_registers(address=14, slave=slave).registers[0])),
+            ("Тип сброса состояния извещателя",
+             self._type_reset_mode(self.read_holding_registers(address=15, slave=slave).registers[0])),
         )
         self.close()
         return params
 
+    def set_slave(self, new_slave: int, slave: int) -> None:
+        self.write_register(1, new_slave, slave)
+        self._set_key()
+        self.close()
+
+    def set_baudrate(self, new_spd: int, slave: int) -> None:
+        self.write_register(4, new_spd, slave)
+        self.close()
+
+    def set_parity(self,) -> None:
+        self.close()
+
+    def set_stop_bit(self,) -> None:
+        self.close()
+
+    def _set_key(self) -> None:
+        self.write_register(13, 7518)
+        # self.close()
+
+    def _value_lcd_indication(self, data) -> str:
+        if data == 1:
+            return "включено"
+        if data == 0:
+            return "выключено"
+
+    def _mark_enabling_detector(self, mark_data) -> str:
+        if mark_data == 0:
+            return "дежурный режим"
+        if mark_data == 1:
+            return "извещатель в тревожном режиме"
+
+    def _hold_alarm_mode(self, mark_mode) -> str:
+        if mark_mode == 0:
+            return "yне удерживать"
+        if mark_mode == 1:
+            return "удерживать"
+
+    def _type_reset_mode(self, mark_type) -> str:
+        if mark_type == 0:
+            return "Без подтверждения ключом (регистр 13)"
+        if mark_type == 1:
+            return "С подтверждением ключом"
