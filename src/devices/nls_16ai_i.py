@@ -7,7 +7,6 @@ RealLab NLS-16AI-I модуль аналогового ввода
 import time
 from pymodbus.framer import ModbusRtuFramer
 from pymodbus.client import ModbusSerialClient as Client_mb
-from loguru import logger
 
 
 class Analog_Input_NLS_16AII(Client_mb):
@@ -46,7 +45,6 @@ class Analog_Input_NLS_16AII(Client_mb):
             timeout=0.5
           )
 
-    @logger.catch()
     def get_info(self, slave=SLAVE) -> tuple:
         input_data: int = self.read_holding_registers(address=522, slave=slave).registers[0]
         h_byte, l_byte = input_data.to_bytes(2, "big")
@@ -75,7 +73,6 @@ class Analog_Input_NLS_16AII(Client_mb):
         time.sleep(1)
         self.close()
 
-    @logger.catch()
     def set_baudrate(self, new_spd: int, slave: int) -> None:
         "Устанавливает скорость устройства"
         self.write_register(513, new_spd, slave)
@@ -83,8 +80,6 @@ class Analog_Input_NLS_16AII(Client_mb):
         time.sleep(1)
         self.close()
 
-
-    @logger.catch()
     def set_parity(self, new_parity: int, slave: int) -> None:
         """
         HB - parity
@@ -98,7 +93,6 @@ class Analog_Input_NLS_16AII(Client_mb):
         time.sleep(1)
         self.close()
 
-    @logger.catch()
     def set_stop_bit(self, new_stop_bit: int, slave: int) -> None:
         """
          HB - parity
