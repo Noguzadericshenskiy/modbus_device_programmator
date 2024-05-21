@@ -46,38 +46,65 @@ class Analog_Input_NLS_16AII(Client_mb):
           )
 
     def get_info(self, slave=SLAVE) -> tuple:
+        time_delay = 0.5
+
         input_data: int = self.read_holding_registers(address=522, slave=slave).registers[0]
         h_byte, l_byte = input_data.to_bytes(2, "big")
+        time.sleep(time_delay)
+        name = self._get_string(self.read_holding_registers(address=200, slave=slave, count=4).registers)
+        version = self._get_string(self.read_holding_registers(address=212, slave=slave, count=4).registers)
+        slave_speed = self.read_holding_registers(address=512, slave=slave, count=2).registers
+        slave = slave_speed[0]
+        speed = slave_speed[1]
+        # slave_dev = self.read_holding_registers(address=512, slave=slave).registers[0]
+        # speed = self._get_speed(self.read_holding_registers(address=513, slave=slave).registers[0])
+        protocol = self._get_protocol(self.read_holding_registers(address=517, slave=slave).registers[0])
+        count = self.read_holding_registers(address=521, slave=slave).registers[0]
+        delay = self.read_holding_registers(address=800, slave=slave).registers[0]
 
-        params = (
-            ("Имя устройства", self._get_string(
-                self.read_holding_registers(address=200, slave=slave, count=4).registers)),
-            ("Адрес устройства", self.read_holding_registers(address=512, slave=slave).registers[0]),
-            ("Паритет", self._get_parity(h_byte)),
-            ("Кол-во стоп бит", self._get_s_bit(l_byte)),
-            ("Скорость интерфейса", self._get_speed(
-                self.read_holding_registers(address=513, slave=slave).registers[0])),
-            ("Протокол", self._get_protocol(
-                self.read_holding_registers(address=517, slave=slave).registers[0])),
-            ("Счетчик ответов на команды", self.read_holding_registers(address=521, slave=slave).registers[0]),
-            ("Задержка ответа на команды", self.read_holding_registers(address=800, slave=slave).registers[0]),
-            ("Версия программы", self._get_string(
-                self.read_holding_registers(address=212, slave=slave, count=4).registers)),
-        )
+
+        params = (("Имя устройства", name,),
+                   ("Адрес устройства", slave),
+                   ("Паритет", self._get_parity(h_byte)),
+                   ("Кол-во стоп бит", self._get_s_bit(l_byte)),
+                   ("Скорость интерфейса", speed),
+                   ("Протокол", protocol),
+                   ("Счетчик ответов на команды", count),
+                   ("Задержка ответа на команды",delay),
+                   ("Версия программы", version),
+                   )
+
+        # params = (
+        #     ("Имя устройства", self._get_string(
+        #         self.read_holding_registers(address=200, slave=slave, count=4).registers)),
+        #     ("Адрес устройства", self.read_holding_registers(address=512, slave=slave).registers[0]),
+        #     ("Паритет", self._get_parity(h_byte)),
+        #     ("Кол-во стоп бит", self._get_s_bit(l_byte)),
+        #     ("Скорость интерфейса", self._get_speed(
+        #         self.read_holding_registers(address=513, slave=slave).registers[0])),
+        #     ("Протокол", self._get_protocol(
+        #         self.read_holding_registers(address=517, slave=slave).registers[0])),
+        #     ("Счетчик ответов на команды", self.read_holding_registers(address=521, slave=slave).registers[0]),
+        #     ("Задержка ответа на команды", self.read_holding_registers(address=800, slave=slave).registers[0]),
+        #     ("Версия программы", self._get_string(
+        #         self.read_holding_registers(address=212, slave=slave, count=4).registers)),
+        # )
         self.close()
         return params
 
     def set_slave(self, new_slave: int, slave: int) -> None:
         self.write_register(512, new_slave, slave)
+        time.sleep(0.2)
         self.write_register(288, 43981, slave)
-        time.sleep(1)
+        time.sleep(0.2)
         self.close()
 
     def set_baudrate(self, new_spd: int, slave: int) -> None:
         "Устанавливает скорость устройства"
         self.write_register(513, new_spd, slave)
+        time.sleep(0.2)
         self.write_register(288, 43981, slave)
-        time.sleep(1)
+        time.sleep(0.2)
         self.close()
 
     def set_parity(self, new_parity: int, slave: int) -> None:
@@ -89,8 +116,9 @@ class Analog_Input_NLS_16AII(Client_mb):
         h_byte, l_byte = input_data.to_bytes(2, "big")
         output_data = ((new_parity & 0xff) << 8) | (l_byte & 0xff)
         self.write_register(522, output_data, slave)
+        time.sleep(0.2)
         self.write_register(288, 43981, slave)
-        time.sleep(1)
+        time.sleep(0.2)
         self.close()
 
     def set_stop_bit(self, new_stop_bit: int, slave: int) -> None:
@@ -99,11 +127,13 @@ class Analog_Input_NLS_16AII(Client_mb):
          LB - stop bit
          """
         input_data: int = self.read_holding_registers(address=522, slave=slave).registers[0]
+        time.sleep(0.2)
         h_byte, l_byte = input_data.to_bytes(2, "big")
         output_data = ((h_byte & 0xff) << 8) | (new_stop_bit & 0xff)
         self.write_register(522, output_data, slave)
+        time.sleep(0.2)
         self.write_register(288, 43981, slave)
-        time.sleep(1)
+        time.sleep(0.2)
         self.close()
 
 
@@ -117,7 +147,6 @@ class Analog_Input_NLS_16AII(Client_mb):
                 return i[1]
 
     def _get_s_bit(self, data: str) -> str:
-        print(data)
         return str(data)
 
     def _get_speed(self, speed_dev: int) -> str:
