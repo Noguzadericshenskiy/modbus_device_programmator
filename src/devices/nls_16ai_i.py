@@ -52,26 +52,30 @@ class Analog_Input_NLS_16AII(Client_mb):
         h_byte, l_byte = input_data.to_bytes(2, "big")
         time.sleep(time_delay)
         name = self._get_string(self.read_holding_registers(address=200, slave=slave, count=4).registers)
+        time.sleep(time_delay)
         version = self._get_string(self.read_holding_registers(address=212, slave=slave, count=4).registers)
+        time.sleep(time_delay)
         slave_speed = self.read_holding_registers(address=512, slave=slave, count=2).registers
         slave = slave_speed[0]
         speed = slave_speed[1]
         # slave_dev = self.read_holding_registers(address=512, slave=slave).registers[0]
         # speed = self._get_speed(self.read_holding_registers(address=513, slave=slave).registers[0])
+        time.sleep(time_delay)
         protocol = self._get_protocol(self.read_holding_registers(address=517, slave=slave).registers[0])
+        time.sleep(time_delay)
         count = self.read_holding_registers(address=521, slave=slave).registers[0]
+        time.sleep(time_delay)
         delay = self.read_holding_registers(address=800, slave=slave).registers[0]
-
-
+        self.close()
         params = (("Имя устройства", name,),
-                   ("Адрес устройства", slave),
-                   ("Паритет", self._get_parity(h_byte)),
-                   ("Кол-во стоп бит", self._get_s_bit(l_byte)),
-                   ("Скорость интерфейса", speed),
-                   ("Протокол", protocol),
-                   ("Счетчик ответов на команды", count),
-                   ("Задержка ответа на команды",delay),
-                   ("Версия программы", version),
+                  ("Адрес устройства", slave),
+                  ("Паритет", self._get_parity(h_byte)),
+                  ("Кол-во стоп бит", self._get_s_bit(l_byte)),
+                  ("Скорость интерфейса", speed),
+                  ("Протокол", protocol),
+                  ("Счетчик ответов на команды", count),
+                  ("Задержка ответа на команды",delay),
+                  ("Версия программы", version),
                    )
 
         # params = (
@@ -89,7 +93,7 @@ class Analog_Input_NLS_16AII(Client_mb):
         #     ("Версия программы", self._get_string(
         #         self.read_holding_registers(address=212, slave=slave, count=4).registers)),
         # )
-        self.close()
+
         return params
 
     def set_slave(self, new_slave: int, slave: int) -> None:
